@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>API Geonames Task</title>
+        <meta name="description" content="Task">
+        <meta name="author" content="Antonia McDonnell">
+        <link rel="stylesheet" href="./libs/css/index.css">
+
+
+    </head>
+
+    <body>
+
+        <div class="header">
+
+        </div>
+        
+        <div class="main">
+            <table>
+                <tr>
+                    <th align="center" class="txtAPIName">
+                        API Name
+                    </th>
+                    <th>
+                        API description
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+                <tr>
+                    <td align="center">
+                        1. APINAME
+                    </td>
+                    <td class="txtAPIDescription">
+                        DESCRIPTION AND INPUT FIELDS GO HERE
+                    </td>
+                    <td align="center">
+                        <button id="containsBtn" class="btnSubmit" data-endpoint="contains" type="submit">Submit</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        2. APINAME
+                    </td>
+                    <td class="txtAPIDescription">
+                        DESCRIPTION AND INPUT FIELDS GO HERE
+                    </td>
+                    <td align="center">
+                    <button id="childrenBtn" class="btnSubmit" data-endpoint="children" type="submit">Submit</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" class="txtAPIName">
+                        3. APINAME
+                    </td>
+                    <td id="txtAPIDescription">
+                        DESCRIPTION AND INPUT FIELDS GO HERE
+                    </td>
+                    <td align="center">
+                    <button id="hierarchyBtn" class="btnSubmit" data-endpoint="hierarchy" type="submit">Submit</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" rowspan="3" colspan="3" id="txtResults">
+                        RESULTS
+                    </td>
+
+                </tr>
+
+            </table>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="./libs/js/script.js"></script>
+        
+        <div id="preloader"></div>
+
+    </body>
+
+    
+
+</html>

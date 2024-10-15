@@ -1,0 +1,10 @@
+# Ignore everything in the root directory
+/*
+
+# But don't ignore these specific directories
+!/task/
+!/project1/
+!/project2/
+
+# Don't ignore the .gitignore file itself
+!.gitignore
