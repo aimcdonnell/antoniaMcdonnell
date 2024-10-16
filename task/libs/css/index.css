@@ -41,3 +41,39 @@
     transform: rotate(360deg);
     }
 }
+table {
+    border-collapse: collapse;
+    margin: 0 auto;
+    width: 50%;  /*Ensure the table takes up the full width of the container*/
+}
+
+
+table, th, td {
+    border: solid 1px rgb(0, 0, 0);
+    padding: 30px;
+}
+
+
+/* Target the first and third columns */
+td:first-child, td:last-child {
+    width: 20%; /* Adjust this percentage as needed */
+}
+
+
+/* Target the middle column */
+td:nth-child(2) {
+    width: 60%; /* Adjust this percentage as needed */
+}
+
+
+#txtResults {
+    padding: 100px;
+}
+
+
+.btnSubmit {
+    background-color: rgb(39, 121, 243);
+    color: rgb(255, 255, 255);
+    border-radius: 5px;
+    border-color: rgb(39, 121, 243);
+}
