@@ -7,7 +7,7 @@ $(window).on('load', function () {
 });
     	//set up an event handler for the click button
 	//when the button is clicked,
-	$('#timezoneSubmitBtn').click(function() {
+	$('#timezoneSubmitBtn').on('click', function() {
 		//run the ajax request to the PHP routine "getCountryInfo.php"
 		$.ajax({
 			//set the expected format of whatever returns to JSON
