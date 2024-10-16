@@ -1,0 +1,82 @@
+<<<<<<< HEAD
+=======
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    overflow: hidden;
+    background: #fff;
+}
+
+    #preloader:before {
+    content: "";
+    position: fixed;
+    top: calc(50% - 30px);
+    left: calc(50% - 30px);
+    border: 6px solid #f2f2f2;
+    border-top: 6px solid #56829e ;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+}
+    
+    @-webkit-keyframes animate-preloader {
+    0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    }
+    100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+    }
+}
+    @keyframes animate-preloader {
+    0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    }
+    100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+    }
+}
+table {
+    border-collapse: collapse;
+    margin: 0 auto;
+    width: 50%;  /*Ensure the table takes up the full width of the container*/
+}
+
+
+table, th, td {
+    border: solid 1px rgb(0, 0, 0);
+    padding: 30px;
+}
+
+
+/* Target the first and third columns */
+td:first-child, td:last-child {
+    width: 20%; /* Adjust this percentage as needed */
+}
+
+
+/* Target the middle column */
+td:nth-child(2) {
+    width: 60%; /* Adjust this percentage as needed */
+}
+
+
+#txtResults {
+    padding: 100px;
+}
+
+
+.btnSubmit {
+    background-color: rgb(39, 121, 243);
+    color: rgb(255, 255, 255);
+    border-radius: 5px;
+    border-color: rgb(39, 121, 243);
+}
+>>>>>>> 4351f18 (Adding Timezone code to index.html and script.js button function)
