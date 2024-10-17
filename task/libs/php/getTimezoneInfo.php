@@ -10,7 +10,7 @@
 	$executionStartTime = microtime(true);
 
 	//concatenates the URL for the API call with the required parameters passed from the data section of the AJAX call in the script.js files
-    $url= 'http://api.geonames.org/timezoneJSON?lat=' . $_REQUEST['lat'] . '&lng=' . $_REQUEST['lng'] . '&username=amcdonnell';
+    $url= 'http://api.geonames.org/timezoneJSON?formatted=true&lat=' . $_REQUEST['lat'] . '&lng=' . $_REQUEST['lng'] . '&username=amcdonnell';
 	//initiates the cURL object and sets some parameters
 	$ch = curl_init();
 	//CURLOPT_SSL_VERIFYPEER is a boolean value that determines whether the cURL object should verify the peer's certificate. The peer's certificate is the certificate that the server presents to the client during the SSL handshake

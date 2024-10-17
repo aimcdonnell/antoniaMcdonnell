@@ -17,7 +17,7 @@ $(window).on('load', function () {
 			data: {
 				//pass the values of the two dropdowns as the parameters country and lang
 				lat: $('#latInput').val(),
-				long: $('#longInput').val()
+				lng: $('#lngInput').val()
 			},
 			//in the success part of the call, any output from the PHP routine will be stored in the result variable
 			success: function(result) {
@@ -27,12 +27,9 @@ $(window).on('load', function () {
 				if (result.status.name == "ok") {
 					//display the continent, capital, languages, population and area
 					//the data held in results is written into the appropriate html elements
-					$('#txtContinent').html(result['data'][0]['continent']);
-					$('#txtCapital').html(result['data'][0]['capital']);
-					$('#txtLanguages').html(result['data'][0]['languages']);
-					$('#txtPopulation').html(result['data'][0]['population']);
-					$('#txtArea').html(result['data'][0]['areaInSqKm']);
-
+					$('#txtSunrise').html(result['data'][0]['sunrise']);
+					$('#txtSunset').html(result['data'][0]['sunset']);
+					$('#txtTime').html(result['data'][0]['time']);
 				}
 			
 			},
