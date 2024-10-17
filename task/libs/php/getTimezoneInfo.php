@@ -70,7 +70,7 @@
 ?>
 =======
 	//concatenates the URL for the API call with the required parameters passed from the data section of the AJAX call in the script.js files
-    $url= 'http://api.geonames.org/timezoneJSON?lat=' . $_REQUEST['lat'] . '&lng=' . $_REQUEST['lng'] . '&username=amcdonnell';
+    $url= 'http://api.geonames.org/timezoneJSON?formatted=true&lat=' . $_REQUEST['lat'] . '&lng=' . $_REQUEST['lng'] . '&username=amcdonnell';
 	//initiates the cURL object and sets some parameters
 	$ch = curl_init();
 	//CURLOPT_SSL_VERIFYPEER is a boolean value that determines whether the cURL object should verify the peer's certificate. The peer's certificate is the certificate that the server presents to the client during the SSL handshake
@@ -106,5 +106,9 @@
 	header('Content-Type: application/json; charset=UTF-8');
 	//echo json_encode($output) is a function that converts the $output variable to a JSON string and sends it to the client
 	echo json_encode($output);
+<<<<<<< HEAD
 ?>
 >>>>>>> 4351f18 (Adding Timezone code to index.html and script.js button function)
+=======
+?>
+>>>>>>> 554b9f2 (Amending the index.html to include different parameters)
