@@ -34,7 +34,7 @@
                         1. Timezone
                     </td>
                     <td>
-                    Type latitude and longitude values into the input boxes below to get (decide on values)
+                    Type latitude and longitude values into the input boxes below to get the country name, time, sunrise and sunset
                     <br>
                     <label for="latInput">Latitude:</label>
                     <input type="text" id="latInput" name="latInput" placeholder="10.2">
@@ -46,6 +46,14 @@
                         <button id="timezoneSubmitBtn" type="submit">Submit</button>
                     </td>
                 </tr>
+              	<tr>
+                    <td>
+                        Time:
+                    </td>
+                    <td id="txtTime">
+
+                    </td>
+                </tr>
                 <tr>
                     <td>
                         Country Name:
@@ -53,9 +61,8 @@
                     <td id="txtCountryName">
                         
                     </td>
-                    
                 </tr>
-                <tr>
+              	<tr>
                     <td>
                         Sunrise:
                     </td>
@@ -71,14 +78,56 @@
 
                     </td>
                 </tr>
+              	<tr>
+                    <td align="center">
+                        2. Find Nearby Weather
+                    </td>
+                    <td>
+                    Type latitude and longitude values into the input boxes below to get the weather according to the nearest weather station.
+                    <br>
+                    <label for="latInput2">Latitude:</label>
+                    <input type="text" id="latInput2" name="latInput2" placeholder="42.7666666666667">
+                    <br>
+                    <label for="lngInput">Longitude:</label>
+                     <input type="text" id="lngInput2" name="lngInput2" placeholder="-1.61666666666667">  
+                    </td>
+                    <td align="center">
+                        <button id="findNearbyWeatherSubmitBtn" type="submit">Submit</button>
+                    </td>
+                </tr>
                 <tr>
                     <td>
-                        Time:
+                        Station Location:
                     </td>
-                    <td id="txtTime">
+                    <td id="txtStationLocation">
+                        
+                    </td>
+                </tr>
+              	<tr>
+                    <td>
+                        Temperature:
+                    </td>
+                    <td id="txtTemperature">
 
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        Date Time:
+                    </td>
+                    <td id="txtDateTime">
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Clouds:
+                    </td>
+                    <td id="txtClouds">
+
+                    </td>
+                </tr>
+
 
 
             </table>
