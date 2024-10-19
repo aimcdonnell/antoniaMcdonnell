@@ -13,13 +13,13 @@ $(window).on('load', function () {
 		//run the ajax request to the PHP routine "getCountryInfo.php"
 		$.ajax({
 			//set the expected format of whatever returns to JSON
-			url: "libs/php/getTimezoneInfo.php",
+			url: "/libs/php/getTimezoneInfo.php",
 			type: 'POST',
 			dataType: 'json',
 			data: {
-				//pass the values of the two dropdowns as the parameters country and lang
+				//pass the values of the two dropdowns as the parameters lat and lang
 				lat: $('#latInput').val(),
-				lng: $('#lngInput').val()
+				lng: $('#lngInput').val(),
 			},
 			//in the success part of the call, any output from the PHP routine will be stored in the result variable
 			success: function(result) {
@@ -27,11 +27,12 @@ $(window).on('load', function () {
 				console.log(JSON.stringify(result));
 				//if the status is ok, then display the data
 				if (result.status.name == "ok") {
-					//display the continent, capital, languages, population and area
+					//display the sunrise, sunset and time values
 					//the data held in results is written into the appropriate html elements
-					$('#txtSunrise').html(result['data'][0]['sunrise']);
-					$('#txtSunset').html(result['data'][0]['sunset']);
-					$('#txtTime').html(result['data'][0]['time']);
+					$('#txtCountryName').html(result.data.countryName);
+					$('#txtSunrise').html(result.data.sunrise);
+					$('#txtSunset').html(result.data.sunset);
+					$('#txtTime').html(result.data.time);
 				}
 			
 			},
