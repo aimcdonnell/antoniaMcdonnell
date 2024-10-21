@@ -1,25 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
     <head>
-        <meta charset="utf-8">
+        <meta charset='utf-8'>
         <title>API Geonames Task</title>
-        <meta name="description" content="Task">
-        <meta name="author" content="Antonia McDonnell">
-        <link rel="stylesheet" href="./libs/css/index.css">
+        <meta name='description' content='Task'>
+        <meta name='author' content='Antonia McDonnell'>
+      	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel='stylesheet' href='./libs/css/index.css'>
 
 
     </head>
 
     <body>
 
-        <div class="header">
+        <div class='header'>
 
         </div>
         
-        <div class="main">
+        <div class='main'>
             <table>
                 <tr>
-                    <th align="center" class="txtAPIName">
+                    <th align='center' class='txtAPIName'>
                         API Name
                     </th>
                     <th>
@@ -30,12 +31,18 @@
                     </th>
                 </tr>
                 <tr>
+<<<<<<< HEAD
                     <td align="center">
                         1. APINAME
+=======
+                    <td align='center'>
+                        1. Timezone
+>>>>>>> 103574d (Added API request for Geonames streetNameLookup API and amended double quotation marks to single quotation marks for consistency)
                     </td>
                     <td>
                     Type latitude and longitude values into the input boxes below to get the country name, time, sunrise and sunset
                     <br>
+<<<<<<< HEAD
 <<<<<<< HEAD
                     Latitude: <input id="latInput" type="text" placeholder="10.2">
                     <br>
@@ -50,13 +57,23 @@
                     </td>
                     <td align="center">
                         <button class="timezoneSubmitBtn" type="submit">Submit</button>
+=======
+                    <label for='timezoneLatInput'>Latitude:</label>
+                    <input type='text' id='timezoneLatInput' name='timezoneLatInput' placeholder='10.2'>
+                    <br>
+                    <label for='timezoneLngInput'>Longitude:</label>
+                     <input type='text' id='timezoneLngInput' name='timezoneLngInput' placeholder='47.01'>  
+                    </td>
+                    <td align='center'>
+                        <button id='timezoneSubmitBtn' type='submit'>Submit</button>
+>>>>>>> 103574d (Added API request for Geonames streetNameLookup API and amended double quotation marks to single quotation marks for consistency)
                     </td>
                 </tr>
               	<tr>
                     <td>
                         Time:
                     </td>
-                    <td id="txtTime">
+                    <td id='txtTime'>
 
                     </td>
                 </tr>
@@ -64,7 +81,7 @@
                     <td>
                         Country Name:
                     </td>
-                    <td id="txtCountryName">
+                    <td id='txtCountryName'>
                         
                     </td>
                 </tr>
@@ -78,39 +95,49 @@
                         Sunrise:
 >>>>>>> 50bfabd (Adding Get Nearby Weather code to application)
                     </td>
+<<<<<<< HEAD
                     <td>
                         DESCRIPTION AND INPUT FIELDS GO HERE
                     </td>
                     <td align="center">
                     <button class="" type="submit">Submit</button>
+=======
+                    <td id='txtSunrise'>
+
+>>>>>>> 103574d (Added API request for Geonames streetNameLookup API and amended double quotation marks to single quotation marks for consistency)
                     </td>
                 </tr>
                 <tr>
                     <td align="center" class="txtAPIName">
                         3. APINAME
                     </td>
+<<<<<<< HEAD
                     <td>
                         DESCRIPTION AND INPUT FIELDS GO HERE
                     </td>
                     <td align="center">
                     <button class="" type="submit">Submit</button>
+=======
+                    <td id='txtSunset'>
+
+>>>>>>> 103574d (Added API request for Geonames streetNameLookup API and amended double quotation marks to single quotation marks for consistency)
                     </td>
                 </tr>
               	<tr>
-                    <td align="center">
+                    <td align='center'>
                         2. Find Nearby Weather
                     </td>
                     <td>
                     Type latitude and longitude values into the input boxes below to get the weather according to the nearest weather station.
                     <br>
-                    <label for="nearbyWeatherLatInput">Latitude:</label>
-                    <input type="text" id="nearbyWeatherLatInput" name="nearbyWeatherLatInput" placeholder="42.7666666666667">
+                    <label for='nearbyWeatherLatInput'>Latitude:</label>
+                    <input type='text' id='nearbyWeatherLatInput' name='nearbyWeatherLatInput' placeholder='42.7666666666667'>
                     <br>
-                    <label for="nearbyWeatherLngInput">Longitude:</label>
-                     <input type="text" id="nearbyWeatherLngInput" name="nearbyWeatherLngInput" placeholder="-1.61666666666667">  
+                    <label for='nearbyWeatherLngInput'>Longitude:</label>
+                     <input type='text' id='nearbyWeatherLngInput' name='nearbyWeatherLngInput' placeholder='-1.61666666666667'>  
                     </td>
-                    <td align="center">
-                        <button id="findNearbyWeatherSubmitBtn" type="submit">Submit</button>
+                    <td align='center'>
+                        <button id='findNearbyWeatherSubmitBtn' type='submit'>Submit</button>
                     </td>
                 </tr>
                 <tr>
@@ -120,7 +147,7 @@
                     <td>
                         Station Location:
                     </td>
-                    <td id="txtStationLocation">
+                    <td id='txtStationLocation'>
                         
                     </td>
                 </tr>
@@ -128,8 +155,12 @@
                     <td>
                         Temperature:
                     </td>
+<<<<<<< HEAD
                     <td id="txtTemperature">
 >>>>>>> 50bfabd (Adding Get Nearby Weather code to application)
+=======
+                    <td id='txtTemperature'>
+>>>>>>> 103574d (Added API request for Geonames streetNameLookup API and amended double quotation marks to single quotation marks for consistency)
 
                     </td>
                 </tr>
@@ -137,7 +168,7 @@
                     <td>
                         Date and Time:
                     </td>
-                    <td id="txtDateTime">
+                    <td id='txtDateTime'>
 
                     </td>
                 </tr>
@@ -145,23 +176,64 @@
                     <td>
                         Clouds:
                     </td>
-                    <td id="txtClouds">
+                    <td id='txtClouds'>
 
                     </td>
                 </tr>
-
-
-
+				<tr>
+                  <td align='center'>
+                    3. Street Name Lookup
+                  </td>
+                  <td>Choose a street name from the options in the dropdown menu below and click submit to find out where it is located.
+					<select id='streetNameLookupSelStreet'>
+                    	<option value='nyhavn'>Nyhavn</option>
+                    	<option value='strasseggerweg'>Strasseggerweg</option>
+                    	<option value='amour'>Amour</option>
+                    	<option value='regent'>Regent</option>
+                    </select>
+                  </td>
+                  <td align='center'>
+                    <button id='streetNameLookupSubmitBtn' type='submit'>Submit</button>
+                  </td>
+              	</tr>
+              	<tr>
+                  <td>
+                    Street Name:
+                  </td>
+                  <td id='txtStreetName'>
+                    
+                  </td>
+                <tr>
+                <tr>
+                  <td>
+                    Locality:
+                  </td>
+                  <td id='txtLocality'>
+                    
+                  </td>
+                <tr>
+                  <td>
+                    Country Code:
+                  </td>
+                  <td id='txtCountryCode'>
+                    
+                  </td>
+              	</tr>
+				<tr>
+                  <td>
+                    State:
+                  </td>
+				<td id='txtState'>
+                  
+              	</td>
+              	</tr>
             </table>
         </div>
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="./libs/js/script.js"></script>
+        <script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
+        <script src='./libs/js/script.js'></script>
         
-        <div id="preloader"></div>
+        <div id='preloader'></div>
 
     </body>
-
-    
-
 </html>

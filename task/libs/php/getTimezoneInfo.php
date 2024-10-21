@@ -9,9 +9,30 @@
 	//initiating the execution time of the routine so that it can be measured
 	$executionStartTime = microtime(true);
 
+<<<<<<< HEAD
 	//concatenates the URL for the API call with the required parameters passed from the data section of the AJAX call in the script.js files
     $url= 'http://api.geonames.org/timezoneJSON?formatted=true&lat=' . $_REQUEST['lat'] . '&lng=' . $_REQUEST['lng'] . '&username=amcdonnell';
 	//initiates the cURL object and sets some parameters
+=======
+	// Ensure lat and lng are set in the request
+	if (isset($_REQUEST['lat']) && isset($_REQUEST['lng'])) {
+	    $lat = $_REQUEST['lat'];
+	    $lng = $_REQUEST['lng'];
+	} else {
+	    // If lat or lng are not present, return an error response
+	    $output['status']['code'] = '400';
+	    $output['status']['name'] = 'error';
+	    $output['status']['description'] = 'Missing latitude or longitude';
+	    $output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . ' ms';
+	    echo json_encode($output);
+	    exit();
+	}
+
+	// Concatenates the URL for the API call with the required parameters
+    $url = 'http://api.geonames.org/timezoneJSON?formatted=true&lat=' . $lat . '&lng=' . $lng . '&username=amcdonnell&style=full';
+
+	// Initiates the cURL object and sets some parameters
+>>>>>>> 103574d (Added API request for Geonames streetNameLookup API and amended double quotation marks to single quotation marks for consistency)
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);  // Disable SSL certificate verification
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  // Return the API response as a string
@@ -29,17 +50,17 @@
 	// Check if the API response contains valid data
 	if (isset($decode['lat']) && isset($decode['lng'])) {
 	    // Stores the decoded JSON string in the $output variable
-	    $output['status']['code'] = "200";
-	    $output['status']['name'] = "ok";
-	    $output['status']['description'] = "success";
-	    $output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
+	    $output['status']['code'] = '200';
+	    $output['status']['name'] = 'ok';
+	    $output['status']['description'] = 'success';
+	    $output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . ' ms';
 	    $output['data'] = $decode;
 	} else {
 	    // If the API call failed or returned an unexpected response, return an error
-	    $output['status']['code'] = "500";
-	    $output['status']['name'] = "error";
-	    $output['status']['description'] = "Failed to retrieve data from the API";
-	    $output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
+	    $output['status']['code'] = '500';
+	    $output['status']['name'] = 'error';
+	    $output['status']['description'] = 'Failed to retrieve data from the API';
+	    $output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . ' ms';
 	}
 
 	// Echo json_encode($output) is a function that converts the $output variable to a JSON string and sends it to the client

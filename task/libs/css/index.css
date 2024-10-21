@@ -43,6 +43,36 @@
     transform: rotate(360deg);
     }
 }
+@media screen and (max-width: 768px) {
+    /* Styles for tablets and smaller screens */
+    table {
+      width: 100%;
+    }
+    
+    th, td {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    input[type="text"], select {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    /* Styles for mobile phones */
+    .main {
+      padding: 10px;
+    }
+    
+    button {
+      width: 100%;
+      margin-top: 10px;
+    }
+  }  
+
 table {
     border-collapse: collapse;
     margin: 0 auto;

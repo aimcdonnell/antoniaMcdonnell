@@ -1,5 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+//Add getPostalCode function to the page
+>>>>>>> 103574d (Added API request for Geonames streetNameLookup API and amended double quotation marks to single quotation marks for consistency)
 $(window).on('load', function () {
     if ($('#preloader').length) {
         $('#preloader').delay(1000).fadeOut('slow', function () {
@@ -11,6 +15,14 @@ $(window).on('load', function () {
 	//when the button is clicked,
 	$('#timezoneSubmitBtn').on('click', function() {
 		//run the ajax request to the PHP routine "getCountryInfo.php"
+		const lat = $('#timezoneLatInput').val();
+		const lng = $('#timezoneLngInput').val();
+		
+		if (!lat || !lng) {
+			alert("Please enter both latitude and longitude values.");
+			return;
+			}
+		
 		$.ajax({
 			//set the expected format of whatever returns to JSON
 			url: "/libs/php/getTimezoneInfo.php",
@@ -21,6 +33,7 @@ $(window).on('load', function () {
 				lat: $('#timezoneLatInput').val(),
 				lng: $('#timezoneLngInput').val(),
 			},
+
 			//in the success part of the call, any output from the PHP routine will be stored in the result variable
 			success: function(result) {
 
@@ -57,8 +70,8 @@ $(window).on('load', function () {
     	const lng = $('#nearbyWeatherLngInput').val(); // Get longitude value
       	
       	// Log lat and lng to the console
-    	console.log('Nearby Weather Request - Latitude:', lat);
-    	console.log('Nearby Weather Request - Longitude:', lng);
+    	//console.log('Nearby Weather Request - Latitude:', lat);
+    	//console.log('Nearby Weather Request - Longitude:', lng);
 
     	if (!lat || !lng) {
         alert("Please enter both latitude and longitude values.");
@@ -99,4 +112,41 @@ $(window).on('load', function () {
 		}); 
 	
 	});
+<<<<<<< HEAD
 >>>>>>> 50bfabd (Adding Get Nearby Weather code to application)
+=======
+	//set up an event handler for the click button
+	//when the button is clicked,
+	$('#streetNameLookupSubmitBtn').on('click', function() {
+		//run the ajax request to the PHP routine 'getStreetNameInfo.php'
+		$.ajax({
+			//set the expected format of whatever returns to JSON
+			url: '/libs/php/getStreetNameInfo.php',
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				//pass the values of the two dropdowns as the parameters lat and lang
+				q: $('#streetNameLookupSelStreet').val(),		
+			},
+			//in the success part of the call, any output from the PHP routine will be stored in the result variable
+			success: function(result) {
+
+				console.log(JSON.stringify(result));
+				//if the status is ok, then display the data
+				if (result.status.name == 'ok') {
+					//display the sunrise, sunset and time values
+					//the data held in results is written into the appropriate html elements
+					$('#txtStreetName').html(result['data'][0]['street']);
+                  	$('#txtLocality').html(result['data'][0]['locality']);
+					$('#txtCountryCode').html(result['data'][0]['countryCode']);
+					$('#txtState').html(result['data'][0]['adminName1']);
+				}
+			
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				// your error code
+			}
+		}); 
+	
+	});
+>>>>>>> 103574d (Added API request for Geonames streetNameLookup API and amended double quotation marks to single quotation marks for consistency)
