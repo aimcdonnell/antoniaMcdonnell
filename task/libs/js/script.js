@@ -14,18 +14,18 @@ $(window).on('load', function () {
     	//set up an event handler for the click button
 	//when the button is clicked,
 	$('#timezoneSubmitBtn').on('click', function() {
-		//run the ajax request to the PHP routine "getCountryInfo.php"
+		//run the ajax request to the PHP routine 'getTimezoneInfo.php'
 		const lat = $('#timezoneLatInput').val();
 		const lng = $('#timezoneLngInput').val();
 		
 		if (!lat || !lng) {
-			alert("Please enter both latitude and longitude values.");
+			alert('Please enter both latitude and longitude values.');
 			return;
 			}
 		
 		$.ajax({
 			//set the expected format of whatever returns to JSON
-			url: "/libs/php/getTimezoneInfo.php",
+			url: '/task/libs/php/getTimezoneInfo.php',
 			type: 'POST',
 			dataType: 'json',
 			data: {
@@ -39,7 +39,7 @@ $(window).on('load', function () {
 
 				console.log(JSON.stringify(result));
 				//if the status is ok, then display the data
-				if (result.status.name == "ok") {
+				if (result.status.name == 'ok') {
 					//display the sunrise, sunset and time values
 					//the data held in results is written into the appropriate html elements
 					$('#txtCountryName').html(result.data.countryName);
@@ -74,14 +74,14 @@ $(window).on('load', function () {
     	//console.log('Nearby Weather Request - Longitude:', lng);
 
     	if (!lat || !lng) {
-        alert("Please enter both latitude and longitude values.");
+        alert('Please enter both latitude and longitude values.');
         return;
         }
       	
-		//run the ajax request to the PHP routine "getNearbyWeather.php"
+		//run the ajax request to the PHP routine 'getNearbyWeather.php'
 		$.ajax({
 			//set the expected format of whatever returns to JSON
-			url: "/libs/php/getNearbyWeather.php",
+			url: '/task/libs/php/getNearbyWeather.php',
 			type: 'POST',
 			dataType: 'json',
 			data: {
@@ -94,7 +94,7 @@ $(window).on('load', function () {
 
 				console.log(JSON.stringify(result));
 				//if the status is ok, then display the data
-				if (result.status.name == "ok") {
+				if (result.status.name == 'ok') {
 					//display the station location, temperature, datetime and Clouds information and time values
 					//the data held in results is written into the appropriate html elements
 					$('#txtStationLocation').html(result.data.stationName);
@@ -102,7 +102,7 @@ $(window).on('load', function () {
 					$('#txtDateTime').html(result.data.datetime);
 					$('#txtClouds').html(result.data.clouds);
 				} else {
-        		console.error("Error:", result.status.description); // Log any errors
+        		console.error('Error:', result.status.description); // Log any errors
     			}
 			
 			},
@@ -121,7 +121,7 @@ $(window).on('load', function () {
 		//run the ajax request to the PHP routine 'getStreetNameInfo.php'
 		$.ajax({
 			//set the expected format of whatever returns to JSON
-			url: '/libs/php/getStreetNameInfo.php',
+			url: '/task/libs/php/getStreetNameInfo.php',
 			type: 'POST',
 			dataType: 'json',
 			data: {
