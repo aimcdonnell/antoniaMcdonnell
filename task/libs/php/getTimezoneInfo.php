@@ -15,10 +15,10 @@
 	    $lng = $_REQUEST['lng'];
 	} else {
 	    // If lat or lng are not present, return an error response
-	    $output['status']['code'] = "400";
-	    $output['status']['name'] = "error";
-	    $output['status']['description'] = "Missing latitude or longitude";
-	    $output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
+	    $output['status']['code'] = '400';
+	    $output['status']['name'] = 'error';
+	    $output['status']['description'] = 'Missing latitude or longitude';
+	    $output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . ' ms';
 	    echo json_encode($output);
 	    exit();
 	}
@@ -44,17 +44,17 @@
 	// Check if the API response contains valid data
 	if (isset($decode['lat']) && isset($decode['lng'])) {
 	    // Stores the decoded JSON string in the $output variable
-	    $output['status']['code'] = "200";
-	    $output['status']['name'] = "ok";
-	    $output['status']['description'] = "success";
-	    $output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
+	    $output['status']['code'] = '200';
+	    $output['status']['name'] = 'ok';
+	    $output['status']['description'] = 'success';
+	    $output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . ' ms';
 	    $output['data'] = $decode;
 	} else {
 	    // If the API call failed or returned an unexpected response, return an error
-	    $output['status']['code'] = "500";
-	    $output['status']['name'] = "error";
-	    $output['status']['description'] = "Failed to retrieve data from the API";
-	    $output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
+	    $output['status']['code'] = '500';
+	    $output['status']['name'] = 'error';
+	    $output['status']['description'] = 'Failed to retrieve data from the API';
+	    $output['status']['returnedIn'] = intval((microtime(true) - $executionStartTime) * 1000) . ' ms';
 	}
 
 	// Echo json_encode($output) is a function that converts the $output variable to a JSON string and sends it to the client
