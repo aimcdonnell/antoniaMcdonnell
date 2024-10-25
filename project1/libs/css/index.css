@@ -203,7 +203,6 @@ color: #d32f2f;
 >>>>>>> 9133713 (Adding map code to index.html page and setting up project structure)
 =======
 
-  CSS:
 #preloader {
 position: fixed;
 top: 0;
@@ -224,8 +223,6 @@ border-top: 6px solid #56829e ;
 border-radius: 50%;
 width: 60px;
 height: 60px;
-10
-COMMERCIAL IN CONFIDENCE
 -webkit-animation: animate-preloader 1s linear infinite;
 animation: animate-preloader 1s linear infinite;
 }
