@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // Preloader handling
 $(window).on("load", function () {
   if ($("#preloader").length) {
@@ -925,6 +926,17 @@ $(window).on("load", function () {
   });
 });
 =======
+=======
+$(window).on('load', function () {
+    if ($('#preloader').length) {
+    $('#preloader').delay(1000).fadeOut('slow', function () {
+    $(this).remove();
+    });
+    }
+    });
+    
+
+>>>>>>> 874f67c (Added preloader code to index.css and script.js files)
 // GLOBAL DECLARATIONS
 // ---------------------------------------------------------
 
