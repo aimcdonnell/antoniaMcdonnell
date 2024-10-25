@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #preloader {
   position: fixed;
   top: 0;
@@ -44,6 +45,9 @@
 }    
 
   html, body {
+=======
+html, body {
+>>>>>>> 9133713 (Adding map code to index.html page and setting up project structure)
     margin: 0;
     padding: 0;
   }
@@ -55,6 +59,7 @@
     padding: 0;
   }
   
+<<<<<<< HEAD
 #selectContainer {
 position: fixed;
 left: 50%;
@@ -181,3 +186,17 @@ color: #4caf50;
 .naturalDisasterBtn {
 color: #d32f2f;
 }
+=======
+  #selectContainer {
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    padding: 11px 0;
+  }
+  
+  #countrySelect {
+    width: 200px;
+    margin: 0 auto;
+  }
+>>>>>>> 9133713 (Adding map code to index.html page and setting up project structure)
