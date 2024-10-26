@@ -8,6 +8,7 @@
     overflow: hidden;
     background: #fff;
     }
+
     #preloader:before {
     content: "";
     position: fixed;
@@ -49,8 +50,8 @@ html, body {
   }
   
   #map {
-    width: 100%;
-    height: 100%;
+    height: 100vh !important;
+    width: 100% !important;
     margin: 0;
     padding: 0;
   }

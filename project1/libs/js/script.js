@@ -1,10 +1,10 @@
 $(window).on('load', function () {
-    if ($('#preloader').length) {
+  if ($('#preloader').length) {
     $('#preloader').delay(1000).fadeOut('slow', function () {
-    $(this).remove();
-    });
-    }
-    });
+      $(this).remove();
+    })
+  }
+});
     
 
 // ---------------------------------------------------------
@@ -42,7 +42,7 @@ var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
 
 // initialise and add controls once DOM is ready
 
-$(document).on('ready', function () {
+$(function () {
   
   map = L.map("map", {
     layers: [streets]
@@ -51,9 +51,27 @@ $(document).on('ready', function () {
   // setView is not required in your application as you will be
   // deploying map.fitBounds() on the country border polygon
 
-  const layerControl = L.control.layers(basemaps).addTo(map);
-
+  L.control.layers(basemaps).addTo(map);
   infoBtn.addTo(map);
+
+    // Fetch country data and populate the select box
+    $.getJSON("/libs/php/getCountries.php", function (data) {
+      if (data.features && Array.isArray(data.features)) {
+        data.features.forEach(function (feature) {
+          var isoCode = feature.properties.iso_a2;
+          var countryName = feature.properties.name;
+  
+          // Append each country as an option to the select box
+          $('#countrySelect').append(
+            $('<option>', { value: isoCode, text: countryName })
+          );
+        });
+      } else {
+        console.error("Invalid data format:", data);
+      }
+    }).fail(function () {
+      alert("Error: Could not load the country data.");
+    });
 
 })
     
