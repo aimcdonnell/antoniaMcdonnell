@@ -7,6 +7,7 @@ $(window).on('load', function () {
     });
     
 
+// ---------------------------------------------------------
 // GLOBAL DECLARATIONS
 // ---------------------------------------------------------
 
@@ -41,7 +42,7 @@ var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
 
 // initialise and add controls once DOM is ready
 
-$(document).ready(function () {
+$(document).on('ready', function () {
   
   map = L.map("map", {
     layers: [streets]
@@ -50,8 +51,9 @@ $(document).ready(function () {
   // setView is not required in your application as you will be
   // deploying map.fitBounds() on the country border polygon
 
-  layerControl = L.control.layers(basemaps).addTo(map);
+  const layerControl = L.control.layers(basemaps).addTo(map);
 
   infoBtn.addTo(map);
 
 })
+    
