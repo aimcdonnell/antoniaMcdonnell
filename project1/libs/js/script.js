@@ -77,7 +77,5 @@ $(function () {
       alert("Error: Could not load the country data.");
     }
   });
-  
-
 });
     
