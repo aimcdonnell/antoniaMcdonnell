@@ -54,8 +54,11 @@ $(function () {
   L.control.layers(basemaps).addTo(map);
   infoBtn.addTo(map);
 
-    // Fetch country data and populate the select box
-    $.getJSON("/libs/php/getCountries.php", function (data) {
+  $.ajax({
+    url: "/project1/libs/php/getCountries.php",
+    type: "GET",
+    dataType: "json",
+    success: function (data) {
       if (data.features && Array.isArray(data.features)) {
         data.features.forEach(function (feature) {
           var isoCode = feature.properties.iso_a2;
@@ -69,9 +72,12 @@ $(function () {
       } else {
         console.error("Invalid data format:", data);
       }
-    }).fail(function () {
+    },
+    error: function () {
       alert("Error: Could not load the country data.");
-    });
+    }
+  });
+  
 
-})
+});
     
