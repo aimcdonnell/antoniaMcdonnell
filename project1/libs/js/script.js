@@ -1010,6 +1010,7 @@ $(function () {
       alert("Error: Could not load the country data.");
     }
   });
+<<<<<<< HEAD
   
 
 <<<<<<< HEAD
@@ -1020,6 +1021,8 @@ $(function () {
     
 >>>>>>> 1175bce (Amending script.js, index.css and index.html to try and get map to work)
 =======
+=======
+>>>>>>> d8c65b7 (Working on the select box so that it displays all the countries in the dropdown box)
 });
     
 >>>>>>> 84f7ae0 (Adding select function to app, 2nd attempt)
