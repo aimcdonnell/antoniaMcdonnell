@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 #preloader {
   position: fixed;
   top: 0;
@@ -48,16 +49,68 @@
 =======
 html, body {
 >>>>>>> 9133713 (Adding map code to index.html page and setting up project structure)
+=======
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    overflow: hidden;
+    background: #fff;
+    }
+    #preloader:before {
+    content: "";
+    position: fixed;
+    top: calc(50% - 30px);
+    left: calc(50% - 30px);
+    border: 6px solid #f2f2f2;
+    border-top: 6px solid #56829e ;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    -webkit-animation: animate-preloader 1s linear infinite;
+    animation: animate-preloader 1s linear infinite;
+    }
+    @-webkit-keyframes animate-preloader {
+    0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    }
+    100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+    }
+    }
+    @keyframes animate-preloader {
+    0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+    }
+    100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+    }
+    }    
+
+html, body {
+    height: 100%;
+>>>>>>> 1175bce (Amending script.js, index.css and index.html to try and get map to work)
     margin: 0;
     padding: 0;
   }
   
   #map {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     margin: 0;
     padding: 0;
   }
+
+  .main {
+    height: 100vh;
+}
   
 <<<<<<< HEAD
 #selectContainer {
@@ -198,6 +251,7 @@ color: #d32f2f;
   #countrySelect {
     width: 200px;
     margin: 0 auto;
+<<<<<<< HEAD
   }
 <<<<<<< HEAD
 >>>>>>> 9133713 (Adding map code to index.html page and setting up project structure)
@@ -248,3 +302,6 @@ transform: rotate(360deg);
 }
 
 >>>>>>> 874f67c (Added preloader code to index.css and script.js files)
+=======
+  }
+>>>>>>> 1175bce (Amending script.js, index.css and index.html to try and get map to work)

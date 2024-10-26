@@ -936,7 +936,11 @@ $(window).on('load', function () {
     });
     
 
+<<<<<<< HEAD
 >>>>>>> 874f67c (Added preloader code to index.css and script.js files)
+=======
+// ---------------------------------------------------------
+>>>>>>> 1175bce (Amending script.js, index.css and index.html to try and get map to work)
 // GLOBAL DECLARATIONS
 // ---------------------------------------------------------
 
@@ -971,7 +975,7 @@ var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
 
 // initialise and add controls once DOM is ready
 
-$(document).ready(function () {
+$(document).on('ready', function () {
   
   map = L.map("map", {
     layers: [streets]
@@ -980,9 +984,13 @@ $(document).ready(function () {
   // setView is not required in your application as you will be
   // deploying map.fitBounds() on the country border polygon
 
-  layerControl = L.control.layers(basemaps).addTo(map);
+  const layerControl = L.control.layers(basemaps).addTo(map);
 
   infoBtn.addTo(map);
 
 })
+<<<<<<< HEAD
 >>>>>>> 9133713 (Adding map code to index.html page and setting up project structure)
+=======
+    
+>>>>>>> 1175bce (Amending script.js, index.css and index.html to try and get map to work)
