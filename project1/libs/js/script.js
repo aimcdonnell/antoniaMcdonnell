@@ -987,8 +987,11 @@ $(function () {
   L.control.layers(basemaps).addTo(map);
   infoBtn.addTo(map);
 
-    // Fetch country data and populate the select box
-    $.getJSON("/libs/php/getCountries.php", function (data) {
+  $.ajax({
+    url: "/project1/libs/php/getCountries.php",
+    type: "GET",
+    dataType: "json",
+    success: function (data) {
       if (data.features && Array.isArray(data.features)) {
         data.features.forEach(function (feature) {
           var isoCode = feature.properties.iso_a2;
@@ -1002,13 +1005,21 @@ $(function () {
       } else {
         console.error("Invalid data format:", data);
       }
-    }).fail(function () {
+    },
+    error: function () {
       alert("Error: Could not load the country data.");
-    });
+    }
+  });
+  
 
+<<<<<<< HEAD
 })
 <<<<<<< HEAD
 >>>>>>> 9133713 (Adding map code to index.html page and setting up project structure)
 =======
     
 >>>>>>> 1175bce (Amending script.js, index.css and index.html to try and get map to work)
+=======
+});
+    
+>>>>>>> 84f7ae0 (Adding select function to app, 2nd attempt)
