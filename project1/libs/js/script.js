@@ -54,28 +54,23 @@ $(function () {
   L.control.layers(basemaps).addTo(map);
   infoBtn.addTo(map);
 
-  $.ajax({
-    url: "/project1/libs/php/getCountries.php",
-    type: "GET",
-    dataType: "json",
-    success: function (data) {
-      if (data.features && Array.isArray(data.features)) {
-        data.features.forEach(function (feature) {
-          var isoCode = feature.properties.iso_a2;
-          var countryName = feature.properties.name;
-  
-          // Append each country as an option to the select box
-          $('#countrySelect').append(
-            $('<option>', { value: isoCode, text: countryName })
-          );
-        });
-      } else {
-        console.error("Invalid data format:", data);
+$.getJSON("libs/js/countryBorders.geo.json", function(result){
+  result.features.forEach(function(feature){
+    $('<option>').text(feature.properties.name).appendTo('#countrySelect');
+  }); 
+});
+
+});
+
+$('#countrySelect').on('change', function() {
+  var country = $('#countrySelect').val();
+  $.getJSON("libs/js/countryBorders.geo.json", function(result){
+    result.features.forEach(function(feature){
+      if (feature.properties.name == country) {
+        // Create a GeoJSON layer and add it to the map
+        var geoJsonLayer = L.geoJSON(feature);
+        map.fitBounds(geoJsonLayer.getBounds());
       }
-    },
-    error: function () {
-      alert("Error: Could not load the country data.");
-    }
+    });
   });
 });
-    

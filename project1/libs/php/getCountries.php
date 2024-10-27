@@ -9,7 +9,7 @@ ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
 // Change the path to your locally saved file
-$filePath = "project1/libs/js/countryBorders.geo.json";
+$filePath = "/project1/libs/js/countryBorders.geo.json";
 
 // Check if the file exists and output its content
 if (file_exists($filePath)) {
@@ -18,4 +18,5 @@ if (file_exists($filePath)) {
     echo $jsonData;
 } else {
     echo json_encode(["error" => "File not found."]);
-}
+    echo $jsonData;
+};
