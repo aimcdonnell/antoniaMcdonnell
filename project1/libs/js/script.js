@@ -987,6 +987,7 @@ $(function () {
   L.control.layers(basemaps).addTo(map);
   infoBtn.addTo(map);
 
+<<<<<<< HEAD
   $.ajax({
     url: "/project1/libs/php/getCountries.php",
     type: "GET",
@@ -1026,3 +1027,25 @@ $(function () {
 });
     
 >>>>>>> 84f7ae0 (Adding select function to app, 2nd attempt)
+=======
+$.getJSON("libs/js/countryBorders.geo.json", function(result){
+  result.features.forEach(function(feature){
+    $('<option>').text(feature.properties.name).appendTo('#countrySelect');
+  }); 
+});
+
+});
+
+$('#countrySelect').on('change', function() {
+  var country = $('#countrySelect').val();
+  $.getJSON("libs/js/countryBorders.geo.json", function(result){
+    result.features.forEach(function(feature){
+      if (feature.properties.name == country) {
+        // Create a GeoJSON layer and add it to the map
+        var geoJsonLayer = L.geoJSON(feature);
+        map.fitBounds(geoJsonLayer.getBounds());
+      }
+    });
+  });
+});
+>>>>>>> b9ca338 (Added countries to the dropdown select box and linked them to the relevant countries, displaying their borders)

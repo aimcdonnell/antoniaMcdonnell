@@ -64,7 +64,7 @@ ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
 // Change the path to your locally saved file
-$filePath = "project1/libs/js/countryBorders.geo.json";
+$filePath = "/project1/libs/js/countryBorders.geo.json";
 
 <<<<<<< HEAD
 // Initiate cURL
@@ -103,5 +103,10 @@ if (file_exists($filePath)) {
     echo $jsonData;
 } else {
     echo json_encode(["error" => "File not found."]);
+<<<<<<< HEAD
 }
 >>>>>>> d8c65b7 (Working on the select box so that it displays all the countries in the dropdown box)
+=======
+    echo $jsonData;
+};
+>>>>>>> b9ca338 (Added countries to the dropdown select box and linked them to the relevant countries, displaying their borders)
