@@ -979,7 +979,7 @@ $(function () {
   
   map = L.map("map", {
     layers: [streets]
-  }).setView([54.5, -4], 6);
+  }).locate({setView: true, maxZoom: 5});
   
   // setView is not required in your application as you will be
   // deploying map.fitBounds() on the country border polygon
@@ -1041,8 +1041,17 @@ $('#countrySelect').on('change', function() {
   $.getJSON("libs/js/countryBorders.geo.json", function(result){
     result.features.forEach(function(feature){
       if (feature.properties.name == country) {
-        // Create a GeoJSON layer and add it to the map
         var geoJsonLayer = L.geoJSON(feature);
+        
+        // Get the area of the country
+        var bounds = geoJsonLayer.getBounds();
+        var area = (bounds.getNorth() - bounds.getSouth()) * (bounds.getEast() - bounds.getWest());
+        
+        // Adjust zoom based on country size
+        let zoomLevel = 5;
+        if (area < 200) {  // For smaller countries like Norway
+            zoomLevel = 7;
+        }
         map.fitBounds(geoJsonLayer.getBounds());
       }
     });
