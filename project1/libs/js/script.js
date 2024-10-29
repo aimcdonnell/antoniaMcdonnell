@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // Preloader handling
 $(window).on("load", function () {
   if ($("#preloader").length) {
@@ -927,12 +928,16 @@ $(window).on("load", function () {
 });
 =======
 =======
+=======
+// Preloader handling
+>>>>>>> 1e671ea (Understanding the map code and adding polygons instead of using setView)
 $(window).on('load', function () {
   if ($('#preloader').length) {
     $('#preloader').delay(1000).fadeOut('slow', function () {
       $(this).remove();
-    })
+    });
   }
+<<<<<<< HEAD
 });
     
 
@@ -941,6 +946,9 @@ $(window).on('load', function () {
 =======
 // ---------------------------------------------------------
 >>>>>>> 1175bce (Amending script.js, index.css and index.html to try and get map to work)
+=======
+  // ---------------------------------------------------------
+>>>>>>> 1e671ea (Understanding the map code and adding polygons instead of using setView)
 // GLOBAL DECLARATIONS
 // ---------------------------------------------------------
 
@@ -973,20 +981,20 @@ var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
 // EVENT HANDLERS
 // ---------------------------------------------------------
 
-// initialise and add controls once DOM is ready
-
 $(function () {
-  
+  // initialise map with the street layer
   map = L.map("map", {
     layers: [streets]
-  }).locate({setView: true, maxZoom: 5});
+  });
   
-  // setView is not required in your application as you will be
-  // deploying map.fitBounds() on the country border polygon
+// create a layer control which makes it easier to switch between the layers/ different maps
+//these different layers are defined in the basemaps variable above
+L.control.layers(basemaps).addTo(map);
 
-  L.control.layers(basemaps).addTo(map);
+//adding an info button to the map
   infoBtn.addTo(map);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   $.ajax({
     url: "/project1/libs/php/getCountries.php",
@@ -1033,16 +1041,34 @@ $.getJSON("libs/js/countryBorders.geo.json", function(result){
     $('<option>').text(feature.properties.name).appendTo('#countrySelect');
   }); 
 });
+=======
+  // sending async request to get the geojson data to specified URL
+$.ajax({
+  url: "libs/js/countryBorders.geo.json",
+  dataType: "json",
+  //specifying the response type as JSON so that it's automatically parsed by jQuery
+  //before the success call
+  //if successful, the JSON data is retrieved from the server/ countryBorders.geo.json file
+  success: function(data) {
+  //taking the geoJSON data and adding it to the map
+  const countryLayer = L.geoJSON(data).addTo(map);
+  //map.fitBounds adjusts the map's view and zoom level to fit within the geographic bounds of the country borders
+  //countryLayer.getBounds() ensure the map centers and zooms appropriately to show the entire country border polygons
+  map.fitBounds(countryLayer.getBounds());
+  },
+  //runs if there is an error with the AJAX request
+  error: function(jqXHR, textStatus, errorThrown) {
+    //logs an error message to the console
+    console.log("Error loading GeoJSON data:", textStatus, errorThrown);
+  }
+})
+>>>>>>> 1e671ea (Understanding the map code and adding polygons instead of using setView)
 
-});
+})
 
-$('#countrySelect').on('change', function() {
-  var country = $('#countrySelect').val();
-  $.getJSON("libs/js/countryBorders.geo.json", function(result){
-    result.features.forEach(function(feature){
-      if (feature.properties.name == country) {
-        var geoJsonLayer = L.geoJSON(feature);
+//ADD CODE THAT CONNECTS THE COUNTRIES TO THE DROPDOWN MENU
         
+<<<<<<< HEAD
         // Get the area of the country
         var bounds = geoJsonLayer.getBounds();
         var area = (bounds.getNorth() - bounds.getSouth()) * (bounds.getEast() - bounds.getWest());
@@ -1058,3 +1084,6 @@ $('#countrySelect').on('change', function() {
   });
 });
 >>>>>>> b9ca338 (Added countries to the dropdown select box and linked them to the relevant countries, displaying their borders)
+=======
+});
+>>>>>>> 1e671ea (Understanding the map code and adding polygons instead of using setView)
