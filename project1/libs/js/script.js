@@ -992,7 +992,56 @@ $(function () {
 L.control.layers(basemaps).addTo(map);
 
 //adding an info button to the map
-  infoBtn.addTo(map);
+infoBtn.addTo(map);
+
+//indefinitely watch the user's location
+navigator.geolocation.watchPosition(success, error);
+
+//create variables in the global scope
+let marker, circle, zoomed;
+
+
+//the function will be called when the user's location is successfully retrieved
+function success(position) {
+  //get the latitude and longitude of the user's location
+  const lat = position.coords.latitude;
+  const lng = position.coords.longitude;
+  const accuracy = position.coords.accuracy;
+  
+//ensuring that we don't have multiple markers and circles on the map if the user moves around
+//if there is already a marker and circle on the map, remove them
+if (marker) {
+    map.removeLayer(marker);
+    map.removeLayer(circle);
+  }
+  //else, create a marker and a circle to show the user's location
+  marker = L.marker([lat, lng]).addTo(map);
+  circle = L.circle([lat, lng], {radius: accuracy}).addTo(map);
+  
+  //1st time the function runs, no value is assigned to zoomed
+  //once the function is run, a value is assigned to zoomed so it won't zoom in again
+  //if the map is not zoomed in
+  if(!zoomed) {
+  //set the map to the bounds of the circle
+  //and save this as the zoomed variable
+  zoomed = map.fitBounds(circle.getBounds());
+  }
+
+  //follow the marker and circle on the map
+  map.setView([lat, lng], 12);
+
+}
+
+
+function error(err) {
+  //checking if the error code is 1, which means the user has denied access to their location
+if(err.code == 1) {
+  alert("You need to allow geolocation access for this to work");
+  //otherwise, it is probably a technical error
+} else {
+    alert("Error occurred. Error code: " + err.code);
+  }
+}
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1053,7 +1102,7 @@ $.ajax({
   //taking the geoJSON data and adding it to the map
   const countryLayer = L.geoJSON(data).addTo(map);
   //map.fitBounds adjusts the map's view and zoom level to fit within the geographic bounds of the country borders
-  //countryLayer.getBounds() ensure the map centers and zooms appropriately to show the entire country border polygons
+  countryLayer.getBounds() //ensure the map centers and zooms appropriately to show the entire country border polygons
   map.fitBounds(countryLayer.getBounds());
   },
   //runs if there is an error with the AJAX request
