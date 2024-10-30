@@ -1,5 +1,7 @@
 <?php
+ //use a php routine to return the ISO code and name for inclusion in the index.html <select> element
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 header("Content-Type: application/json; charset=UTF-8");
 
@@ -61,11 +63,19 @@ header("Pragma: no-cache"); // For HTTP/1.0 compatibility
 
 // Enable error reporting
 ini_set('display_errors', 'On');
+=======
+//initiating comprehensive error reporting so that the routine 
+//(a sequence of code that is intended to be used repeatedly during 
+//the execution of a programme) runs in the browser
+ini_set("display_errors", "On");
+>>>>>>> da455e7 (Rewriting code to follow the correct method, using PHP routines rather than multiple AJAX calls)
 error_reporting(E_ALL);
 
-// Change the path to your locally saved file
-$filePath = "/project1/libs/js/countryBorders.geo.json";
+$executionStartTime = microtime(true);
+//Read the file
+$json = file_get_contents("libs/js/countryBorders.geo.json");
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 // Initiate cURL
 $ch = curl_init($url);
@@ -110,3 +120,23 @@ if (file_exists($filePath)) {
     echo $jsonData;
 };
 >>>>>>> b9ca338 (Added countries to the dropdown select box and linked them to the relevant countries, displaying their borders)
+=======
+//Decode the JSON file
+$decode = json_decode($result, true);
+
+$output["status"]["code"] = "200";
+$output["status"]["name"] = "ok";
+$output["status"]["description"] = "success";
+$output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
+//return the iso code and name in the code
+$output["data"] = $decode["features"];
+
+//check if the file was read successfully
+if ($result === false) {
+    die("Error reading file");
+}
+
+header("Content-Type: application/json; charset=UTF-8");
+
+?>
+>>>>>>> da455e7 (Rewriting code to follow the correct method, using PHP routines rather than multiple AJAX calls)

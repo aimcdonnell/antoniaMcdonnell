@@ -3,6 +3,7 @@
 <<<<<<< HEAD
 // Preloader handling
 $(window).on("load", function () {
+<<<<<<< HEAD
   if ($("#preloader").length) {
     $("#preloader").delay(1500).fadeOut("slow", function () {
       $(this).remove();
@@ -932,11 +933,14 @@ $(window).on("load", function () {
 // Preloader handling
 >>>>>>> 1e671ea (Understanding the map code and adding polygons instead of using setView)
 $(window).on('load', function () {
+=======
+>>>>>>> da455e7 (Rewriting code to follow the correct method, using PHP routines rather than multiple AJAX calls)
   if ($('#preloader').length) {
-    $('#preloader').delay(1000).fadeOut('slow', function () {
+    $('#preloader').delay(1000).fadeOut("slow", function () {
       $(this).remove();
     });
   }
+<<<<<<< HEAD
 <<<<<<< HEAD
 });
     
@@ -947,6 +951,9 @@ $(window).on('load', function () {
 // ---------------------------------------------------------
 >>>>>>> 1175bce (Amending script.js, index.css and index.html to try and get map to work)
 =======
+=======
+
+>>>>>>> da455e7 (Rewriting code to follow the correct method, using PHP routines rather than multiple AJAX calls)
   // ---------------------------------------------------------
 >>>>>>> 1e671ea (Understanding the map code and adding polygons instead of using setView)
 // GLOBAL DECLARATIONS
@@ -955,14 +962,15 @@ $(window).on('load', function () {
 var map;
 
 // tile layers
+var layerControl;
 
 var streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
-    attribution: "Tiles © Esri — Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
+    attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
   }
 );
 
 var satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-    attribution: "Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+    attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
   }
 );
 
@@ -981,23 +989,27 @@ var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
 // EVENT HANDLERS
 // ---------------------------------------------------------
 
+// initialise and add controls once DOM is ready
+
 $(function () {
-  // initialise map with the street layer
+  
   map = L.map("map", {
     layers: [streets]
-  });
+  }).setView([54.5, -4], 6);
   
-// create a layer control which makes it easier to switch between the layers/ different maps
-//these different layers are defined in the basemaps variable above
-L.control.layers(basemaps).addTo(map);
+  // setView is not required in your application as you will be
+  // deploying map.fitBounds() on the country border polygon
 
-//adding an info button to the map
-infoBtn.addTo(map);
+  layerControl = L.control.layers(basemaps).addTo(map);
 
-//create variables in the global scope
-let marker, circle, zoomed;
+  infoBtn.addTo(map);
+
+})
+
+//add select button data to the map
 
 
+<<<<<<< HEAD
 //the function will be called when the user's location is successfully retrieved
 function success(position) {
   const lat = position.coords.latitude;
@@ -1170,3 +1182,6 @@ navigator.geolocation.watchPosition(success, error);
         
 });
 >>>>>>> ca9ca28 (Adding select box to application)
+=======
+});
+>>>>>>> da455e7 (Rewriting code to follow the correct method, using PHP routines rather than multiple AJAX calls)
