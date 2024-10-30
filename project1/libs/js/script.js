@@ -994,42 +994,32 @@ L.control.layers(basemaps).addTo(map);
 //adding an info button to the map
 infoBtn.addTo(map);
 
-//indefinitely watch the user's location
-navigator.geolocation.watchPosition(success, error);
-
 //create variables in the global scope
 let marker, circle, zoomed;
 
 
 //the function will be called when the user's location is successfully retrieved
 function success(position) {
-  //get the latitude and longitude of the user's location
   const lat = position.coords.latitude;
   const lng = position.coords.longitude;
   const accuracy = position.coords.accuracy;
-  
-//ensuring that we don't have multiple markers and circles on the map if the user moves around
-//if there is already a marker and circle on the map, remove them
-if (marker) {
+
+  if (marker) {
     map.removeLayer(marker);
     map.removeLayer(circle);
   }
-  //else, create a marker and a circle to show the user's location
+
   marker = L.marker([lat, lng]).addTo(map);
   circle = L.circle([lat, lng], {radius: accuracy}).addTo(map);
   
-  //1st time the function runs, no value is assigned to zoomed
-  //once the function is run, a value is assigned to zoomed so it won't zoom in again
-  //if the map is not zoomed in
-  if(!zoomed) {
-  //set the map to the bounds of the circle
-  //and save this as the zoomed variable
-  zoomed = map.fitBounds(circle.getBounds());
+  //if the map is not zoomed in, zoom in to the circle's bounds
+  if (!zoomed) {
+    //the map will not zoom in again when the user zooms out
+    zoomed = map.fitBounds(circle.getBounds());
   }
-
+  
 
 }
-
 
 function error(err) {
   //checking if the error code is 1, which means the user has denied access to their location
@@ -1041,6 +1031,7 @@ if(err.code == 1) {
   }
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   $.ajax({
@@ -1089,6 +1080,11 @@ $.getJSON("libs/js/countryBorders.geo.json", function(result){
   }); 
 });
 =======
+=======
+//indefinitely watch the user's location
+navigator.geolocation.watchPosition(success, error);
+
+>>>>>>> e1239ab (Working on the user location's marker code)
   // sending async request to get the geojson data to specified URL
   $.ajax({
     url: "libs/js/countryBorders.geo.json",
@@ -1098,16 +1094,14 @@ $.getJSON("libs/js/countryBorders.geo.json", function(result){
   //if successful, the JSON data is retrieved from the server/ countryBorders.geo.json file
   success: function(data) {
   //taking the geoJSON data and adding it to the map
-  
   //TO DO: filter so that you only have polygon around country in which the user is located
-
     const countryLayer = L.geoJSON(data).addTo(map);
     //map.fitBounds adjusts the map's view and zoom level to fit within the geographic bounds of the country borders
     countryLayer.getBounds() //ensure the map centers and zooms appropriately to show the entire country border polygons
     map.fitBounds(countryLayer.getBounds());
 
     //connecting select box to the list of countries in the geoJSON data
-
+  
     //loop through the geoJSON data and create an option for each country
     $.getJSON("libs/js/countryBorders.geo.json", function(data) {
       //loop through the geoJSON data
