@@ -1,5 +1,6 @@
 <?php
 
+//header is needed to set the content type of the response to JSON
 header("Content-Type: application/json; charset=UTF-8");
 
 //enable error reporting for debugging
@@ -41,13 +42,12 @@ $output["status"]["name"] = "ok";
 $output["status"]["description"] = "success";
 // the execution time calculated by subtracting the start time by the current time
 $output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
-
 //structuring the response in a well organized way (status, name, description, execution time, and data)
 //in one structured array
 $output["data"] = $countryData;
 
 //encodes the entire output array as JSON and sends it as the response
-//automatically converts the entire utput array into JSON
+//automatically converts the entire output array into JSON
 echo json_encode($output);
 
 ?>
