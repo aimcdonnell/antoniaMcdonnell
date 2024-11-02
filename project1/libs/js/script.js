@@ -4,8 +4,13 @@
 // Preloader handling
 $(window).on("load", function () {
 <<<<<<< HEAD
+<<<<<<< HEAD
   if ($("#preloader").length) {
     $("#preloader").delay(1500).fadeOut("slow", function () {
+=======
+  if ($("#preloader").length) {
+    $("#preloader").delay(1000).fadeOut("slow", function () {
+>>>>>>> 68b9fc1 (Amending getCountries.php and script.js so that they use the PHP routine correctly)
       $(this).remove();
     });
   }
@@ -1004,11 +1009,10 @@ $(function () {
 
   infoBtn.addTo(map);
 
-})
-
-//add select button data to the map
 
 
+
+<<<<<<< HEAD
 <<<<<<< HEAD
 //the function will be called when the user's location is successfully retrieved
 function success(position) {
@@ -1185,3 +1189,40 @@ navigator.geolocation.watchPosition(success, error);
 =======
 });
 >>>>>>> da455e7 (Rewriting code to follow the correct method, using PHP routines rather than multiple AJAX calls)
+=======
+
+  // Load countries into select box on page load
+  $.ajax({
+    url: "libs/php/getCountries.php",
+    type: "GET",
+    dataType: "json",
+    success: function(result) {
+  console.log(result);
+  //if the request is successful
+      if (result.status.name == "ok") {
+        //create an empty options variable
+        let options = "";
+        //for each country in the result
+        result.data.forEach(country => {
+          //add an option to the options variable
+          options += `<option value="${country.id}">${country.name}</option>`;
+        });
+        //set the options variable to the select box so that it is displayed on the page
+        $("#countrySelect").html(options);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+
+      console.log(`Error: ${textStatus} - ${errorThrown}`);
+    }
+
+  });
+
+  // Handle select change event
+  $("#countrySelect").on("change", function() {
+    const selectedCountryId = $(this).val();
+  });
+});
+
+});
+>>>>>>> 68b9fc1 (Amending getCountries.php and script.js so that they use the PHP routine correctly)
