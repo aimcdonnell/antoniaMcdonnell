@@ -1,7 +1,7 @@
 // Preloader handling
 $(window).on("load", function () {
-  if ($('#preloader').length) {
-    $('#preloader').delay(1000).fadeOut("slow", function () {
+  if ($("#preloader").length) {
+    $("#preloader").delay(1000).fadeOut("slow", function () {
       $(this).remove();
     });
   }
@@ -55,9 +55,41 @@ $(function () {
 
   infoBtn.addTo(map);
 
-})
 
-//add select button data to the map
 
+
+
+  // Load countries into select box on page load
+  $.ajax({
+    url: "libs/php/getCountries.php",
+    type: "GET",
+    dataType: "json",
+    success: function(result) {
+  console.log(result);
+  //if the request is successful
+      if (result.status.name == "ok") {
+        //create an empty options variable
+        let options = "";
+        //for each country in the result
+        result.data.forEach(country => {
+          //add an option to the options variable
+          options += `<option value="${country.id}">${country.name}</option>`;
+        });
+        //set the options variable to the select box so that it is displayed on the page
+        $("#countrySelect").html(options);
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+
+      console.log(`Error: ${textStatus} - ${errorThrown}`);
+    }
+
+  });
+
+  // Handle select change event
+  $("#countrySelect").on("change", function() {
+    const selectedCountryId = $(this).val();
+  });
+});
 
 });
