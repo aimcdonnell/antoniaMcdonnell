@@ -18,6 +18,8 @@ var layerControl;
 
 var countryData = [];
 
+var borderLayer;
+
 //street map layer
 var streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
     attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
@@ -122,8 +124,56 @@ $(function () {
     }
   });
 
-  //ADD FILTERING TO APPLICATION
+  // Handle country selection change to fetch border information
+  $("#countrySelect").on("change", function() {
+    var selectedISOCode = $(this).val();
+
+    if (!selectedISOCode) {
+      console.warn("No ISO code selected.");
+      return;
+    }
+
+    // Perform AJAX request to fetch country borders
+    $.ajax({
+      url: 'libs/php/getCountryBorders.php', // Adjust the path as needed
+      method: 'GET',
+      data: { iso_code: selectedISOCode }, // Pass the ISO code as a parameter. The ISO code is taken from the dropdown menu and uses the PHP script to fetch the border data
+      dataType: 'json',
+      success: function(response) {
+        if (response.status.name !== "ok") {
+          console.error(response.status.description);
+          return;
+        }
+
+        // Access the border coordinates from the response data
+        const borderCoordinates = response.data;
+        console.log(borderCoordinates);
+
+        // Optional: clear any existing map layers
+        if (typeof borderLayer !== 'undefined') {
+          borderLayer.remove();
+        }
+
+
+        // Create a new Leaflet GeoJSON layer for the borders
+        borderLayer = L.geoJSON(borderCoordinates).addTo(map);
+
+        //add style to the border layer
+        borderLayer.setStyle({
+          fillColor: "#ff1234",
+          weight: 2,
+          fillOpacity: 1
+        })
+
+
+        // Zoom the map to fit the borders
+        map.fitBounds(borderLayer.getBounds());
+      },
+      error: function(xhr, status, error) {
+        console.error("Error fetching country borders:", error);
+      }
+    });
+  });
 
 });
-
 });
