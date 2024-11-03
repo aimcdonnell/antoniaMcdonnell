@@ -11,13 +11,15 @@ error_reporting(E_ALL);
 $executionStartTime = microtime(true);
 
 //get the iso code from the request
-$isoCode = isset($_REQUEST["iso_code"]) ? $_REQUEST["iso_code"] : null;
+$isoCode = isset($_REQUEST["isoCode"]) ? $_REQUEST["isoCode"] : null;
+
 
 //if iso code is not provided, return an error message
 if(!$isoCode) {
     echo json_encode(["error" => "ISO code is required"]);
     exit;
 }
+
 
 //Read the contents of the JSON file
 $json = file_get_contents("../js/countryBorders.geo.json");
