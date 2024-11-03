@@ -1,7 +1,7 @@
 <?php
 
 //header is needed to set the content type of the response to JSON
-header("Content-Type: application/json; charset=UTF-8");
+header("Content-Type: application/json; charset=UTF-8;");
 
 //enable error reporting for debugging
 ini_set("display_errors", "On");
