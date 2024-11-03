@@ -16,8 +16,13 @@ $isoCode = isset($_REQUEST["isoCode"]) ? $_REQUEST["isoCode"] : null;
 
 =======
 //get the iso code from the request
+<<<<<<< HEAD
 $isoCode = isset($_REQUEST["iso_code"]) ? $_REQUEST["iso_code"] : null;
 >>>>>>> 3f9b70b (Amendin code to try to add borders to the countries)
+=======
+$isoCode = isset($_REQUEST["isoCode"]) ? $_REQUEST["isoCode"] : null;
+
+>>>>>>> 87719ae (Working on adding borders to countries when selected from the dropdown select box)
 
 //if iso code is not provided, return an error message
 if(!$isoCode) {
@@ -26,9 +31,13 @@ if(!$isoCode) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> 3f9b70b (Amendin code to try to add borders to the countries)
+=======
+
+>>>>>>> 87719ae (Working on adding borders to countries when selected from the dropdown select box)
 //Read the contents of the JSON file
 $json = file_get_contents("../js/countryBorders.geo.json");
 

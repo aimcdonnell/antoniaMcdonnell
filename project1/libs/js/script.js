@@ -1264,6 +1264,7 @@ navigator.geolocation.watchPosition(success, error);
   // Handle country selection change to fetch border information
   $("#countrySelect").on("change", function() {
     var selectedISOCode = $(this).val();
+    //console.log(selectedISOCode);
 
     if (!selectedISOCode) {
       console.warn("No ISO code selected.");
@@ -1274,7 +1275,7 @@ navigator.geolocation.watchPosition(success, error);
     $.ajax({
       url: 'libs/php/getCountryBorders.php', // Adjust the path as needed
       method: 'GET',
-      data: { iso_code: selectedISOCode }, // Pass the ISO code as a parameter. The ISO code is taken from the dropdown menu and uses the PHP script to fetch the border data
+      data: { isoCode: selectedISOCode }, // Pass the ISO code as a parameter. The ISO code is taken from the dropdown menu and uses the PHP script to fetch the border data
       dataType: 'json',
       success: function(response) {
         if (response.status.name !== "ok") {
@@ -1283,28 +1284,32 @@ navigator.geolocation.watchPosition(success, error);
         }
 
         // Access the border coordinates from the response data
-        const borderCoordinates = response.data;
+        const borderCoordinates = response;
         console.log(borderCoordinates);
 
         // Optional: clear any existing map layers
-        if (typeof borderLayer !== 'undefined') {
+        /*if (typeof borderLayer !== 'undefined') {
           borderLayer.remove();
-        }
+        }*/
 
 
         // Create a new Leaflet GeoJSON layer for the borders
-        borderLayer = L.geoJSON(borderCoordinates).addTo(map);
+        /*borderLayer = L.geoJSON(borderCoordinates).addTo(map);*/
 
         //add style to the border layer
-        borderLayer.setStyle({
-          fillColor: "#ff1234",
+        /*borderLayer.setStyle({
+          fillColor:,
           weight: 2,
           fillOpacity: 1
-        })
+        })*/
 
 
         // Zoom the map to fit the borders
-        map.fitBounds(borderLayer.getBounds());
+        /*map.fitBounds(borderLayer.getBounds());*/
+
+        var polygon = L.polygon(borderCoordinates, {color: "#ff1234"}).addTo(map);
+        map.fitBounds(polygon.getBounds());
+
       },
       error: function(xhr, status, error) {
         console.error("Error fetching country borders:", error);
