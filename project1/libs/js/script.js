@@ -1284,7 +1284,7 @@ navigator.geolocation.watchPosition(success, error);
         }
 
         // Access the border coordinates from the response data
-        const borderCoordinates = response;
+        const borderCoordinates = response.data;
         console.log(borderCoordinates);
 
         // Optional: clear any existing map layers
