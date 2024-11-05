@@ -57,13 +57,14 @@
     
     #selectContainer {
       position: fixed;
-      top: 0;
+      left: 50%;
       z-index: 1000;
-      width: 100%;
-      padding: 11px 0;
-    }
-    
-    #countrySelect {
-      width: 200px;
-      margin: 0 auto;
-    }
+      display: flex;/* Center the content horizontally */
+      align-items: center; /* Center the content vertically */
+  }
+  
+  #countrySelect {
+      width: 200px; /* Set desired width */
+      padding: 10px; /* Add padding for aesthetic */
+      font-size: 16px; /* Set font size */
+  }
