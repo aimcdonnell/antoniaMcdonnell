@@ -18,7 +18,7 @@ var layerControl;
 
 var countryData = [];
 
-var borderLayer;
+
 
 //street map layer
 var streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
@@ -54,7 +54,7 @@ $(function () {
   
   map = L.map("map", {
     layers: [streets]
-  });
+  }).setView([54.5, -4], 6);
   
   // setView is not required in your application as you will be
   // deploying map.fitBounds() on the country border polygon
@@ -83,7 +83,7 @@ $(function () {
     //console.log("latitude: ", lat, "longitude: ", lng, "accuracy: ", accuracy);
     //TO AMEND: set the map view to the user's location using .fitBounds()
     //currently centres the map on the user's location at a zoom level of 6
-    map.setView([lat, lng], 6);
+    //map.setView([lat, lng], 6);
 
   }
 
@@ -140,42 +140,45 @@ $(function () {
       method: 'GET',
       data: { isoCode: selectedISOCode }, // Pass the ISO code as a parameter. The ISO code is taken from the dropdown menu and uses the PHP script to fetch the border data
       dataType: 'json',
-      success: function(response) {
-        if (response.status.name !== "ok") {
-          console.error(response.status.description);
-          return;
-        }
+            success: function(response) {
+              if (response.status.name !== "ok") {
+                console.error(response.status.description);
+                return;
+              }
 
-        // Access the border coordinates from the response data
-        const borderCoordinates = response.data;
-        console.log(borderCoordinates);
+              // Access the border coordinates from the response data
+              const borderCoordinates = response.data[0];
+              console.log("Border coordinates:", borderCoordinates);
 
-        // Optional: clear any existing map layers
-        /*if (typeof borderLayer !== 'undefined') {
-          borderLayer.remove();
-        }*/
-
-
-        // Create a new Leaflet GeoJSON layer for the borders
-        /*borderLayer = L.geoJSON(borderCoordinates).addTo(map);*/
-
-        //add style to the border layer
-        /*borderLayer.setStyle({
-          fillColor:,
-          weight: 2,
-          fillOpacity: 1
-        })*/
+        
+              // Clear any existing map layers
+              var borderLayer;
+        
+              if (borderLayer) {
+                map.removeLayer(borderLayer);
+              }
 
 
-        // Zoom the map to fit the borders
-        /*map.fitBounds(borderLayer.getBounds());*/
+              // Create a new Leaflet GeoJSON layer for the border
+              borderLayer = L.geoJSON(borderCoordinates, {
+               style: {
+                color: "#ff1234",
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.5
+              }
+              }).addTo(map);
 
-        var polygon = L.polygon(borderCoordinates, {color: "#ff1234"}).addTo(map);
-        map.fitBounds(polygon.getBounds());
-
-      },
-      error: function(xhr, status, error) {
-        console.error("Error fetching country borders:", error);
+              //Retrieve the geographical boundaries of a map layer, view, or shape
+              var bounds = borderLayer.getBounds();
+              if (bounds.isValid()) {
+                //map.fitBounds(bounds) automatically adjusts the map view to show the entire country's borders
+                map.fitBounds(bounds);
+              }
+   
+            }, 
+            error: function(xhr, status, error) { 
+              console.error("Error fetching country borders:", error);
       }
     });
   });
