@@ -1352,17 +1352,6 @@ navigator.geolocation.watchPosition(success, error);
         return;
       }
 
-      /*// Sanitize coordinates function
-      function sanitizeCoordinates(coordinates) {
-        return coordinates.map(coord => {
-          if (Array.isArray(coord[0])) {
-            return sanitizeCoordinates(coord); // Recursively process nested arrays
-          } else {
-            return coord.slice(0, 2); // Return [lng, lat] pairs
-          }
-        });
-      }*/
-
       // AJAX request to get country border data
       $.ajax({
         url: 'libs/php/getCountryBorders.php',
@@ -1376,15 +1365,10 @@ navigator.geolocation.watchPosition(success, error);
           }
           
           const borderCoordinates = response.data; // Access the coordinates
-          //console.log("border coordinates test: ", borderCoordinates[0][0]);
-          /*const sanitizedBorderCoordinates = sanitizeCoordinates(borderCoordinates);*/
-          //console.log(borderCoordinates[0][0][0]);
 
           // Determine whether the structure is MultiPolygon or Polygon
           const isMultiPolygon = Array.isArray(borderCoordinates[0][0]) && Array.isArray(borderCoordinates[0][0][0]);
           //console.log("isMultiPolygon: ", isMultiPolygon);
-
-        
 
           const geoJsonData = {
             type: "Feature",
