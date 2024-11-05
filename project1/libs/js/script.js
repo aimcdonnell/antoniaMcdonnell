@@ -1378,7 +1378,7 @@ navigator.geolocation.watchPosition(success, error);
           const borderCoordinates = response.data; // Access the coordinates
           //console.log("border coordinates test: ", borderCoordinates[0][0]);
           /*const sanitizedBorderCoordinates = sanitizeCoordinates(borderCoordinates);*/
-          console.log(borderCoordinates[0][0][0]);
+          //console.log(borderCoordinates[0][0][0]);
 
           // Determine whether the structure is MultiPolygon or Polygon
           const isMultiPolygon = Array.isArray(borderCoordinates[0][0]) && Array.isArray(borderCoordinates[0][0][0]);
