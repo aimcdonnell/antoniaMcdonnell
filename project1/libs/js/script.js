@@ -18,6 +18,7 @@ $(window).on("load", function () {
   // ---------------------------------------------------------
   // GLOBAL DECLARATIONS
   // ---------------------------------------------------------
+<<<<<<< HEAD
 
   // Store the leaflet map instance
   var map;
@@ -963,20 +964,21 @@ $(window).on('load', function () {
 >>>>>>> 1e671ea (Understanding the map code and adding polygons instead of using setView)
 // GLOBAL DECLARATIONS
 // ---------------------------------------------------------
+=======
+>>>>>>> aa2580b (Added borders to all the countries on the map)
 
-//store the leaflet map instance
-var map;
+  // Store the leaflet map instance
+  var map;
 
-// store the tile layer interface to change map layers
-var layerControl;
+  // Store the tile layer interface to change map layers
+  var layerControl;
 
-var countryData = [];
+  var countryData = [];
 
-
-
-//street map layer
-var streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+  // Street map layer
+  var streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
     attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
+<<<<<<< HEAD
   }
 );
 
@@ -1259,68 +1261,169 @@ navigator.geolocation.watchPosition(success, error);
       console.log(`Error: ${textStatus} - ${errorThrown}`);
       //console.log(jqXHR.responseText);
     }
+=======
+>>>>>>> aa2580b (Added borders to all the countries on the map)
   });
 
-  // Handle country selection change to fetch border information
-  $("#countrySelect").on("change", function() {
-    var selectedISOCode = $(this).val();
-    //console.log(selectedISOCode);
+  // Satellite map layer
+  var satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+    attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+  });
 
-    if (!selectedISOCode) {
-      console.warn("No ISO code selected.");
-      return;
+  // Layers are stored in basemaps variable to facilitate easy switching
+  var basemaps = {
+    "Streets": streets,
+    "Satellite": satellite
+  };
+
+  // Info button to open a modal
+  var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
+    $("#exampleModal").modal("show");
+  });
+
+  // ---------------------------------------------------------
+  // EVENT HANDLERS
+  // ---------------------------------------------------------
+
+  // Initialise map with streets as the default layer
+  $(function () {
+    map = L.map("map", {
+      layers: [streets]
+    }).setView([54.5, -4], 6);
+
+    // Add a layer group for the border
+    let borderLayer = L.layerGroup().addTo(map);
+
+    // Add the layer control to the map
+    layerControl = L.control.layers(basemaps).addTo(map);
+
+    // Add the info button to the map
+    infoBtn.addTo(map);
+
+    // Check if the user has geolocation enabled
+    if (!navigator.geolocation) {
+      alert("Your browser does not support geolocation");
+    } else {
+      navigator.geolocation.watchPosition(getPosition);
     }
 
-    // Perform AJAX request to fetch country borders
+    // Get user's position
+    function getPosition(position) {
+      var lat = position.coords.latitude;
+      var lng = position.coords.longitude;
+
+      // Set the map view to the user's location
+      //use .getBounds() .fitBounds() here?
+      map.setView([lat, lng], 5);
+      //TODO: ADD THE BORDER USING THE BORDER COORDINATES
+    }
+
+    // AJAX request to get countries
     $.ajax({
-      url: 'libs/php/getCountryBorders.php', // Adjust the path as needed
-      method: 'GET',
-      data: { isoCode: selectedISOCode }, // Pass the ISO code as a parameter. The ISO code is taken from the dropdown menu and uses the PHP script to fetch the border data
-      dataType: 'json',
-            success: function(response) {
-              if (response.status.name !== "ok") {
-                console.error(response.status.description);
-                return;
-              }
+      url: "libs/php/getCountries.php",
+      type: "GET",
+      dataType: "json",
+      success: function (result) {
+        if (result.status.name == "ok") {
+          result.data.forEach(country => {
+            countryData.push({
+              code: country["iso_a2"],
+              name: country["name"]
+            });
 
-              // Access the border coordinates from the response data
-              const borderCoordinates = response.data[0];
-              console.log("Border coordinates:", borderCoordinates);
-
-        
-              // Clear any existing map layers
-              var borderLayer;
-        
-              if (borderLayer) {
-                map.removeLayer(borderLayer);
-              }
-
-
-              // Create a new Leaflet GeoJSON layer for the border
-              borderLayer = L.geoJSON(borderCoordinates, {
-               style: {
-                color: "#ff1234",
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.5
-              }
-              }).addTo(map);
-
-              //Retrieve the geographical boundaries of a map layer, view, or shape
-              var bounds = borderLayer.getBounds();
-              if (bounds.isValid()) {
-                //map.fitBounds(bounds) automatically adjusts the map view to show the entire country's borders
-                map.fitBounds(bounds);
-              }
-   
-            }, 
-            error: function(xhr, status, error) { 
-              console.error("Error fetching country borders:", error);
+            $("<option>")
+              .val(country["iso_a2"])
+              .text(country["name"])
+              .appendTo("#countrySelect");
+          });
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log(`Error: ${textStatus} - ${errorThrown}`);
       }
     });
-  });
 
+    // Handle country selection change
+    $("#countrySelect").on("change", function () {
+      var selectedISOCode = $(this).val();
+
+      if (!selectedISOCode) {
+        console.warn("No ISO code selected.");
+        return;
+      }
+
+      /*// Sanitize coordinates function
+      function sanitizeCoordinates(coordinates) {
+        return coordinates.map(coord => {
+          if (Array.isArray(coord[0])) {
+            return sanitizeCoordinates(coord); // Recursively process nested arrays
+          } else {
+            return coord.slice(0, 2); // Return [lng, lat] pairs
+          }
+        });
+      }*/
+
+      // AJAX request to get country border data
+      $.ajax({
+        url: 'libs/php/getCountryBorders.php',
+        method: 'GET',
+        data: { isoCode: selectedISOCode },
+        dataType: 'json',
+        success: function (response) {
+          if (response.status.name !== "ok") {
+            console.error(response.status.description);
+            return;
+          }
+          
+          const borderCoordinates = response.data; // Access the coordinates
+          //console.log("border coordinates test: ", borderCoordinates[0][0]);
+          /*const sanitizedBorderCoordinates = sanitizeCoordinates(borderCoordinates);*/
+          console.log(borderCoordinates[0][0][0]);
+
+          // Determine whether the structure is MultiPolygon or Polygon
+          const isMultiPolygon = Array.isArray(borderCoordinates[0][0]) && Array.isArray(borderCoordinates[0][0][0]);
+          //console.log("isMultiPolygon: ", isMultiPolygon);
+
+        
+
+          const geoJsonData = {
+            type: "Feature",
+            geometry: {
+              type: isMultiPolygon ? "MultiPolygon" : "Polygon",
+              coordinates: borderCoordinates
+            },
+            properties: {}
+          };
+    
+
+          try {
+            // Log the structure of geoJsonData to check format
+            console.log("GeoJSON data structure:", JSON.stringify(geoJsonData, null, 2));
+
+            let geoJsonLayer = L.geoJSON(geoJsonData, {
+              style: {
+                color: "#ff1234",
+                weight: 3,
+                opacity: 1,
+                fillColor: "#ff1234",
+                fillOpacity: 0.2
+              }
+            }).addTo(borderLayer); // Add to the borderLayer
+
+            // Fit bounds of the map to the geoJSON layer
+            let bounds = geoJsonLayer.getBounds();
+            map.fitBounds(bounds);
+          } catch (error) {
+            console.error("Error adding GeoJSON layer:", error);
+          }
+        }, error: function (jqXHR, textStatus, errorThrown) {
+          console.log(`Error: ${textStatus} - ${errorThrown}`);
+        }
+      });
+    });
+  });
 });
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 });
@@ -1328,3 +1431,5 @@ navigator.geolocation.watchPosition(success, error);
 =======
 });
 >>>>>>> 3f9b70b (Amendin code to try to add borders to the countries)
+=======
+>>>>>>> aa2580b (Added borders to all the countries on the map)
