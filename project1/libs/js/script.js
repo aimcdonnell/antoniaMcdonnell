@@ -99,7 +99,7 @@ $(window).on("load", function () {
       // Set the map view to the user's location
       //use .getBounds() .fitBounds() here?
       //TO DO: Remove borders once the country is unselected
-        map.setView([lat, lng], 6);
+        //map.setView([lat, lng], 6);
 
     //Reverse geocoding to get the user country's ISO code
     $.ajax({
@@ -148,6 +148,10 @@ $(window).on("load", function () {
         data: { isoCode: selectedISOCode },
         dataType: 'json',
         success: function (response) {
+
+          if (borderLayer) {
+            borderLayer.clearLayers();
+          }
           
           const borderCoordinates = response.data; // Access the coordinates
 
