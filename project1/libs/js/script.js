@@ -1327,10 +1327,11 @@ navigator.geolocation.watchPosition(success, error);
     });
 
     // Check if the user has geolocation enabled
+
     if (!navigator.geolocation) {
       alert("Your browser does not support geolocation");
     } else {
-      navigator.geolocation.watchPosition(getPosition);
+      navigator.geolocation.getCurrentPosition(getPosition);
     }
 
     // Get user's position
@@ -1339,9 +1340,7 @@ navigator.geolocation.watchPosition(success, error);
       var lng = position.coords.longitude;
 
       // Set the map view to the user's location
-      //use .getBounds() .fitBounds() here?
-      //TO DO: Remove borders once the country is unselected
-        //map.setView([lat, lng], 6);
+      map.setView([lat, lng], 6);
 
     //Reverse geocoding to get the user country's ISO code
     $.ajax({
@@ -1351,7 +1350,6 @@ navigator.geolocation.watchPosition(success, error);
         lat: lat,
         lng: lng
       },
-      //CARRY ON FROM HERE
       success: function (response) {
         //decodes the response from the php script
         const result = JSON.parse(response);
@@ -1374,7 +1372,7 @@ navigator.geolocation.watchPosition(success, error);
       
    
       
-    // Handle country selection change
+    // Handles dropdown country selection changes
     $("#countrySelect").on("change", function () {
       var selectedISOCode = $(this).val();
 
