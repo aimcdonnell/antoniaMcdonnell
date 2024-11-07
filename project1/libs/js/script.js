@@ -44,10 +44,11 @@ $(window).on("load", function () {
   // ---------------------------------------------------------
 
   // Initialise map with streets as the default layer
+  //$(function () { means
   $(function () {
     map = L.map("map", {
       layers: [streets]
-    }).setView([54.5, -4], 6);
+    });
 
     // Add a layer group for the border
     let borderLayer = L.layerGroup().addTo(map);
@@ -57,24 +58,6 @@ $(window).on("load", function () {
 
     // Add the info button to the map
     infoBtn.addTo(map);
-
-    // Check if the user has geolocation enabled
-    if (!navigator.geolocation) {
-      alert("Your browser does not support geolocation");
-    } else {
-      navigator.geolocation.watchPosition(getPosition);
-    }
-
-    // Get user's position
-    function getPosition(position) {
-      var lat = position.coords.latitude;
-      var lng = position.coords.longitude;
-
-      // Set the map view to the user's location
-      //use .getBounds() .fitBounds() here?
-      map.setView([lat, lng], 5);
-      //TODO: ADD THE BORDER USING THE BORDER COORDINATES
-    }
 
     // AJAX request to get countries
     $.ajax({
@@ -93,14 +76,62 @@ $(window).on("load", function () {
               .val(country["iso_a2"])
               .text(country["name"])
               .appendTo("#countrySelect");
-          });
-        }
-      },
+          });         
+          }
+        },
       error: function (jqXHR, textStatus, errorThrown) {
         console.log(`Error: ${textStatus} - ${errorThrown}`);
       }
     });
 
+    // Check if the user has geolocation enabled
+    if (!navigator.geolocation) {
+      alert("Your browser does not support geolocation");
+    } else {
+      navigator.geolocation.watchPosition(getPosition);
+    }
+
+    // Get user's position
+    function getPosition(position) {
+      var lat = position.coords.latitude;
+      var lng = position.coords.longitude;
+
+      // Set the map view to the user's location
+      //use .getBounds() .fitBounds() here?
+      //TO DO: Remove borders once the country is unselected
+        map.setView([lat, lng], 6);
+
+    //Reverse geocoding to get the user country's ISO code
+    $.ajax({
+      url: "libs/php/getGeocodeData.php",
+      type: "GET",
+      data: {
+        lat: lat,
+        lng: lng
+      },
+      //CARRY ON FROM HERE
+      success: function (response) {
+        //decodes the response from the php script
+        const result = JSON.parse(response);
+        //console.log(JSON.stringify(result.data[0].components["ISO_3166-1_alpha-2"]));
+        if (result.data && result.data.length > 0) {
+          //console.log("Response results:", response)
+          const userCountry = result.data[0].components["ISO_3166-1_alpha-2"];
+          //console.log(`User country: ${userCountry}`);
+
+          $("#countrySelect").val(userCountry).trigger("change");
+
+        } else {
+          console.warn("No country code found for the user's location");
+        }
+      }, error: function (jqXHR, textStatus, errorThrown) {
+        console.error(`Reverse geocoding error: ${textStatus} - ${errorThrown}`);
+      }
+    });  
+      }
+      
+   
+      
     // Handle country selection change
     $("#countrySelect").on("change", function () {
       var selectedISOCode = $(this).val();
@@ -112,15 +143,11 @@ $(window).on("load", function () {
 
       // AJAX request to get country border data
       $.ajax({
-        url: 'libs/php/getCountryBorders.php',
-        method: 'GET',
+        url: "libs/php/getCountryBorders.php",
+        method: "GET",
         data: { isoCode: selectedISOCode },
         dataType: 'json',
         success: function (response) {
-          if (response.status.name !== "ok") {
-            console.error(response.status.description);
-            return;
-          }
           
           const borderCoordinates = response.data; // Access the coordinates
 
@@ -140,7 +167,7 @@ $(window).on("load", function () {
 
           try {
             // Log the structure of geoJsonData to check format
-            console.log("GeoJSON data structure:", JSON.stringify(geoJsonData, null, 2));
+            //console.log("GeoJSON data structure:", JSON.stringify(geoJsonData, null, 2));
 
             let geoJsonLayer = L.geoJSON(geoJsonData, {
               style: {
