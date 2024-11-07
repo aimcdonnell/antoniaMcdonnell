@@ -1278,23 +1278,23 @@ navigator.geolocation.watchPosition(success, error);
 
   // Info button to open a modal
   var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
-    $("#exampleModal").modal("show");
+    $("#country-info-modal").modal("show");
   });
 
   var cloudBtn = L.easyButton("fa-cloud fa-xl", function (btn, map) {
-    $("#cloudModal").modal("show");
+    $("#").modal("show");
   });
 
   var currencyBtn = L.easyButton("fa-solid fa-dollar-sign fa-xl", function (btn, map) {
-    $("#currencyModal").modal("show");
+    $("#").modal("show");
   });
 
   var wikipediaBtn = L.easyButton("fa-brands fa-wikipedia-w fa-xl", function (btn, map) {
-    $("#wikipediaModal").modal("show");
+    $("#").modal("show");
   });
 
   var newspaperBtn = L.easyButton("fa-solid fa-newspaper fa-xl", function (btn, map) {
-    $("#newspaperModal").modal("show");
+    $("#").modal("show");
   });
 
   // ---------------------------------------------------------
