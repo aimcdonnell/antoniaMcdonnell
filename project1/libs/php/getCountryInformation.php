@@ -8,6 +8,7 @@ error_reporting(E_ALL);
 //initiating the execution time of the routine so that it can be measured
 $executionStartTime = microtime(true);
 
+<<<<<<< HEAD
 $isoCode = isset($_REQUEST["isoCode"]) ? $_REQUEST["isoCode"] : null;
 error_log("Received ISO code: " . $isoCode);
 
@@ -37,5 +38,8 @@ if (isset($output["data"])) {
 } else {
     echo json_encode(["error" => "Country information not found"]);
 }
+=======
+
+>>>>>>> a24ea01 (Renaming country information php file and adding country data to JSON file)
 
 ?>
