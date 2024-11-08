@@ -34,11 +34,8 @@ $(window).on("load", function () {
     "Satellite": satellite
   };
 
-  // Info button to open a modal
-  var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
-    $("#country-info-modal").modal("show");
-  });
-
+  
+  
   var cloudBtn = L.easyButton("fa-cloud fa-xl", function (btn, map) {
     $("#").modal("show");
   });
@@ -60,7 +57,7 @@ $(window).on("load", function () {
   // ---------------------------------------------------------
 
   // Initialise map with streets as the default layer
-  //$(function () { means
+  //$(function () {} means run the code only after the DOM is fully loaded
   $(function () {
     map = L.map("map", {
       layers: [streets]
@@ -71,15 +68,7 @@ $(window).on("load", function () {
 
     // Add the layer control to the map
     layerControl = L.control.layers(basemaps).addTo(map);
-
-    // Add the buttons to the map
-    infoBtn.addTo(map);
-    cloudBtn.addTo(map);
-    currencyBtn.addTo(map);
-    wikipediaBtn.addTo(map);
-    newspaperBtn.addTo(map);
     
-
     // AJAX request to get countries
     $.ajax({
       url: "libs/php/getCountries.php",
@@ -104,6 +93,52 @@ $(window).on("load", function () {
         console.log(`Error: ${textStatus} - ${errorThrown}`);
       }
     });
+
+          // Info button to open a modal
+          var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
+            var selectedISOCode = $("#countrySelect").val();
+      
+          if (!selectedISOCode) {
+            console.warn("No ISO code selected.");
+          }
+
+              //Handles the information button window data
+
+          $.ajax({
+            url: "libs/php/getCountryInformation.php",
+            type: "POST",
+            dataType: "json",
+            data: { isoCode: $("#countrySelect").val() },
+
+            success: function(result) {
+              //const response = JSON.parse(result);
+              console.log(JSON.stringify(result.data.name.common));
+
+              if (result.status.name === "ok") {
+                $("#country-name").html(result.data.name.common);
+                $("#country-capital").html(result.data.capital[0]);
+                $("#country-flag").html(`<img src="${result.data.flags.svg}" class="img-thumbnail" alt="flag">`);
+                $("#country-population").html(result.data.population.toLocaleString());
+                $("#country-languages").html(Object.values(result.data.languages).join(", "));
+              
+                $("#country-info-modal").modal("show");
+              }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              console.log(`Error: ${textStatus} - ${errorThrown}`);
+            }
+          });
+          
+        });
+
+        // Add the buttons to the map
+        infoBtn.addTo(map);
+        
+        /*cloudBtn.addTo(map);
+        currencyBtn.addTo(map);
+        wikipediaBtn.addTo(map);
+        newspaperBtn.addTo(map);*/
+        
 
     // Check if the user has geolocation enabled
 
@@ -138,6 +173,7 @@ $(window).on("load", function () {
           const userCountry = result.data[0].components["ISO_3166-1_alpha-2"];
           //console.log(`User country: ${userCountry}`);
 
+          //trigger the change event to select the user's country location
           $("#countrySelect").val(userCountry).trigger("change");
 
         } else {
@@ -213,5 +249,6 @@ $(window).on("load", function () {
         }
       });
     });
+      
   });
 });
