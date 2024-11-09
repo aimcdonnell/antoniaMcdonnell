@@ -1277,10 +1277,9 @@ navigator.geolocation.watchPosition(success, error);
   };
 
   
-  
-  var cloudBtn = L.easyButton("fa-cloud fa-xl", function (btn, map) {
-    $("#").modal("show");
-  });
+  /*currencyBtn.addTo(map);
+  wikipediaBtn.addTo(map);
+  newspaperBtn.addTo(map);*/
 
   var currencyBtn = L.easyButton("fa-solid fa-dollar-sign fa-xl", function (btn, map) {
     $("#").modal("show");
@@ -1336,7 +1335,7 @@ navigator.geolocation.watchPosition(success, error);
       }
     });
 
-          // Info button to open a modal
+          // Info button to open the info modal
           var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
             var selectedISOCode = $("#countrySelect").val();
       
@@ -1350,19 +1349,23 @@ navigator.geolocation.watchPosition(success, error);
             url: "libs/php/getCountryInformation.php",
             type: "POST",
             dataType: "json",
+            //retrieving the iso code value from the countrySelect dropdown
             data: { isoCode: $("#countrySelect").val() },
 
             success: function(result) {
               //const response = JSON.parse(result);
+              //checking the response format
               console.log(JSON.stringify(result.data.name.common));
 
+              //adding the data to the modal
               if (result.status.name === "ok") {
                 $("#country-name").html(result.data.name.common);
                 $("#country-capital").html(result.data.capital[0]);
                 $("#country-flag").html(`<img src="${result.data.flags.svg}" class="img-thumbnail" alt="flag">`);
                 $("#country-population").html(result.data.population.toLocaleString());
                 $("#country-languages").html(Object.values(result.data.languages).join(", "));
-              
+                
+                // Display the modal when the data is loaded
                 $("#country-info-modal").modal("show");
               }
             },
@@ -1373,13 +1376,9 @@ navigator.geolocation.watchPosition(success, error);
           
         });
 
-        // Add the buttons to the map
+        // Add the info button to the map
         infoBtn.addTo(map);
-        
-        /*cloudBtn.addTo(map);
-        currencyBtn.addTo(map);
-        wikipediaBtn.addTo(map);
-        newspaperBtn.addTo(map);*/
+
         
 
     // Check if the user has geolocation enabled
@@ -1431,6 +1430,7 @@ navigator.geolocation.watchPosition(success, error);
       
     // Handles dropdown country selection changes
     $("#countrySelect").on("change", function () {
+      // Get the selected country's ISO code
       var selectedISOCode = $(this).val();
 
       if (!selectedISOCode) {
@@ -1441,7 +1441,8 @@ navigator.geolocation.watchPosition(success, error);
       // AJAX request to get country border data
       $.ajax({
         url: "libs/php/getCountryBorders.php",
-        method: "GET",
+        type: "GET",
+        //send the ISO code from the dropdown to the php script
         data: { isoCode: selectedISOCode },
         dataType: 'json',
         success: function (response) {
@@ -1491,6 +1492,50 @@ navigator.geolocation.watchPosition(success, error);
         }
       });
     });
+
+    var weatherBtn = L.easyButton("fa-solid fa-umbrella fa-xl", function (btn, map) {
+      // 1st AJAX request to geocode to get latitude and longitude values
+      var chosenIsoCode = $(this).val();
+      if (!chosenIsoCode) {
+        console.warn("No ISO code selected.");
+        return;
+      }
+      $.ajax({
+        url: "libs/php/getCountryInformation.php",
+        type: "GET",
+        dataType: "json",
+        data: { isoCode: chosenIsoCode },
+        success: function (response) {
+          if (response.status.name === "ok") {
+            const capital = response.data.capital[0];
+            console.log("Capital city:", capital);
+
+            $.ajax({
+              url: "libs/php/getWeatherData.php",
+              type: "GET",
+              dataType: "json",
+              data: { city:  capital },
+              success: function(weatherResult) {
+                if (weatherResult.status.name === "ok") {
+                  //Amend code below to display weather info
+                  $("#").html();
+
+                  $("#weather-info-modal").modal("show");
+                }
+              }
+            })
+          }
+        }
+      });
+
+
+
+      //2nd Ajax request to get weather data
+    });
+  
+            
+    weatherBtn.addTo(map);
+
       
   });
 });

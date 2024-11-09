@@ -11,6 +11,9 @@ error_reporting(E_ALL);
 $executionStartTime = microtime(true);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 52cb1b1 (Adding weather information for Weather API)
 //request comes from script.js (i.e. the client)
 $isoCode = isset($_REQUEST["isoCode"]) ? $_REQUEST["isoCode"] : null;
 
@@ -57,10 +60,14 @@ $found = false;
 //for each countryBorder in countryBorders["features"]
 foreach ($countryBorders["features"] as $countryBorder) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     //if the countryBorder's properties["iso_a2"] from countryBorders.geo.json is equal to the iso code from script.js/the request ($isoCode)
 =======
     //if the countryBorder's properties["iso_a2"] is equal to the iso code from the request
 >>>>>>> 3f9b70b (Amendin code to try to add borders to the countries)
+=======
+    //if the countryBorder's properties["iso_a2"] from countryBorders.geo.json is equal to the iso code from script.js/the request ($isoCode)
+>>>>>>> 52cb1b1 (Adding weather information for Weather API)
     if ($countryBorder["properties"]["iso_a2"] === $isoCode) {
         //set the output array to the coordinates of the countryBorder
         $output["data"] = $countryBorder["geometry"]["coordinates"];
