@@ -10,7 +10,7 @@ error_reporting(E_ALL);
 //measuring the script"s execution time
 $executionStartTime = microtime(true);
 
-//get the iso code from the request
+//request comes from script.js (i.e. the client)
 $isoCode = isset($_REQUEST["isoCode"]) ? $_REQUEST["isoCode"] : null;
 
 
@@ -39,7 +39,7 @@ $found = false;
 
 //for each countryBorder in countryBorders["features"]
 foreach ($countryBorders["features"] as $countryBorder) {
-    //if the countryBorder's properties["iso_a2"] is equal to the iso code from the request
+    //if the countryBorder's properties["iso_a2"] from countryBorders.geo.json is equal to the iso code from script.js/the request ($isoCode)
     if ($countryBorder["properties"]["iso_a2"] === $isoCode) {
         //set the output array to the coordinates of the countryBorder
         $output["data"] = $countryBorder["geometry"]["coordinates"];
