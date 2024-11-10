@@ -5,12 +5,18 @@ header("Content-Type: application/json; charset=UTF-8");
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
+<<<<<<< HEAD
 define('SECURE_ACCESS', true);
 require_once './config.php';
 
 $executionStartTime = microtime(true);
 
 $apiKey = WEATHER_API_KEY;
+=======
+$executionStartTime = microtime(true);
+
+$apiKey = "7f4a1ebae420da2cc92d2f9d2ac7cbf5";
+>>>>>>> b32b2f7 (Adding weather info for each country's capital city)
 
 if (isset($_REQUEST["lat"]) && isset($_REQUEST["lng"])) {
     $lat = $_REQUEST["lat"];
@@ -42,7 +48,11 @@ if (isset($decode["list"][0])) {
 
     echo json_encode($output);
 } else {
+<<<<<<< HEAD
     echo json_encode(["error" => "No weather results found"]);
+=======
+    echo "No results found";
+>>>>>>> b32b2f7 (Adding weather info for each country's capital city)
 }
 
 ?>

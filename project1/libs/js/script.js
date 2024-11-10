@@ -1350,12 +1350,12 @@ navigator.geolocation.watchPosition(success, error);
             type: "POST",
             dataType: "json",
             //retrieving the iso code value from the countrySelect dropdown
-            data: { isoCode: $("#countrySelect").val() },
+            data: { isoCode: selectedISOCode },
 
             success: function(result) {
               //const response = JSON.parse(result);
               //checking the response format
-              console.log(JSON.stringify(result.data.name.common));
+              //console.log(JSON.stringify(result.data.name.common));
 
               //adding the data to the modal
               if (result.status.name === "ok") {
@@ -1407,11 +1407,11 @@ navigator.geolocation.watchPosition(success, error);
       },
       success: function (response) {
         //decodes the response from the php script
-        const result = JSON.parse(response);
+        //const result = JSON.parse(response);
         //console.log(JSON.stringify(result.data[0].components["ISO_3166-1_alpha-2"]));
-        if (result.data && result.data.length > 0) {
+        if (response.data && response.data.length > 0) {
           //console.log("Response results:", response)
-          const userCountry = result.data[0].components["ISO_3166-1_alpha-2"];
+          const userCountry = response.data[0].components["ISO_3166-1_alpha-2"];
           //console.log(`User country: ${userCountry}`);
 
           //trigger the change event to select the user's country location
@@ -1495,11 +1495,12 @@ navigator.geolocation.watchPosition(success, error);
 
     var weatherBtn = L.easyButton("fa-solid fa-umbrella fa-xl", function (btn, map) {
       // 1st AJAX request to geocode to get latitude and longitude values
-      var chosenIsoCode = $(this).val();
+      var chosenIsoCode = $("#countrySelect").val();
       if (!chosenIsoCode) {
         console.warn("No ISO code selected.");
         return;
       }
+      //get the lat and lng values for the capital city from geocodeData
       $.ajax({
         url: "libs/php/getCountryInformation.php",
         type: "GET",
@@ -1507,32 +1508,49 @@ navigator.geolocation.watchPosition(success, error);
         data: { isoCode: chosenIsoCode },
         success: function (response) {
           if (response.status.name === "ok") {
-            const capital = response.data.capital[0];
-            console.log("Capital city:", capital);
+            const capital = response.data.capitalInfo.latlng;
+            //console.log("Capital city:", capital);
 
+            //pass the capital city lat and lng values from openCage data to the openWeather API
             $.ajax({
-              url: "libs/php/getWeatherData.php",
+              url: "libs/php/getDailyWeatherData.php",
               type: "GET",
               dataType: "json",
-              data: { city:  capital },
-              success: function(weatherResult) {
+              data: { 
+                lat: capital[0], 
+                lng: capital[1]
+              },
+              success: function (weatherResult) {
                 if (weatherResult.status.name === "ok") {
-                  //Amend code below to display weather info
-                  $("#").html();
+                  // Display current weather for capital city
+                  $("#weather-capital").html(weatherResult.data.city.name);
+                  
+                  // Loop through 5 day forecast
+                  weatherResult.data.list.forEach((day, index) => {
+                    if (index % 8 === 0) {
+                      const temp = Math.round(day.main.temp);
+                      const humidity = day.main.humidity;
+                      
+                      // Add data to existing modal elements using day number
+                      console.log("Icon URL:", `https://openweathermap.org/img/wn/${day.weather[0].icon}.png`);
+                      $(`#weather-icon-${index/8}`).html(`<img src="https://openweathermap.org/img/w/${day.weather[0].icon}.png" alt="Weather Icon">`);
+                      $(`#weather-description-${index/8}`).html(`${day.weather[0].description}`);
+                      $(`#weather-temp-${index/8}`).html(`${temp}°C`);
+                      $(`#weather-humidity-${index/8}`).html(`${humidity}`);
+                      //console.log("Weather icon code:", day.weather[0].icon);
+                    }
+                  });
 
                   $("#weather-info-modal").modal("show");
                 }
+              }, error: function(jqXHR, textStatus, errorThrown) {
+                console.log(`Error: ${textStatus} - ${errorThrown}`);
               }
             })
           }
         }
       });
-
-
-
-      //2nd Ajax request to get weather data
     });
-  
             
     weatherBtn.addTo(map);
 

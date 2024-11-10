@@ -344,4 +344,29 @@ transform: rotate(360deg);
       padding: 10px; /* Add padding for aesthetic */
       font-size: 16px; /* Set font size */
   }
+<<<<<<< HEAD
 >>>>>>> 582cb85 (Centering country dropdown list)
+=======
+
+  /* Styling the scrollbar itself */
+::-webkit-scrollbar {
+  width: 8px; /* Width of the vertical scrollbar */
+  height: 8px; /* Height of the horizontal scrollbar */
+}
+
+/* Styling the track of the scrollbar */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Styling the draggable part of the scrollbar */
+::-webkit-scrollbar-thumb {
+  background: #0e91a2;
+  border-radius: 4px;
+}
+
+/* Styling the draggable part when hovered */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+>>>>>>> b32b2f7 (Adding weather info for each country's capital city)

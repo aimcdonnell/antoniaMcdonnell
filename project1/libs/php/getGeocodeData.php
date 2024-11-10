@@ -1,6 +1,7 @@
 <?php
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 header("Content-Type: application/json; charset=UTF-8");
 
 ini_set('display_errors', 'On');
@@ -31,6 +32,10 @@ if (isset($_REQUEST["lat"]) && isset($_REQUEST["lng"])) {
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 =======
+=======
+header("Content-Type: application/json; charset=UTF-8");
+
+>>>>>>> b32b2f7 (Adding weather info for each country's capital city)
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
