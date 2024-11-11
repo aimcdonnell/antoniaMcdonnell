@@ -1292,6 +1292,7 @@ navigator.geolocation.watchPosition(success, error);
   var newspaperBtn = L.easyButton("fa-solid fa-newspaper fa-xl", function (btn, map) {
     $("#").modal("show");
   });
+  
 
   // ---------------------------------------------------------
   // EVENT HANDLERS
