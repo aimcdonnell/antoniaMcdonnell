@@ -1292,7 +1292,6 @@ navigator.geolocation.watchPosition(success, error);
   var newspaperBtn = L.easyButton("fa-solid fa-newspaper fa-xl", function (btn, map) {
     $("#").modal("show");
   });
-  
 
   // ---------------------------------------------------------
   // EVENT HANDLERS
@@ -1328,7 +1327,19 @@ navigator.geolocation.watchPosition(success, error);
               .val(country["iso_a2"])
               .text(country["name"])
               .appendTo("#countrySelect");
-          });         
+          });
+          
+          //sorting the country names alphabetically
+          var options = $("#countrySelect option").toArray();
+          options.sort(function (a, b) {
+            let aa = a.textContent;
+            let bb = b.textContent;
+
+            if (aa.toUpperCase() < bb.toUpperCase()) return -1;
+            else if (aa.toUpperCase() > bb.toUpperCase()) return 1;
+            else return 0;            
+          });
+          $("#countrySelect").empty().append(options);
           }
         },
       error: function (jqXHR, textStatus, errorThrown) {
