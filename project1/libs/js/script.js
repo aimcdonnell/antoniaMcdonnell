@@ -1277,13 +1277,10 @@ navigator.geolocation.watchPosition(success, error);
   };
 
   
-  /*currencyBtn.addTo(map);
-  wikipediaBtn.addTo(map);
+  /*wikipediaBtn.addTo(map);
   newspaperBtn.addTo(map);*/
 
-  var currencyBtn = L.easyButton("fa-solid fa-dollar-sign fa-xl", function (btn, map) {
-    $("#").modal("show");
-  });
+  
 
   var wikipediaBtn = L.easyButton("fa-brands fa-wikipedia-w fa-xl", function (btn, map) {
     $("#").modal("show");
@@ -1328,7 +1325,7 @@ navigator.geolocation.watchPosition(success, error);
               .text(country["name"])
               .appendTo("#countrySelect");
           });
-          
+
           //sorting the country names alphabetically
           var options = $("#countrySelect option").toArray();
           options.sort(function (a, b) {
@@ -1566,6 +1563,102 @@ navigator.geolocation.watchPosition(success, error);
             
     weatherBtn.addTo(map);
 
+    var currencyBtn = L.easyButton("fa-solid fa-dollar-sign fa-xl", function (btn, map) {
+      // AJAX request to get country information
+      $("#currency-modal-rates").empty();
+      $("#currency-modal-code").empty();
+      $("#currency-input").empty();
+      var currencyISOCode = $("#countrySelect").val();
+
+      if (!currencyISOCode) {
+        console.warn("No ISO code selected.");
+        return;
+      }
+
+      $.ajax({
+        url: "libs/php/getCountryInformation.php",
+        type: "GET",
+        dataType: "json",
+        data: { isoCode: currencyISOCode },
+        success: function (response) {
+          //console.log(JSON.stringify("GetCountryInformationResponse", response));
+          if (response.status.name === "ok") {
+            var currency = response.data.currencies;
+            var currencyCode = Object.keys(currency)[0];
+            console.log("Currency ISO code", currencyCode);
+
+            // AJAX request to get currency exchange rates
+            $.ajax({
+              url: "libs/php/getCurrencyData.php",
+              type: "GET",
+              dataType: "json",
+              data: { currency: currencyCode },
+              success: function (currencyResult) {
+                if (currencyResult.status.name === "ok") {
+                  // Display currency exchange rates
+                  //loop through the rates in currencyResult.data.rates and display them in the modal
+
+                  Object.entries(currencyResult.data.rates).forEach(([code, rate]) => {
+                    if (code === currencyCode) {
+
+                      $("#currency-modal-code").append(`
+                        ${code}
+                        
+                        `)
+                        $("#currency-modal-rates").append(`
+                          
+                          ${rate}
+                          
+                        `)
+                    }
+                  })
+
+                  
+
+                  // Function to calculate and display result
+                  function calculateCurrencyConversion() {
+                    var inputAmount = $("#currency-input").val();
+                    var currencyRate = parseFloat($("#currency-modal-rates").text()) || 0;
+                    
+                    if (isNaN(inputAmount)) {
+                      alert("Please enter a valid number.");
+                      $("#currency-input").val("");
+                      $("#currency-modal-results").html("0.00");
+                      return;
+                    }
+
+                    var result = inputAmount * currencyRate;
+                    
+                    // Display the result in the designated area
+                    $("#currency-modal-results").html(result.toFixed(2)); // Adjust decimal places as needed
+                  }
+
+                  // Attach change event handlers
+                  $("#currency-input").on("input", calculateCurrencyConversion);
+                  $("#currency-modal-rates").on("input", calculateCurrencyConversion);
+
+                  // Trigger calculation on modal show to ensure it initializes with the current values
+                  $("#currency-modal").on("show.bs.modal", calculateCurrencyConversion);
+
+                  $("#currency-modal").on("hide.bs.modal", function () {
+                    $("#currency-input").val(""); // Clear the input value
+                  });
+
+
+                  $("#currency-modal-base").html(currencyResult.data.base);
+                  $("#currency-modal").modal("show");
+                }
+              }, 
+              error: function (jqXHR, textStatus, errorThrown) {
+                console.log(`Error: ${textStatus} - ${errorThrown}`);
+              }
+            })
+          }
+        }   
+    });
+    });
+
+    currencyBtn.addTo(map);
       
   });
 });

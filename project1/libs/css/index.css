@@ -369,4 +369,12 @@ transform: rotate(360deg);
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+<<<<<<< HEAD
 >>>>>>> b32b2f7 (Adding weather info for each country's capital city)
+=======
+
+input {
+  border: none;
+  outline: none;
+}
+>>>>>>> 032e89d (Adding currency converter to app)
