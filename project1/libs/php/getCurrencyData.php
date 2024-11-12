@@ -1,9 +1,12 @@
 <?php
 //Getting currency data from the Open Exchange Rates API
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> 032e89d (Adding currency converter to app)
+=======
+>>>>>>> fc006f9 (Adding getNewsData.php file)
 header("Content-Type: application/json; charset=UTF-8");
 
 ini_set('display_errors', 'On');
