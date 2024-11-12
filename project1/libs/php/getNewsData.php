@@ -21,14 +21,20 @@ if (!$isoCode) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> eb2b536 (Added NewsData API to app)
 // Validate ISO code (2-letter code)
 if (!preg_match("/^[A-Z]{2}$/", $isoCode)) {
     echo json_encode(["error" => "Invalid ISO code format"]);
     exit;
 }
 
+<<<<<<< HEAD
 $apiKey = NEWS_DATA_API_KEY;
 =======
+=======
+>>>>>>> eb2b536 (Added NewsData API to app)
 $apiKey = "pub_589596ff54fa50004cfd22c7a69da957ccedc";
 >>>>>>> fc006f9 (Adding getNewsData.php file)
 

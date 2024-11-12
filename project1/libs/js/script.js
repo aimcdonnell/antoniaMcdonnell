@@ -1277,8 +1277,7 @@ navigator.geolocation.watchPosition(success, error);
   };
 
   
-  /*wikipediaBtn.addTo(map);
-  newspaperBtn.addTo(map);*/
+  /*wikipediaBtn.addTo(map);*/
 
   
 
@@ -1286,9 +1285,6 @@ navigator.geolocation.watchPosition(success, error);
     $("#").modal("show");
   });
 
-  var newspaperBtn = L.easyButton("fa-solid fa-newspaper fa-xl", function (btn, map) {
-    $("#").modal("show");
-  });
 
   // ---------------------------------------------------------
   // EVENT HANDLERS
@@ -1549,9 +1545,10 @@ navigator.geolocation.watchPosition(success, error);
                       //console.log("Weather icon code:", day.weather[0].icon);
                     }
                   });
-
+                  //Show the weather modal
                   $("#weather-info-modal").modal("show");
                 }
+                //Handling errors
               }, error: function(jqXHR, textStatus, errorThrown) {
                 console.log(`Error: ${textStatus} - ${errorThrown}`);
               }
@@ -1570,6 +1567,7 @@ navigator.geolocation.watchPosition(success, error);
       $("#currency-input").empty();
       var currencyISOCode = $("#countrySelect").val();
 
+      //if no ISO code selected, return
       if (!currencyISOCode) {
         console.warn("No ISO code selected.");
         return;
@@ -1585,7 +1583,7 @@ navigator.geolocation.watchPosition(success, error);
           if (response.status.name === "ok") {
             var currency = response.data.currencies;
             var currencyCode = Object.keys(currency)[0];
-            console.log("Currency ISO code", currencyCode);
+            //console.log("Currency ISO code", currencyCode);
 
             // AJAX request to get currency exchange rates
             $.ajax({
@@ -1652,7 +1650,88 @@ navigator.geolocation.watchPosition(success, error);
     });
 
     currencyBtn.addTo(map);
-      
+   
+    var newsBtn = L.easyButton("fa-solid fa-newspaper fa-xl", function (btn, map) {
+
+        // Get the selected country's ISO code
+        $("#news-modal-body").empty();
+
+        var newsISOCode = $("#countrySelect").val();
+  
+        if (!newsISOCode) {
+          console.warn("No ISO code selected.");
+          return;
+        }
+
+        // AJAX request to get news articles
+        $.ajax({
+          url: "libs/php/getNewsData.php",
+          type: "GET",
+          dataType: "json",
+          data: { isoCode: newsISOCode },
+          success: function (response) {
+            if (response.status.name === "ok" && response.data.results.length > 0) {
+              console.log("News data response", response.data.results[0]);
+
+              //display news articles matching the selected country's ISO code
+              // Helper function to format date
+              // Helper function to format date
+              function formatDate(dateString) {
+                const date = new Date(dateString);
+                const day = date.getDate();
+                const daySuffix = getDaySuffix(day);
+                const month = date.toLocaleString("default", { month: "long" });
+                const year = date.getFullYear();
+
+                // Format the time component
+                let hours = date.getHours();
+                const minutes = date.getMinutes().toString().padStart(2, "0");
+                const ampm = hours >= 12 ? "PM" : "AM";
+                hours = hours % 12 || 12;  // Convert to 12-hour format
+
+                return `${day}${daySuffix} ${month} ${year}, ${hours}:${minutes} ${ampm}`;
+              }
+
+              function getDaySuffix(day) {
+                if (day >= 11 && day <= 13) return "th";
+                switch (day % 10) {
+                    case 1: return "st";
+                    case 2: return "nd";
+                    case 3: return "rd";
+                    default: return "th";
+                }
+              }
+              Object.entries(response.data.results).forEach(([key, value]) => {
+                let formattedDate = formatDate(value.pubDate);
+                $("#news-modal-body").append(`
+                  <tr>
+                    <td colspan=2 class="font-weight-bold">${value.title}                    
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>${formattedDate}</td>
+                    <td><a href="${value.link}" target="_blank">Read more...</a></td>
+                  </tr>
+                  `);
+              });
+
+              $("#news-modal").modal("show");
+
+            } else {
+              $("#news-modal-body").append(`
+                <tr>
+                    <td colspan="2">No news available from the selected country</td>
+                </tr>
+            `);
+              $("#news-modal").modal("show");
+            }
+          }, error: function (jqXHR, textStatus, errorThrown) {
+            console.log(`Error: ${textStatus} - ${errorThrown}`);
+          }
+        })
+    });
+    
+    newsBtn.addTo(map);
   });
 });
 <<<<<<< HEAD
