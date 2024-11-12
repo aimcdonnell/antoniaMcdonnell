@@ -359,25 +359,17 @@ $(window).on("load", function () {
                   Object.entries(currencyResult.data.rates).forEach(([code, rate]) => {
                     if (code === currencyCode) {
 
-                      $("#currency-modal-code").append(`
-                        ${code}
-                        
-                        `)
-                        $("#currency-modal-rates").append(`
-                          
-                          ${rate}
-                          
-                        `)
+                      $("#currency-modal-code").append(`${code}`)
+                        $("#currency-modal-rates").append(`${rate}`)
                     }
                   })
-
-                  
 
                   // Function to calculate and display result
                   function calculateCurrencyConversion() {
                     var inputAmount = $("#currency-input").val();
                     var currencyRate = parseFloat($("#currency-modal-rates").text()) || 0;
                     
+                    /// Check if input is a valid number
                     if (isNaN(inputAmount)) {
                       alert("Please enter a valid number.");
                       $("#currency-input").val("");
@@ -385,6 +377,7 @@ $(window).on("load", function () {
                       return;
                     }
 
+                    // Calculate the result
                     var result = inputAmount * currencyRate;
                     
                     // Display the result in the designated area
@@ -398,10 +391,10 @@ $(window).on("load", function () {
                   // Trigger calculation on modal show to ensure it initializes with the current values
                   $("#currency-modal").on("show.bs.modal", calculateCurrencyConversion);
 
+                  // Clear input value on modal hide
                   $("#currency-modal").on("hide.bs.modal", function () {
                     $("#currency-input").val(""); // Clear the input value
                   });
-
 
                   $("#currency-modal-base").html(currencyResult.data.base);
                   $("#currency-modal").modal("show");
