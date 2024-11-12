@@ -1,5 +1,5 @@
 <?php
-//Getting currency data from the Open Exchange Rates API
+//Getting news data from the News API
 header("Content-Type: application/json; charset=UTF-8");
 
 ini_set('display_errors', 'On');
@@ -7,9 +7,16 @@ error_reporting(E_ALL);
 
 $executionStartTime = microtime(true);
 
-$apiKey = "ac1427d7ddbc49abb7374c7e40489199";
+$isoCode = isset($_REQUEST["isoCode"]) ? $_REQUEST["isoCode"] : null;
 
-$url = "https://openexchangerates.org/api/latest.json?app_id=" . $apiKey;
+if (!$isoCode) {
+    echo json_encode(["error" => "ISO code not provided"]);
+    exit;
+}
+
+$apiKey = "pub_589596ff54fa50004cfd22c7a69da957ccedc";
+
+$url = "https://newsdata.io/api/1/news?apikey=" . $apiKey . "&country=" . $isoCode . "&language=en";
 
 $ch = curl_init();
 
@@ -23,7 +30,7 @@ curl_close($ch);
 
 $decode = json_decode($result, true);
 
-if (isset($decode["rates"])) {
+if (isset($decode["results"])) {
     $output["status"]["code"] = "200";
     $output["status"]["name"] = "ok";
     $output["status"]["description"] = "success";
