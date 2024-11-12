@@ -14,6 +14,12 @@ if (!$isoCode) {
     exit;
 }
 
+// Validate ISO code (2-letter code)
+if (!preg_match("/^[A-Z]{2}$/", $isoCode)) {
+    echo json_encode(["error" => "Invalid ISO code format"]);
+    exit;
+}
+
 $apiKey = "pub_589596ff54fa50004cfd22c7a69da957ccedc";
 
 $url = "https://newsdata.io/api/1/news?apikey=" . $apiKey . "&country=" . $isoCode . "&language=en";
