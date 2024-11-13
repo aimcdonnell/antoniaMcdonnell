@@ -75,8 +75,12 @@ if (isset($decode["results"])) {
 
     echo json_encode($output);
 } else {
+<<<<<<< HEAD
     echo "No results found";
 >>>>>>> fc006f9 (Adding getNewsData.php file)
+=======
+    echo json_encode(["error" => "No results found"]);
+>>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
 }
 
 ?>

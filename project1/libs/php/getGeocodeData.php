@@ -105,7 +105,7 @@ if (isset($decode["results"][0])) {
     
     echo json_encode($output);
 } else {
-    echo "No results found";
+    echo json_encode(["error" => "No results found"]);
 }
 >>>>>>> 502b667 (Adding borders to the user's country location)
 ?>

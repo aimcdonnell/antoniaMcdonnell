@@ -49,10 +49,14 @@ if (isset($decode["rates"])) {
     echo json_encode($output);
 } else {
 <<<<<<< HEAD
+<<<<<<< HEAD
     echo json_encode(["error" => "No currency data results found"]);
 =======
     echo "No results found";
 >>>>>>> 032e89d (Adding currency converter to app)
+=======
+    echo json_encode(["error" => "No results found"]);
+>>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
 }
 
 ?>

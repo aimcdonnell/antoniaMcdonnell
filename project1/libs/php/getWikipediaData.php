@@ -7,14 +7,20 @@ error_reporting(E_ALL);
 
 $executionStartTime = microtime(true);
 
+<<<<<<< HEAD
 define('SECURE_ACCESS', true);
 require_once './config.php';
 
+=======
+>>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
 $countryMappings = [
     "Bosnia and Herz." => "Bosnia and Herzegovina",
     "Central African Rep." => "Central African Republic",
     "Czech Rep." => "Czech Republic",
+<<<<<<< HEAD
     "Czech Rep." => "Czechia",
+=======
+>>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
     "Dem. Rep. Congo" => "Democratic Republic of the Congo",
     "Dem. Rep. Korea" => "Democratic Republic of Korea",
     "Dominican Rep." => "Dominican Republic",
@@ -25,7 +31,11 @@ $countryMappings = [
 
 ];
 
+<<<<<<< HEAD
 $username = WIKIPEDIA_USERNAME;
+=======
+$username="amcdonnell";
+>>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
 
 //these parameters link to the parameters in the AJAX's data object
 if (isset($_REQUEST["country"]) && isset($_REQUEST["isoCode"])) {
@@ -42,7 +52,11 @@ $fullCountryName = array_key_exists($searchedCountry, $countryMappings) ? $count
 // URL-encode the final country name for safe usage in the URL
 $encodedCountry = urlencode($fullCountryName);
 
+<<<<<<< HEAD
 $url = "http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=5&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
+=======
+$url = "http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=10&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
+>>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -64,6 +78,10 @@ if (isset($decode["geonames"])) {
 
     echo  json_encode($output);
 } else {
+<<<<<<< HEAD
     echo json_encode(["error" => "No wiki geonames results found"]);
+=======
+    echo json_encode(["error" => "No results found"]);
+>>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
 }
 ?>

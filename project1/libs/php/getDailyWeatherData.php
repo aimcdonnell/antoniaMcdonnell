@@ -49,10 +49,14 @@ if (isset($decode["list"][0])) {
     echo json_encode($output);
 } else {
 <<<<<<< HEAD
+<<<<<<< HEAD
     echo json_encode(["error" => "No weather results found"]);
 =======
     echo "No results found";
 >>>>>>> b32b2f7 (Adding weather info for each country's capital city)
+=======
+    echo json_encode(["error" => "No results found"]);
+>>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
 }
 
 ?>
