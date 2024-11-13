@@ -45,7 +45,7 @@ if (isset($decode["results"])) {
 
     echo json_encode($output);
 } else {
-    echo "No results found";
+    echo json_encode(["error" => "No results found"]);
 }
 
 ?>

@@ -34,16 +34,6 @@ $(window).on("load", function () {
     "Satellite": satellite
   };
 
-  
-  /*wikipediaBtn.addTo(map);*/
-
-  
-
-  var wikipediaBtn = L.easyButton("fa-brands fa-wikipedia-w fa-xl", function (btn, map) {
-    $("#").modal("show");
-  });
-
-
   // ---------------------------------------------------------
   // EVENT HANDLERS
   // ---------------------------------------------------------
@@ -490,5 +480,33 @@ $(window).on("load", function () {
     });
     
     newsBtn.addTo(map);
+
+    var wikipediaBtn = L.easyButton("fa-brands fa-wikipedia-w fa-xl", function (btn, map) {
+      
+      var wikipediaCountryName = $("#countrySelect option:selected").text();
+      var wikipediaISOCode = $("#countrySelect").val();
+      
+
+      $.ajax({
+        url: "libs/php/getWikipediaData.php",
+        type: "GET",
+        dataType: "json",
+        data: { 
+          country: wikipediaCountryName,
+          isoCode: wikipediaISOCode
+        },
+        success: function (response) {
+          if (response.status === "ok") {
+            console.log("Wikipedia data response", response[0]);
+          }
+        }, error: function (jqXHR, textStatus, errorThrown) {
+          console.log(`Error: ${textStatus} - ${errorThrown}`);
+        }
+      })
+
+    });
+
+     wikipediaBtn.addTo(map);
+  
   });
 });
