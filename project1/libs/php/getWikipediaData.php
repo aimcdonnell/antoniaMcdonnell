@@ -38,7 +38,7 @@ $fullCountryName = array_key_exists($searchedCountry, $countryMappings) ? $count
 // URL-encode the final country name for safe usage in the URL
 $encodedCountry = urlencode($fullCountryName);
 
-$url = "http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=10&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
+$url = "http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=5&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

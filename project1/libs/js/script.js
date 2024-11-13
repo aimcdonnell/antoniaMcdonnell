@@ -1,7 +1,7 @@
 // Preloader handling
 $(window).on("load", function () {
   if ($("#preloader").length) {
-    $("#preloader").delay(1000).fadeOut("slow", function () {
+    $("#preloader").delay(1500).fadeOut("slow", function () {
       $(this).remove();
     });
   }
@@ -419,7 +419,7 @@ $(window).on("load", function () {
           data: { isoCode: newsISOCode },
           success: function (response) {
             if (response.status.name === "ok" && response.data.results.length > 0) {
-              console.log("News data response", response.data.results[0]);
+              //console.log("News data response", response.data.results[0]);
 
               //display news articles matching the selected country's ISO code
               // Helper function to format date
@@ -453,14 +453,15 @@ $(window).on("load", function () {
                 let formattedDate = formatDate(value.pubDate);
                 $("#news-modal-body").append(`
                   <tr>
-                    <td colspan=2 class="font-weight-bold">${value.title}                    
+                    <td colspan="3" </td>
+                      <div style="display: flex; flex-direction: column;">
+                        <span class="font-weight-bold">${value.title}</span>
+                        <span>${formattedDate}</span>
+                        <a href="${value.link}" target="_blank">Read more...</a>
+                      </div>
                     </td>
                   </tr>
-                  <tr>
-                    <td>${formattedDate}</td>
-                    <td><a href="${value.link}" target="_blank">Read more...</a></td>
-                  </tr>
-                  `);
+                `);
               });
 
               $("#news-modal").modal("show");
@@ -482,7 +483,7 @@ $(window).on("load", function () {
     newsBtn.addTo(map);
 
     var wikipediaBtn = L.easyButton("fa-brands fa-wikipedia-w fa-xl", function (btn, map) {
-      
+      $("#wikipedia-modal-body").empty();
       var wikipediaCountryName = $("#countrySelect option:selected").text();
       var wikipediaISOCode = $("#countrySelect").val();
       
@@ -496,8 +497,30 @@ $(window).on("load", function () {
           isoCode: wikipediaISOCode
         },
         success: function (response) {
-          if (response.status === "ok") {
-            console.log("Wikipedia data response", response[0]);
+          if (response.status.name === "ok" && response.data.length > 0) {
+            console.log(response.data[0]);
+            response.data.forEach(function (article) {
+              $("#wikipedia-modal-body").append(`
+                  <tr>
+                    <td colspan="3">
+                      <div style="display: flex; flex-direction: column;">
+                        <span class="font-weight-bold">${article.title}</span>
+                        <span>${article.summary}</span>
+                        <a href="https://${article.wikipediaUrl}" target="_blank"> Read more...</a>
+                      </div>
+                    </td>
+                </tr>
+              `);
+              
+              $("#wikipedia-modal").modal("show");
+            });
+          } else {
+            $("#wikipedia-modal-body").append(`
+                <tr>
+                    <td colspan="2">No Wikipedia article available for the selected country</td>
+                </tr>
+            `);
+            $("#wikipedia-modal").modal("show");
           }
         }, error: function (jqXHR, textStatus, errorThrown) {
           console.log(`Error: ${textStatus} - ${errorThrown}`);

@@ -95,3 +95,8 @@ input {
   border: none;
   outline: none;
 }
+
+.read-more {
+  border-bottom: .5px solid #989797; /* Adjust color as needed */
+  text-decoration: none; /* Optional: remove underline */
+}
