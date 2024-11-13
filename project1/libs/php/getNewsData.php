@@ -54,17 +54,26 @@ $decode = json_decode($result, true);
 
 if (isset($decode["results"])) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3d3d168 (Adding wikipedia articles to the wiki modal, updating countryBorders.geo.json file and saving renewable energy percentages)
     
     // Limit the results to the first 5 articles
     $limitedResults = array_slice($decode["results"], 0, 5);
 
+<<<<<<< HEAD
 =======
 >>>>>>> fc006f9 (Adding getNewsData.php file)
+=======
+>>>>>>> 3d3d168 (Adding wikipedia articles to the wiki modal, updating countryBorders.geo.json file and saving renewable energy percentages)
     $output["status"]["code"] = "200";
     $output["status"]["name"] = "ok";
     $output["status"]["description"] = "success";
     $output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3d3d168 (Adding wikipedia articles to the wiki modal, updating countryBorders.geo.json file and saving renewable energy percentages)
     $output["data"]["results"] = $limitedResults;
 
     echo json_encode($output);

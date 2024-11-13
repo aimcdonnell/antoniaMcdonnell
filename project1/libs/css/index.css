@@ -377,4 +377,12 @@ input {
   border: none;
   outline: none;
 }
+<<<<<<< HEAD
 >>>>>>> 032e89d (Adding currency converter to app)
+=======
+
+.read-more {
+  border-bottom: .5px solid #989797; /* Adjust color as needed */
+  text-decoration: none; /* Optional: remove underline */
+}
+>>>>>>> 3d3d168 (Adding wikipedia articles to the wiki modal, updating countryBorders.geo.json file and saving renewable energy percentages)

@@ -53,10 +53,14 @@ $fullCountryName = array_key_exists($searchedCountry, $countryMappings) ? $count
 $encodedCountry = urlencode($fullCountryName);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 $url = "http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=5&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
 =======
 $url = "http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=10&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
 >>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
+=======
+$url = "http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=5&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
+>>>>>>> 3d3d168 (Adding wikipedia articles to the wiki modal, updating countryBorders.geo.json file and saving renewable energy percentages)
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
