@@ -385,4 +385,19 @@ input {
   border-bottom: .5px solid #989797; /* Adjust color as needed */
   text-decoration: none; /* Optional: remove underline */
 }
+<<<<<<< HEAD
 >>>>>>> 3d3d168 (Adding wikipedia articles to the wiki modal, updating countryBorders.geo.json file and saving renewable energy percentages)
+=======
+
+.leaflet-control-easybutton-button {
+  position: relative;
+}
+
+.wikibtn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+>>>>>>> 1aef87f (Working on fixing uncentred icons)

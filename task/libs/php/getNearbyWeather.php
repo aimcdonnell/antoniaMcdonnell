@@ -106,7 +106,7 @@ if (isset($_REQUEST['lat']) && isset($_REQUEST['lng'])) {
 }
 
 // Concatenate API URL
-$url = 'http://api.geonames.org/findNearByWeatherJSON?formatted=true&lat=' . trim($lat) . '&lng=' . trim($lng) . '&username=amcdonnell&style=full';
+$url = 'https://api.geonames.org/findNearByWeatherJSON?formatted=true&lat=' . trim($lat) . '&lng=' . trim($lng) . '&username=amcdonnell&style=full';
 
 // Log the correct API URL
 //echo 'API URL: ' . $url;

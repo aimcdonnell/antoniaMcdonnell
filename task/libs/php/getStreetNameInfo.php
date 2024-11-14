@@ -10,10 +10,14 @@ $executionStartTime = microtime(true);
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 $url = 'https://api.geonames.org/streetNameLookupJSON?formatted=true&q=' . $_REQUEST['q'] . '&username=amcdonnell';
 =======
 $url = 'http://api.geonames.org/streetNameLookupJSON?formatted=true&q=' . $_REQUEST['q'] . '&username=amcdonnell';
 >>>>>>> 103574d (Added API request for Geonames streetNameLookup API and amended double quotation marks to single quotation marks for consistency)
+=======
+$url = 'https://api.geonames.org/streetNameLookupJSON?formatted=true&q=' . $_REQUEST['q'] . '&username=amcdonnell';
+>>>>>>> 1aef87f (Working on fixing uncentred icons)
 
 $ch = curl_init();
 

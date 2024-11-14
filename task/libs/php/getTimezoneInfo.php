@@ -29,7 +29,7 @@
 	}
 
 	// Concatenates the URL for the API call with the required parameters
-    $url = 'http://api.geonames.org/timezoneJSON?formatted=true&lat=' . $lat . '&lng=' . $lng . '&username=amcdonnell&style=full';
+    $url = 'https://api.geonames.org/timezoneJSON?formatted=true&lat=' . $lat . '&lng=' . $lng . '&username=amcdonnell&style=full';
 
 	// Initiates the cURL object and sets some parameters
 >>>>>>> 103574d (Added API request for Geonames streetNameLookup API and amended double quotation marks to single quotation marks for consistency)
