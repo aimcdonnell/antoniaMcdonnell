@@ -9,7 +9,7 @@ error_reporting(E_ALL);
 $executionStartTime = microtime(true);
 
 
-$url = 'http://api.geonames.org/streetNameLookupJSON?formatted=true&q=' . $_REQUEST['q'] . '&username=amcdonnell';
+$url = 'https://api.geonames.org/streetNameLookupJSON?formatted=true&q=' . $_REQUEST['q'] . '&username=amcdonnell';
 
 $ch = curl_init();
 

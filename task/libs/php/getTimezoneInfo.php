@@ -24,7 +24,7 @@
 	}
 
 	// Concatenates the URL for the API call with the required parameters
-    $url = 'http://api.geonames.org/timezoneJSON?formatted=true&lat=' . $lat . '&lng=' . $lng . '&username=amcdonnell&style=full';
+    $url = 'https://api.geonames.org/timezoneJSON?formatted=true&lat=' . $lat . '&lng=' . $lng . '&username=amcdonnell&style=full';
 
 	// Initiates the cURL object and sets some parameters
 	$ch = curl_init();

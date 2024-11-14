@@ -482,7 +482,7 @@ $(window).on("load", function () {
     
     newsBtn.addTo(map);
 
-    var wikipediaBtn = L.easyButton("fa-brands fa-wikipedia-w fa-xl", function (btn, map) {
+    var wikipediaBtn = L.easyButton('<i class="fa-brands fa-wikipedia-w fa-xl wikibtn"></i>', function (btn, map) {
       $("#wikipedia-modal-body").empty();
       var wikipediaCountryName = $("#countrySelect option:selected").text();
       var wikipediaISOCode = $("#countrySelect").val();
@@ -530,6 +530,6 @@ $(window).on("load", function () {
     });
 
      wikipediaBtn.addTo(map);
-  
+
   });
 });
