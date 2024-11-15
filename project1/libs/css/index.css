@@ -203,6 +203,7 @@ color: #828080;
 
 .energyBtn {
 color: #4caf50;
+<<<<<<< HEAD
 }
 
 .naturalDisasterBtn {
@@ -463,3 +464,6 @@ color: #c338c3;
 color: #828080;
 }
 >>>>>>> 2b5de68 (Unifying php status code if/else statements)
+=======
+}
+>>>>>>> 6958058 (Adding renewable energy data to app and energy button)

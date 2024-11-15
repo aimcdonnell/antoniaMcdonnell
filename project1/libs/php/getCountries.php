@@ -195,7 +195,11 @@ if (isset($decode["features"])) {
     echo json_encode(["error" => "No country data results found"]);
 }
 
+<<<<<<< HEAD
 
 
 ?>
 >>>>>>> 68b9fc1 (Amending getCountries.php and script.js so that they use the PHP routine correctly)
+=======
+?>
+>>>>>>> 6958058 (Adding renewable energy data to app and energy button)

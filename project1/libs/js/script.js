@@ -1531,7 +1531,7 @@ navigator.geolocation.watchPosition(success, error);
                       const humidity = day.main.humidity;
                       
                       // Add data to existing modal elements using day number
-                      console.log("Icon URL:", `https://openweathermap.org/img/wn/${day.weather[0].icon}.png`);
+                      //console.log("Icon URL:", `https://openweathermap.org/img/wn/${day.weather[0].icon}.png`);
                       $(`#weather-icon-${index/8}`).html(`<img src="https://openweathermap.org/img/w/${day.weather[0].icon}.png" alt="Weather Icon">`);
                       $(`#weather-description-${index/8}`).html(`${day.weather[0].description}`);
                       $(`#weather-temp-${index/8}`).html(`${temp}°C`);
@@ -1776,6 +1776,55 @@ navigator.geolocation.watchPosition(success, error);
     });
 
      wikipediaBtn.addTo(map);
+
+     var energyBtn = L.easyButton('<i class="fa-solid fa-bolt fa-xl modalBtn energyBtn"></i>', function (btn, map) {
+      
+
+      // 1st AJAX request to geocode to get latitude and longitude values
+      var energyIsoCode = $("#countrySelect").val();
+      if (!energyIsoCode) {
+        console.warn("No ISO code selected.");
+        return;
+      }
+      
+      $.ajax({
+        url: "libs/php/getRenewableEnergyData.php",
+        type: "GET",
+        dataType: "json",
+        data: {
+          isoCode: energyIsoCode
+        }, 
+        success: function (response) {
+          //console.log(response.data);
+
+          if (response.status.name === "ok") {
+            console.log(response.data);
+            $("#renewable-energy-country").html(response.data.country);
+            $("#renewable-energy-generation").html(response.data.generation_GWh + " GWh");
+            $("#renewable-energy-percentage").html(response.data.renewable_percentage + "%");
+            $("#renewable-hydro-percentage").html(response.data.hydro + "%");
+            $("#renewable-wind-percentage").html(response.data.wind + "%");
+            $("#renewable-solar-percentage").html(response.data.solar + "%");
+            $("#renewable-biomass-percentage").html(response.data.bioenergy + "%");
+            $("#renewable-geothermal-percentage").html(response.data.geothermal + "%");
+            
+            $("#renewable-energy-modal").modal("show");
+
+
+          } else {
+            $("#modal-body").append(`
+                <tr>
+                    <td colspan="2">No renewable energy data available for the selected country</td>
+                </tr>
+            `);
+            $("#renewable-energy-modal").modal("show");
+          }
+        }
+      })
+      
+    });
+    energyBtn.addTo(map);
+
 
   });
 });
