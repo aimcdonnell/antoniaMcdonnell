@@ -33,18 +33,24 @@ curl_close($ch);
 
 //converts the JSON string returned by the API call and stores it in the $decode variable. Decode means to convert a string from one format to another.
 $decode = json_decode($result,true);
-//stores the decoded JSON string in the $output variable
-//$output is an associative array that contains the data returned by the API call
-$output["status"]["code"] = "200";
-//$output['status']['name'] is a string that contains the name of the status of the API call
-$output["status"]["name"] = "ok";
-//$output['status']['description'] is a string that contains the description of the status of the API call
-$output["status"]["description"] = "success";
-//$output['status']['returnedIn'] is a string that contains the time taken to execute the API call
-$output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
-//the $decode["results"] in the code below returns the "results" property from the JSON string returned by the API call
-$output["data"] = $decode["results"];
 
-//echo json_encode($output) is a function that converts the $output variable to a JSON string and sends it to the client
-echo json_encode($output);
+if (isset($decode["results"])) {
+    //stores the decoded JSON string in the $output variable
+    //$output is an associative array that contains the data returned by the API call
+    $output["status"]["code"] = "200";
+    //$output['status']['name'] is a string that contains the name of the status of the API call
+    $output["status"]["name"] = "ok";
+    //$output['status']['description'] is a string that contains the description of the status of the API call
+    $output["status"]["description"] = "success";
+    //$output['status']['returnedIn'] is a string that contains the time taken to execute the API call
+    $output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
+    //the $decode["results"] in the code below returns the "results" property from the JSON string returned by the API call
+    $output["data"] = $decode["results"];
+
+    //echo json_encode($output) is a function that converts the $output variable to a JSON string and sends it to the client
+    echo json_encode($output);
+} else {
+    echo json_encode(["error" => "No country coordinate results found"]);
+}
+
 ?>

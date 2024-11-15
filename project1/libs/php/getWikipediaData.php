@@ -91,9 +91,13 @@ if (isset($decode["geonames"])) {
     echo  json_encode($output);
 } else {
 <<<<<<< HEAD
+<<<<<<< HEAD
     echo json_encode(["error" => "No wiki geonames results found"]);
 =======
     echo json_encode(["error" => "No results found"]);
 >>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
+=======
+    echo json_encode(["error" => "No wiki geonames results found"]);
+>>>>>>> 2b5de68 (Unifying php status code if/else statements)
 }
 ?>

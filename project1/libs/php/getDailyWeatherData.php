@@ -50,6 +50,7 @@ if (isset($decode["list"][0])) {
 } else {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     echo json_encode(["error" => "No weather results found"]);
 =======
     echo "No results found";
@@ -57,6 +58,9 @@ if (isset($decode["list"][0])) {
 =======
     echo json_encode(["error" => "No results found"]);
 >>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
+=======
+    echo json_encode(["error" => "No weather results found"]);
+>>>>>>> 2b5de68 (Unifying php status code if/else statements)
 }
 
 ?>

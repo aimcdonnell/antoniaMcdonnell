@@ -32,6 +32,7 @@ foreach($countries as $country) {
     }
 }
 
+<<<<<<< HEAD
 $output["status"]["code"] = "200";
 $output["status"]["name"] = "ok";
 $output["status"]["description"] = "success";
@@ -60,13 +61,23 @@ if (isset($output["data"])) {
     $output["status"]["description"] = "success";
     $output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
 
+=======
+if (isset($output["data"])) {
+    $output["status"]["code"] = "200";
+    $output["status"]["name"] = "ok";
+    $output["status"]["description"] = "success";
+    $output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
+
+>>>>>>> 2b5de68 (Unifying php status code if/else statements)
     echo json_encode($output);    
 } else {
     echo json_encode(["error" => "Country information not found"]);
 }
+<<<<<<< HEAD
 =======
 
 >>>>>>> a24ea01 (Renaming country information php file and adding country data to JSON file)
+=======
+>>>>>>> 2b5de68 (Unifying php status code if/else statements)
 
-echo json_encode($output);
 ?>

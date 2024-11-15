@@ -80,6 +80,9 @@ foreach ($countryBorders["features"] as $countryBorder) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2b5de68 (Unifying php status code if/else statements)
 if (isset($countryBorders["features"])) {
     //if the countryBorder was found then return json
     //status details - 200 = success
@@ -90,6 +93,7 @@ if (isset($countryBorders["features"])) {
     $output["status"]["description"] = "success";
     //the execution time calculated by subtracting the start time by the current time
     $output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
+<<<<<<< HEAD
 
     //encodes the entire output array as JSON and sends it as the response
     //automatically converts the entire output array into JSON
@@ -100,18 +104,21 @@ if (isset($countryBorders["features"])) {
 
 =======
 //if the countryBorder was found then return json
+=======
+>>>>>>> 2b5de68 (Unifying php status code if/else statements)
 
-//status details - 200 = success
-$output["status"]["code"] = "200";
-//text status = ok
-$output["status"]["name"] = "ok";
-//description = a success message
-$output["status"]["description"] = "success";
-//the execution time calculated by subtracting the start time by the current time
-$output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
+    //encodes the entire output array as JSON and sends it as the response
+    //automatically converts the entire output array into JSON
+    echo json_encode($output);
+} else {
+    echo json_encode(["error" => "No country border data results found"]);
+}
 
+<<<<<<< HEAD
 //encodes the entire output array as JSON and sends it as the response
 //automatically converts the entire output array into JSON
 echo json_encode($output);
 >>>>>>> 3f9b70b (Amendin code to try to add borders to the countries)
+=======
+>>>>>>> 2b5de68 (Unifying php status code if/else statements)
 ?>
