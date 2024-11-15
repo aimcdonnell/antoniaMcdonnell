@@ -55,6 +55,7 @@ $encodedCountry = urlencode($fullCountryName);
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 $url = "http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=5&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
 =======
 $url = "http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=10&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
@@ -65,6 +66,9 @@ $url = "http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encode
 =======
 $url = "https://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=5&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
 >>>>>>> 1aef87f (Working on fixing uncentred icons)
+=======
+$url = "http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=5&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
+>>>>>>> db384b4 (Fixing issue with Geonames Wiki api)
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
