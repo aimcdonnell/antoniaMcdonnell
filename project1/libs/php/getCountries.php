@@ -52,6 +52,4 @@ if (isset($decode["features"])) {
     echo json_encode(["error" => "No country data results found"]);
 }
 
-
-
 ?>
