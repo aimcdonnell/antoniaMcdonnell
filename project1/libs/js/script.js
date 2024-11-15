@@ -482,7 +482,7 @@ $(window).on("load", function () {
     
     newsBtn.addTo(map);
 
-    var wikipediaBtn = L.easyButton('<i class="fa-brands fa-wikipedia-w fa-xl wikibtn"></i>', function (btn, map) {
+    var wikipediaBtn = L.easyButton("fa-brands fa-wikipedia-w fa-xl", function (btn, map) {
       $("#wikipedia-modal-body").empty();
       var wikipediaCountryName = $("#countrySelect option:selected").text();
       var wikipediaISOCode = $("#countrySelect").val();
@@ -497,8 +497,8 @@ $(window).on("load", function () {
           isoCode: wikipediaISOCode
         },
         success: function (response) {
+          console.log(response);
           if (response.status.name === "ok" && response.data.length > 0) {
-            console.log(response.data[0]);
             response.data.forEach(function (article) {
               $("#wikipedia-modal-body").append(`
                   <tr>
@@ -517,7 +517,7 @@ $(window).on("load", function () {
           } else {
             $("#wikipedia-modal-body").append(`
                 <tr>
-                    <td colspan="2">No Wikipedia article available for the selected country</td>
+                    <td colspan="2">No Wikipedia articles available for the selected country</td>
                 </tr>
             `);
             $("#wikipedia-modal").modal("show");

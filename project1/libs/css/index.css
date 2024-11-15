@@ -100,15 +100,3 @@ input {
   border-bottom: .5px solid #989797; /* Adjust color as needed */
   text-decoration: none; /* Optional: remove underline */
 }
-
-.leaflet-control-easybutton-button {
-  position: relative;
-}
-
-.wikibtn {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
