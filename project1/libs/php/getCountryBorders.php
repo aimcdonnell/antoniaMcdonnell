@@ -51,18 +51,22 @@ foreach ($countryBorders["features"] as $countryBorder) {
 
 }
 
-//if the countryBorder was found then return json
+if (isset($countryBorders["features"])) {
+    //if the countryBorder was found then return json
+    //status details - 200 = success
+    $output["status"]["code"] = "200";
+    //text status = ok
+    $output["status"]["name"] = "ok";
+    //description = a success message
+    $output["status"]["description"] = "success";
+    //the execution time calculated by subtracting the start time by the current time
+    $output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
 
-//status details - 200 = success
-$output["status"]["code"] = "200";
-//text status = ok
-$output["status"]["name"] = "ok";
-//description = a success message
-$output["status"]["description"] = "success";
-//the execution time calculated by subtracting the start time by the current time
-$output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
+    //encodes the entire output array as JSON and sends it as the response
+    //automatically converts the entire output array into JSON
+    echo json_encode($output);
+} else {
+    echo json_encode(["error" => "No country border data results found"]);
+}
 
-//encodes the entire output array as JSON and sends it as the response
-//automatically converts the entire output array into JSON
-echo json_encode($output);
 ?>

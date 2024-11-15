@@ -89,7 +89,7 @@ $(window).on("load", function () {
     });
 
           // Info button to open the info modal
-          var infoBtn = L.easyButton("fa-info fa-xl", function (btn, map) {
+          var infoBtn = L.easyButton('<i class="fa-solid fa-info fa-xl modalBtn infoBtn"></i>', function (btn, map) {
             var selectedISOCode = $("#countrySelect").val();
       
           if (!selectedISOCode) {
@@ -246,7 +246,7 @@ $(window).on("load", function () {
       });
     });
 
-    var weatherBtn = L.easyButton("fa-solid fa-umbrella fa-xl", function (btn, map) {
+    var weatherBtn = L.easyButton('<i class="fa-solid fa-umbrella fa-xl modalBtn weatherBtn"></i>', function (btn, map) {
       // 1st AJAX request to geocode to get latitude and longitude values
       var chosenIsoCode = $("#countrySelect").val();
       if (!chosenIsoCode) {
@@ -308,7 +308,7 @@ $(window).on("load", function () {
             
     weatherBtn.addTo(map);
 
-    var currencyBtn = L.easyButton("fa-solid fa-dollar-sign fa-xl", function (btn, map) {
+    var currencyBtn = L.easyButton('<i class="fa-solid fa-dollar-sign fa-xl modalBtn currencyBtn"></i>', function (btn, map) {
       // AJAX request to get country information
       $("#currency-modal-rates").empty();
       $("#currency-modal-code").empty();
@@ -399,7 +399,7 @@ $(window).on("load", function () {
 
     currencyBtn.addTo(map);
    
-    var newsBtn = L.easyButton("fa-solid fa-newspaper fa-xl", function (btn, map) {
+    var newsBtn = L.easyButton('<i class="fa-solid fa-newspaper fa-xl modalBtn newsBtn"></i>', function (btn, map) {
 
         // Get the selected country's ISO code
         $("#news-modal-body").empty();
@@ -482,7 +482,7 @@ $(window).on("load", function () {
     
     newsBtn.addTo(map);
 
-    var wikipediaBtn = L.easyButton("fa-brands fa-wikipedia-w fa-xl", function (btn, map) {
+    var wikipediaBtn = L.easyButton('<i class="fa-brands fa-wikipedia-w fa-xl modalBtn wikipediaBtn"></i>', function (btn, map) {
       $("#wikipedia-modal-body").empty();
       var wikipediaCountryName = $("#countrySelect option:selected").text();
       var wikipediaISOCode = $("#countrySelect").val();

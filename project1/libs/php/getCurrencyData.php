@@ -32,7 +32,7 @@ if (isset($decode["rates"])) {
 
     echo json_encode($output);
 } else {
-    echo json_encode(["error" => "No results found"]);
+    echo json_encode(["error" => "No currency data results found"]);
 }
 
 ?>

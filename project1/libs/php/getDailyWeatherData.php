@@ -39,7 +39,7 @@ if (isset($decode["list"][0])) {
 
     echo json_encode($output);
 } else {
-    echo json_encode(["error" => "No results found"]);
+    echo json_encode(["error" => "No weather results found"]);
 }
 
 ?>

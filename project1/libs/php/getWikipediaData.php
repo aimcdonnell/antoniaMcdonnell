@@ -60,6 +60,6 @@ if (isset($decode["geonames"])) {
 
     echo  json_encode($output);
 } else {
-    echo json_encode(["error" => "No results found"]);
+    echo json_encode(["error" => "No wiki geonames results found"]);
 }
 ?>

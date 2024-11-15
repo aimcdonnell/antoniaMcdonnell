@@ -32,21 +32,26 @@ foreach ($decode["features"] as $country) {
     ];
 }
 
-//status details - 200 = success
-$output["status"]["code"] = "200";
-//text status = ok
-$output["status"]["name"] = "ok";
-//description = a success message
-$output["status"]["description"] = "success";
-// the execution time calculated by subtracting the start time by the current time
-$output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
+if (isset($decode["features"])) {
+    //status details - 200 = success
+    $output["status"]["code"] = "200";
+    //text status = ok
+    $output["status"]["name"] = "ok";
+    //description = a success message
+    $output["status"]["description"] = "success";
+    // the execution time calculated by subtracting the start time by the current time
+    $output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
+    //structuring the response in a well organized way (status, name, description, execution time, and data)
+    //in one structured array
+    $output["data"] = $countryData;
 
-//structuring the response in a well organized way (status, name, description, execution time, and data)
-//in one structured array
-$output["data"] = $countryData;
+    //encodes the entire output array as JSON and sends it as the response
+    //automatically converts the entire utput array into JSON
+    echo json_encode($output);
+} else {
+    echo json_encode(["error" => "No country data results found"]);
+}
 
-//encodes the entire output array as JSON and sends it as the response
-//automatically converts the entire utput array into JSON
-echo json_encode($output);
+
 
 ?>
