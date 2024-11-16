@@ -639,7 +639,7 @@ $(window).on("load", function () {
                       <span><strong>Natural Disaster:</strong> ${event.fields.type[0].name}</span>
                       <span><strong>Date:</strong> ${formatDate(event.fields.date.created)}</span>
                       <span><strong>Status:</strong> ${capitalizeFirstLetter(event.fields.status)}</span>
-                      <span><strong>URL:</strong> <a href="${event.fields.url}" target="_blank">${event.fields.url}</a></span>
+                      <span><a href="${event.fields.url}" target="_blank">Learn more</a></span>
                     </div>
                   </td>
                 </tr>
