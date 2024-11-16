@@ -1563,7 +1563,7 @@ navigator.geolocation.watchPosition(success, error);
 
       //if no ISO code selected, return
       if (!currencyISOCode) {
-        console.warn("No ISO code selected.");
+        console.warn("No ISO code selected for the weather modal.");
         return;
       }
 
@@ -1653,7 +1653,7 @@ navigator.geolocation.watchPosition(success, error);
         var newsISOCode = $("#countrySelect").val();
   
         if (!newsISOCode) {
-          console.warn("No ISO code selected.");
+          console.warn("No ISO code selected for the currency modal.");
           return;
         }
 
@@ -1783,7 +1783,7 @@ navigator.geolocation.watchPosition(success, error);
       // 1st AJAX request to geocode to get latitude and longitude values
       var energyIsoCode = $("#countrySelect").val();
       if (!energyIsoCode) {
-        console.warn("No ISO code selected.");
+        console.warn("No ISO code selected for the energy modal.");
         return;
       }
       
@@ -1798,7 +1798,7 @@ navigator.geolocation.watchPosition(success, error);
           //console.log(response.data);
 
           if (response.status.name === "ok") {
-            console.log(response.data);
+            //console.log(response.data);
             $("#renewable-energy-country").html(response.data.country);
             $("#renewable-energy-generation").html(response.data.generation_GWh + " GWh");
             $("#renewable-energy-percentage").html(response.data.renewable_percentage + "%");
@@ -1825,7 +1825,88 @@ navigator.geolocation.watchPosition(success, error);
     });
     energyBtn.addTo(map);
 
+    var naturalDisasterBtn = L.easyButton('<i class="fa-solid fa-triangle-exclamation fa-xl modalBtn naturalDisasterBtn"></i>', function(btn, map){
+      
+      $("#natural-disaster-modal-body").empty();
 
+      var naturalDisasterCountry = $("#countrySelect option:selected").text();
+
+      if (!naturalDisasterCountry) {
+        console.warn("No country selected for the natural disaster modal.");
+        return;
+      }
+
+      $.ajax({
+        url: "libs/php/getNaturalDisasterData.php",
+        type: "GET",
+        dataType: "json",
+        data: {
+          country: naturalDisasterCountry
+        },
+        success: function (response) {
+          console.log(response);
+          if (response.status.name === "ok" && response.data.length > 0) {
+            response.data.forEach(function (event){
+              
+              function getCountryName(naturalDisasterCountry, countries) {
+                // Check if the country name matches the expected country name in the response data
+                if (Array.isArray(countries)) {
+                  for (let i = 0; i < countries.length; i++) {
+                    if (countries[i].name === naturalDisasterCountry) {
+                      return naturalDisasterCountry; // Return country name if match is found
+                    }
+                  }
+                } else if (countries === naturalDisasterCountry) {
+                  // Single country match
+                  return naturalDisasterCountry;
+                }
+                return "Unknown Country"; // Fallback if no match is found
+              }
+
+              function capitalizeFirstLetter(str) {
+                return str.charAt(0).toUpperCase() + str.slice(1);
+              }
+
+              function formatDate(dateString) {
+                const date = new Date(dateString);
+                const day = date.getDate();
+                const month = date.toLocaleString('default', { month: 'long' });
+                const year = date.getFullYear();
+                return `${month} ${year}`;
+              }
+
+              var countryName = getCountryName(naturalDisasterCountry, event.fields.country);
+
+              $("#natural-disaster-modal-body").append(`
+                <tr>
+                  <td>
+                    <div style="display: flex; flex-direction: column;">
+                      <span><strong>Country:</strong> ${countryName}</span>
+                      <span><strong>Natural Disaster:</strong> ${event.fields.type[0].name}</span>
+                      <span><strong>Date:</strong> ${formatDate(event.fields.date.created)}</span>
+                      <span><strong>Status:</strong> ${capitalizeFirstLetter(event.fields.status)}</span>
+                      <span><strong>URL:</strong> <a href="${event.fields.url}" target="_blank">${event.fields.url}</a></span>
+                    </div>
+                  </td>
+                </tr>
+              `);
+              $("#natural-disaster-modal").modal("show");
+            });
+          } else {
+            $("#natural-disaster-modal-body").append(`
+                <tr>
+                    <td colspan="2">No natural disaster data available for the selected country</td>
+                </tr>
+            `);
+            $("#natural-disaster-modal").modal("show");
+          }
+        }, error: function (jqXHR, textStatus, errorThrown) {
+          console.log(`Error: ${textStatus} - ${errorThrown}`);
+        }
+      })
+    });
+
+    naturalDisasterBtn.addTo(map);
   });
 });
 <<<<<<< HEAD

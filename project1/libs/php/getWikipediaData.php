@@ -18,9 +18,13 @@ $countryMappings = [
     "Central African Rep." => "Central African Republic",
     "Czech Rep." => "Czech Republic",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "Czech Rep." => "Czechia",
 =======
 >>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
+=======
+    "Czech Rep." => "Czechia",
+>>>>>>> 4c204db (Adding information on natural disasters to my code)
     "Dem. Rep. Congo" => "Democratic Republic of the Congo",
     "Dem. Rep. Korea" => "Democratic Republic of Korea",
     "Dominican Rep." => "Dominican Republic",
