@@ -11,6 +11,7 @@ $countryMappings = [
     "Bosnia and Herz." => "Bosnia and Herzegovina",
     "Central African Rep." => "Central African Republic",
     "Czech Rep." => "Czech Republic",
+    "Czech Rep." => "Czechia",
     "Dem. Rep. Congo" => "Democratic Republic of the Congo",
     "Dem. Rep. Korea" => "Democratic Republic of Korea",
     "Dominican Rep." => "Dominican Republic",

@@ -125,6 +125,47 @@ color: #6fa1e8
 color: #c19015;
 }
 
+/* Ensure the table layout adapts */
+
+/* Ensure the modal content is responsive */
+.modal-body {
+  overflow-x: auto; /* Enable horizontal scrolling if necessary */
+}
+
+.table {
+  table-layout: fixed; /* Prevents cells from expanding beyond modal width */
+  width: 100%; /* Ensure the table fits the modal */
+  overflow-wrap: break-word; /* Ensures long text wraps */
+}
+
+/* Prevent large numbers from overflowing */
+#currency-modal-results {
+  white-space: nowrap; /* Allow wrapping of text */
+  max-width: 100%; /* Constrain width within the modal */
+  overflow: hidden; /* Hide any overflow */
+}
+
+/* Input box adjustments for mobile */
+#currency-input {
+  width: 100%; /* Ensure input box stays within container */
+  max-width: 100%; /* Prevent input from exceeding container width */
+  box-sizing: border-box; /* Include padding and border in width */
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide any overflow */
+}
+
+/* Modal adjustments for small screens */
+@media (max-width: 768px) {
+  .modal-dialog {
+    max-width: 90%; /* Reduce modal width for small screens */
+    margin: auto; /* Center modal on screen */
+  }
+
+  .modal-body {
+    padding: 10px; /* Reduce padding for a better fit */
+  }
+}
+
 .newsBtn {
 color: #c338c3;
 }
@@ -135,4 +176,8 @@ color: #828080;
 
 .energyBtn {
 color: #4caf50;
+}
+
+.naturalDisasterBtn {
+color: #d32f2f;
 }
