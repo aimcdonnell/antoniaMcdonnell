@@ -47,13 +47,16 @@ $apiKey = "0d315a3d7ebc4c95983e51902d24a8a1";
 if (isset($_REQUEST["lat"]) && isset($_REQUEST["lng"])) {
     $lat = $_REQUEST["lat"];
     $lng = $_REQUEST["lng"];
+    $url = "https://api.opencagedata.com/geocode/v1/json?q=" . $lat . "," . $lng . "&key=" . $apiKey;
+} elseif (isset($_REQUEST["isoCode"])) {
+    $country = urlencode($_REQUEST["isoCode"]);
+    $url = "https://api.opencagedata.com/geocode/v1/json?q=" . $country . "&key=" . $apiKey;
+
 } else {
     // Handle missing parameters, e.g., return an error response or set default values
-    echo "Latitude and longitude are required.";
+    echo "Latitude and longitude or geocode country are required.";
     exit;
 }
-
-$url = "https://api.opencagedata.com/geocode/v1/json?q=" . $lat . "," . $lng . "&key=" . $apiKey;
 
 $ch = curl_init();
 <<<<<<< HEAD

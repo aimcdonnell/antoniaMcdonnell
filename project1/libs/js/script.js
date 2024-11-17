@@ -979,6 +979,7 @@ $(window).on('load', function () {
 
   var countryData = [];
 
+
   // Street map layer
   var streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
     attribution: "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012"
@@ -1280,6 +1281,8 @@ navigator.geolocation.watchPosition(success, error);
     "Satellite": satellite
   };
 
+  var cityMarkers;
+
   // ---------------------------------------------------------
   // EVENT HANDLERS
   // ---------------------------------------------------------
@@ -1290,6 +1293,10 @@ navigator.geolocation.watchPosition(success, error);
     map = L.map("map", {
       layers: [streets]
     });
+
+   /* let overlays = {
+      Cities:  cityMarkers,
+    };*/
 
     // Add a layer group for the border
     let borderLayer = L.layerGroup().addTo(map);
@@ -1928,14 +1935,14 @@ navigator.geolocation.watchPosition(success, error);
           if (response.status.name === "ok" && response.data.length > 0) {
             for (let i = 0; i < response.data.length; i++) {
               if (countryIsoCode === response.data[i].countryCode) {
-                var cityMarker = L.ExtraMarkers.icon({
+                cityMarkers = L.ExtraMarkers.icon({
                   icon: "fa-solid fa-city",
                   markerColor: "black",
                   shape: "circle",
                   prefix: "fa"
                 });
                 
-                L.marker([response.data[i].lat, response.data[i].lng], {icon: cityMarker}).addTo(map).bindPopup(`${response.data[i].name}`);
+                L.marker([response.data[i].lat, response.data[i].lng], {icon: cityMarkers}).addTo(map).bindPopup(`${response.data[i].name}`);
               }
               
             }
@@ -1954,6 +1961,62 @@ navigator.geolocation.watchPosition(success, error);
       $("#countrySelect").on("change", function () {
         addCityMarkers();
       });
+
+      function addPOIMarkers() {
+        map.eachLayer(function (layer) {
+          if (layer instanceof L.Marker) {
+            map.removeLayer(layer);
+          }
+      })
+
+      var POIIsoCode = $("#countrySelect").val();
+
+      $.ajax({
+        url: "libs/php/getCities.php",
+        type: "GET",
+        dataType: "json",
+        data: {
+          isoCode: POIIsoCode
+        },
+        success: function (response) {
+          if (response.status.name === "ok" && response.data.length > 0) {
+            for (let i = 0; i < response.data.length; i++) {
+              if (POIIsoCode === response.data[i].countryCode) {
+
+                const cityLat = response.data[i].lat;
+                const cityLng = response.data[i].lng;
+                console.log(cityLat, cityLng);
+
+                $.ajax({
+                  url: "libs/php/getPointsOfInterest.php",
+                  type: "GET",
+                  dataType: "json",
+                  data: {
+                    lat: cityLat,
+                    lng: cityLng
+                  },
+                  //keep working on this code
+                  success: function (response) {
+                    console.log(response);
+                    if (response) {
+                      console.log("Points of interest found", response.data)
+                    } else {
+                      console.log("No nearby points of interest found.");
+                    }
+                  }, 
+                  error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(`Error: ${textStatus} - ${errorThrown}`);
+                  }
+                })
+            }
+          }
+        }
+      }
+      })
+    }
+    $("#countrySelect").on("change", function () {
+      addPOIMarkers();
+    });
   });
 });
 <<<<<<< HEAD
