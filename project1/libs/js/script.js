@@ -598,7 +598,7 @@ $(window).on("load", function () {
           country: naturalDisasterCountry
         },
         success: function (response) {
-          console.log(response);
+          //console.log(response);
           if (response.status.name === "ok" && response.data.length > 0) {
             response.data.forEach(function (event){
               
@@ -661,5 +661,52 @@ $(window).on("load", function () {
     });
 
     naturalDisasterBtn.addTo(map);
+    
+    function addCityMarkers() {
+      //remove existing markers
+      map.eachLayer(function (layer) {
+        if (layer instanceof L.Marker) {
+          map.removeLayer(layer);
+        }
+      });
+      var countryIsoCode = $("#countrySelect").val();
+      
+      $.ajax({
+        url: "libs/php/getCities.php",
+        type: "GET",
+        dataType: "json",
+        data: {
+          isoCode: countryIsoCode
+        },
+        success: function (response) {
+          if (response.status.name === "ok" && response.data.length > 0) {
+            for (let i = 0; i < response.data.length; i++) {
+              if (countryIsoCode === response.data[i].countryCode) {
+                var cityMarker = L.ExtraMarkers.icon({
+                  icon: "fa-solid fa-city",
+                  markerColor: "black",
+                  shape: "circle",
+                  prefix: "fa"
+                });
+                
+                L.marker([response.data[i].lat, response.data[i].lng], {icon: cityMarker}).addTo(map).bindPopup(`${response.data[i].name}`);
+              }
+              
+            }
+          } else {
+            console.log("No cities found for the selected country.");
+          }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.log(`Error: ${textStatus} - ${errorThrown}`);
+        }
+ 
+
+      });
+      
+    }
+      $("#countrySelect").on("change", function () {
+        addCityMarkers();
+      });
   });
 });
