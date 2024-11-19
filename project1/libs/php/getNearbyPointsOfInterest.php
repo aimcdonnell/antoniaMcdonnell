@@ -15,7 +15,7 @@ if (!$lat || !$lng) {
     exit;
 }
 
-$url = "http://api.geonames.org/findNearbyPOIsOSMJSON?lat=" . $lat . "&lng=" . $lng . "&username=" . $username;
+$url = "http://api.geonames.org/findNearbyPOIsOSMJSON?lat=" . $lat . "&lng=" . $lng . "&radius=1&username=" . $username;
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -32,7 +32,7 @@ if (isset($decode["poi"])) {
     $output["status"]["name"] = "ok";
     $output["status"]["description"] = "success";
     $output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
-    $output["data"] = $decode["geonames"];
+    $output["data"] = $decode["poi"];
     echo json_encode($output);
 } else {
     echo json_encode(["error" => "No points of interest data results found"]);

@@ -671,7 +671,31 @@ $(window).on("load", function () {
     
     let cityMarkersGroup = L.layerGroup().addTo(map);
     let poiMarkersGroup = L.layerGroup().addTo(map);
-    
+
+    function fetchNearbyPOIs(lat, lng) {
+          $.ajax({
+              url: "libs/php/getNearbyPointsOfInterest.php",
+              type: "GET",
+              dataType: "json",
+              data: { lat, lng },
+              success: function (response) {
+                console.log(response);
+                if (response.status.name === "ok") {
+                      response.data.forEach(poi => {
+                          L.marker([poi.lat, poi.lng])
+                              .addTo(poiMarkersGroup)
+                              .bindPopup(`${poi.name}`);
+                      });
+                  } else {
+                      console.log("No POIs found near the given coordinates.");
+                  }
+              },
+              error: function (jqXHR, textStatus, errorThrown) {
+                  console.error(`Error fetching POIs: ${textStatus} - ${errorThrown}`);
+              }
+          });
+     ; // Delay in milliseconds
+  }
     function addCityMarkers() {
         cityMarkersGroup.clearLayers();
     
@@ -682,8 +706,10 @@ $(window).on("load", function () {
             dataType: "json",
             data: { isoCode: countryIsoCode },
             success: function (response) {
+              //console.log(response);
                 if (response.status.name === "ok" && response.data.length > 0) {
                     response.data.forEach(city => {
+                      //console.log("Coordinates:", city.lat, city.lng);
                         const cityMarker = L.ExtraMarkers.icon({
                             icon: "fa-solid fa-city",
                             markerColor: "black",
@@ -694,6 +720,7 @@ $(window).on("load", function () {
                         L.marker([city.lat, city.lng], { icon: cityMarker })
                             .addTo(cityMarkersGroup)
                             .bindPopup(`${city.name}`);
+                            fetchNearbyPOIs(city.lat, city.lng);
 
                     });
                 } else {
