@@ -1,5 +1,4 @@
 <?php
-
 header("Content-Type: application/json; charset=UTF-8");
 
 ini_set('display_errors', 'On');
@@ -11,10 +10,14 @@ $username = "amcdonnell";
 $lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : null;
 $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : null;
 
-$url = "http://api.geonames.org/findNearbyPOIsOSMJSON?lat=" . $lat . "&lng=" . $lng . "&radius=50&username=" . $username;
+if (!$lat || !$lng) {
+    echo json_encode(["error" => "Latitude or Longitude not provided"]);
+    exit;
+}
+
+$url = "http://api.geonames.org/findNearbyPOIsOSMJSON?lat=" . $lat . "&lng=" . $lng . "&username=" . $username;
 
 $ch = curl_init();
-
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_URL, $url);
@@ -24,8 +27,7 @@ curl_close($ch);
 
 $decode = json_decode($result, true);
 
-
-if (isset($decode["geonames"])) {
+if (isset($decode["poi"])) {
     $output["status"]["code"] = "200";
     $output["status"]["name"] = "ok";
     $output["status"]["description"] = "success";

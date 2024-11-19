@@ -1915,107 +1915,45 @@ navigator.geolocation.watchPosition(success, error);
 
     naturalDisasterBtn.addTo(map);
     
+    let cityMarkersGroup = L.layerGroup().addTo(map);
+    let poiMarkersGroup = L.layerGroup().addTo(map);
+    
     function addCityMarkers() {
-      //remove existing markers
-      map.eachLayer(function (layer) {
-        if (layer instanceof L.Marker) {
-          map.removeLayer(layer);
-        }
-      });
-      var countryIsoCode = $("#countrySelect").val();
-      
-      $.ajax({
-        url: "libs/php/getCities.php",
-        type: "GET",
-        dataType: "json",
-        data: {
-          isoCode: countryIsoCode
-        },
-        success: function (response) {
-          if (response.status.name === "ok" && response.data.length > 0) {
-            for (let i = 0; i < response.data.length; i++) {
-              if (countryIsoCode === response.data[i].countryCode) {
-                cityMarkers = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-city",
-                  markerColor: "black",
-                  shape: "circle",
-                  prefix: "fa"
-                });
-                
-                L.marker([response.data[i].lat, response.data[i].lng], {icon: cityMarkers}).addTo(map).bindPopup(`${response.data[i].name}`);
-              }
-              
-            }
-          } else {
-            console.log("No cities found for the selected country.");
-          }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-          console.log(`Error: ${textStatus} - ${errorThrown}`);
-        }
- 
+        cityMarkersGroup.clearLayers();
+    
+        const countryIsoCode = $("#countrySelect").val();
+        $.ajax({
+            url: "libs/php/getCities.php",
+            type: "GET",
+            dataType: "json",
+            data: { isoCode: countryIsoCode },
+            success: function (response) {
+                if (response.status.name === "ok" && response.data.length > 0) {
+                    response.data.forEach(city => {
+                        const cityMarker = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-city",
+                            markerColor: "black",
+                            shape: "circle",
+                            prefix: "fa"
+                        });
+    
+                        L.marker([city.lat, city.lng], { icon: cityMarker })
+                            .addTo(cityMarkersGroup)
+                            .bindPopup(`${city.name}`);
 
-      });
-      
+                    });
+                } else {
+                    console.log("No cities found for the selected country.");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error(`Error: ${textStatus} - ${errorThrown}`);
+            }
+
+        });
     }
-      $("#countrySelect").on("change", function () {
+        $("#countrySelect").on("change", function () {
         addCityMarkers();
-      });
-
-      function addPOIMarkers() {
-        map.eachLayer(function (layer) {
-          if (layer instanceof L.Marker) {
-            map.removeLayer(layer);
-          }
-      })
-
-      var POIIsoCode = $("#countrySelect").val();
-
-      $.ajax({
-        url: "libs/php/getCities.php",
-        type: "GET",
-        dataType: "json",
-        data: {
-          isoCode: POIIsoCode
-        },
-        success: function (response) {
-          if (response.status.name === "ok" && response.data.length > 0) {
-            for (let i = 0; i < response.data.length; i++) {
-              if (POIIsoCode === response.data[i].countryCode) {
-
-                const cityLat = response.data[i].lat;
-                const cityLng = response.data[i].lng;
-                console.log(cityLat, cityLng);
-
-                $.ajax({
-                  url: "libs/php/getPointsOfInterest.php",
-                  type: "GET",
-                  dataType: "json",
-                  data: {
-                    lat: cityLat,
-                    lng: cityLng
-                  },
-                  //keep working on this code
-                  success: function (response) {
-                    console.log(response);
-                    if (response) {
-                      console.log("Points of interest found", response.data)
-                    } else {
-                      console.log("No nearby points of interest found.");
-                    }
-                  }, 
-                  error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(`Error: ${textStatus} - ${errorThrown}`);
-                  }
-                })
-            }
-          }
-        }
-      }
-      })
-    }
-    $("#countrySelect").on("change", function () {
-      addPOIMarkers();
     });
   });
 });

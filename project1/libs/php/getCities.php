@@ -25,8 +25,12 @@ $username = "amcdonnell";
 $country = isset($_REQUEST["isoCode"]) ? $_REQUEST["isoCode"] : null;
 
 // URL to fetch all cities globally from Geonames API
+<<<<<<< HEAD
 $url = "http://api.geonames.org/searchJSON?formatted=true&country=". $country . "&cities=cities1000&username=" . $username . "&style=full&maxRows=50";
 >>>>>>> 99d4a8a (Adding cities to the map)
+=======
+$url = "http://api.geonames.org/searchJSON?formatted=true&country=". $country . "&cities=cities1000&username=" . $username . "&style=full&maxRows=25";
+>>>>>>> 5008a68 (Added city markers and starting to implement points of interest data)
 
 $ch = curl_init();
 
