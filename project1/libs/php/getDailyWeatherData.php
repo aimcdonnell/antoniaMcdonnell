@@ -5,9 +5,12 @@ header("Content-Type: application/json; charset=UTF-8");
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
+define('SECURE_ACCESS', true);
+require_once './config.php';
+
 $executionStartTime = microtime(true);
 
-$apiKey = "7f4a1ebae420da2cc92d2f9d2ac7cbf5";
+$apiKey = WEATHER_API_KEY;
 
 if (isset($_REQUEST["lat"]) && isset($_REQUEST["lng"])) {
     $lat = $_REQUEST["lat"];

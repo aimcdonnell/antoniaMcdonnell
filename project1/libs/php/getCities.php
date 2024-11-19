@@ -5,10 +5,13 @@ header("Content-Type: application/json; charset=UTF-8");
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
+define('SECURE_ACCESS', true);
+require_once './config.php';
+
 $executionStartTime = microtime(true);
 
 // No country ISO code is needed anymore
-$username = "amcdonnell";
+$username = GEONAMES_USERNAME;
 $country = isset($_REQUEST["isoCode"]) ? $_REQUEST["isoCode"] : null;
 
 // URL to fetch all cities globally from Geonames API

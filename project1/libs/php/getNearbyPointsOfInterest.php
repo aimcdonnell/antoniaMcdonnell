@@ -6,7 +6,10 @@ error_reporting(E_ALL);
 
 $executionStartTime = microtime(true);
 
-$username = "amcdonnell";
+define('SECURE_ACCESS', true);
+require_once './config.php';
+
+$username = NEARBY_POIS_USERNAME;
 $lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : null;
 $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : null;
 

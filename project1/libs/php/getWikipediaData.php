@@ -7,6 +7,9 @@ error_reporting(E_ALL);
 
 $executionStartTime = microtime(true);
 
+define('SECURE_ACCESS', true);
+require_once './config.php';
+
 $countryMappings = [
     "Bosnia and Herz." => "Bosnia and Herzegovina",
     "Central African Rep." => "Central African Republic",
@@ -22,7 +25,7 @@ $countryMappings = [
 
 ];
 
-$username="amcdonnell";
+$username = WIKIPEDIA_USERNAME;
 
 //these parameters link to the parameters in the AJAX's data object
 if (isset($_REQUEST["country"]) && isset($_REQUEST["isoCode"])) {

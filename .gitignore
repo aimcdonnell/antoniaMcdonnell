@@ -8,3 +8,6 @@
 
 # Don't ignore the .gitignore file itself
 !.gitignore
+
+# Ignore the config.php file
+config.php

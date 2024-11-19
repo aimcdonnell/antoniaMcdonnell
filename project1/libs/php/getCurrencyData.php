@@ -5,9 +5,12 @@ header("Content-Type: application/json; charset=UTF-8");
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
+define('SECURE_ACCESS', true);
+require_once './config.php';
+
 $executionStartTime = microtime(true);
 
-$apiKey = "ac1427d7ddbc49abb7374c7e40489199";
+$apiKey = CURRENCY_API_KEY;
 
 $url = "https://openexchangerates.org/api/latest.json?app_id=" . $apiKey;
 

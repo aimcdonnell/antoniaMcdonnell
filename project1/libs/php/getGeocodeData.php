@@ -5,10 +5,13 @@ header("Content-Type: application/json; charset=UTF-8");
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
+define('SECURE_ACCESS', true);
+require_once './config.php';
+
 $executionStartTime = microtime(true);
 
 
-$apiKey = "0d315a3d7ebc4c95983e51902d24a8a1";
+$apiKey = OPENCAGE_API_KEY;
 
 if (isset($_REQUEST["lat"]) && isset($_REQUEST["lng"])) {
     $lat = $_REQUEST["lat"];

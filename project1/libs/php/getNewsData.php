@@ -7,6 +7,9 @@ error_reporting(E_ALL);
 
 $executionStartTime = microtime(true);
 
+define('SECURE_ACCESS', true);
+require_once './config.php';
+
 $isoCode = isset($_REQUEST["isoCode"]) ? $_REQUEST["isoCode"] : null;
 
 if (!$isoCode) {
@@ -20,7 +23,7 @@ if (!preg_match("/^[A-Z]{2}$/", $isoCode)) {
     exit;
 }
 
-$apiKey = "pub_589596ff54fa50004cfd22c7a69da957ccedc";
+$apiKey = NEWS_DATA_API_KEY;
 
 $url = "https://newsdata.io/api/1/news?apikey=" . $apiKey . "&country=" . $isoCode . "&language=en";
 
