@@ -1928,7 +1928,7 @@ navigator.geolocation.watchPosition(success, error);
               data: { lat, lng },
               success: function (response) {
                 //console.log(response);
-                if (response.status.name === "ok" && Array.isArray(response.data) && response.data.length > 0) {
+                if (response && response.status && response.status.name === "ok" && Array.isArray(response.data) && response.data.length > 0) {
                       response.data.forEach(poi => {
                         let markerIcon;
                       if (markerIcon) {}
