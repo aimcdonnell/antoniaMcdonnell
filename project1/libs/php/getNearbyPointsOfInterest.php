@@ -15,7 +15,7 @@ if (!$lat || !$lng) {
     exit;
 }
 
-$url = "http://api.geonames.org/findNearbyPOIsOSMJSON?lat=" . $lat . "&lng=" . $lng . "&radius=1&username=" . $username;
+$url = "http://api.geonames.org/findNearbyPOIsOSMJSON?lat=" . $lat . "&lng=" . $lng . "&radius=1&maxRows=3&username=" . $username;
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

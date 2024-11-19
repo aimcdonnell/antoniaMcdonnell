@@ -33,9 +33,7 @@ $(window).on("load", function () {
   var basemaps = {
     "Streets": streets,
     "Satellite": satellite
-  };
-
-  var cityMarkers;
+  }
 
   // ---------------------------------------------------------
   // EVENT HANDLERS
@@ -48,15 +46,13 @@ $(window).on("load", function () {
       layers: [streets]
     });
 
-   /* let overlays = {
-      Cities:  cityMarkers,
-    };*/
+    let overlays;
 
     // Add a layer group for the border
     let borderLayer = L.layerGroup().addTo(map);
 
     // Add the layer control to the map
-    layerControl = L.control.layers(basemaps).addTo(map);
+    //layerControl = L.control.layers(basemaps, overlays).addTo(map);
     
     // AJAX request to get countries
     $.ajax({
@@ -669,8 +665,8 @@ $(window).on("load", function () {
 
     naturalDisasterBtn.addTo(map);
     
-    let cityMarkersGroup = L.layerGroup().addTo(map);
-    let poiMarkersGroup = L.layerGroup().addTo(map);
+    let cityMarkersGroup = L.markerClusterGroup().addTo(map);
+    let poiMarkersGroup = L.markerClusterGroup().addTo(map);
 
     function fetchNearbyPOIs(lat, lng) {
           $.ajax({
@@ -680,11 +676,135 @@ $(window).on("load", function () {
               data: { lat, lng },
               success: function (response) {
                 console.log(response);
-                if (response.status.name === "ok") {
+                if (response.status.name === "ok" && Array.isArray(response.data) && response.data.length > 0) {
                       response.data.forEach(poi => {
-                          L.marker([poi.lat, poi.lng])
-                              .addTo(poiMarkersGroup)
-                              .bindPopup(`${poi.name}`);
+                        let markerIcon;
+
+                        if (poi.typeClass === "building"){
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-building",
+                            markerColor: "red",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+
+                        } else if (poi.typeClass === "attraction") {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-star",
+                            markerColor: "blue",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+
+                        } else if (poi.typeClass === "tourism") {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-camera",
+                            markerColor: "purple",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+
+                        } else if (poi.typeClass === "natural") {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-tree",
+                            markerColor: "green",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+
+                        } else if (poi.typeClass === "amenity") {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-shop",
+                            markerColor: "orange",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+
+                        } else if (poi.typeClass === "shop") {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-store",
+                            markerColor: "orange-dark",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+
+                        } else if (poi.typeClass === "highway") {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-road",
+                            markerColor: "blue",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+
+                        } else if (poi.typeClass === "food") {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-utensils",
+                            markerColor: "white",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+
+                        } else if (poi.typeClass === "leisure") {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-umbrella-beach",
+                            markerColor: "pink",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+
+                        } else if (poi.typeClass === "transport") {
+                         markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-bus",
+                            markerColor: "blue",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+
+                        } else if (poi.typeClass === "education") {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-graduation-cap",
+                            markerColor: "blue",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+
+                        } else if (poi.typeClass === "healthcare") {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-briefcase-medical",
+                            markerColor: "red",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+                        }
+                        if (markerIcon) {
+                          L.marker([poi.lat, poi.lng], { icon: markerIcon })
+                          .addTo(poiMarkersGroup)
+                          .bindPopup(`${poi.name || "Unnamed " + poi.typeClass + " marker"} `);
+                        }
                       });
                   } else {
                       console.log("No POIs found near the given coordinates.");
@@ -694,8 +814,8 @@ $(window).on("load", function () {
                   console.error(`Error fetching POIs: ${textStatus} - ${errorThrown}`);
               }
           });
-     ; // Delay in milliseconds
   }
+
     function addCityMarkers() {
         cityMarkersGroup.clearLayers();
     
@@ -736,5 +856,13 @@ $(window).on("load", function () {
         $("#countrySelect").on("change", function () {
         addCityMarkers();
     });
+
+    overlays = {
+        "Points of Interest": poiMarkersGroup,
+        "Cities": cityMarkersGroup
+    };
+
+    layerControl = L.control.layers(basemaps, overlays).addTo(map);
+
   });
 });
