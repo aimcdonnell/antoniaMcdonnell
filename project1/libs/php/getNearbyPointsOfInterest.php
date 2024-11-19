@@ -6,10 +6,14 @@ error_reporting(E_ALL);
 
 $executionStartTime = microtime(true);
 
+<<<<<<< HEAD
 define('SECURE_ACCESS', true);
 require_once './config.php';
 
 $username = NEARBY_POIS_USERNAME;
+=======
+$username = "amcdonnell";
+>>>>>>> f354cb9 (Adding nearby points of interest)
 $lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : null;
 $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : null;
 
@@ -18,7 +22,11 @@ if (!$lat || !$lng) {
     exit;
 }
 
+<<<<<<< HEAD
 $url = "http://api.geonames.org/findNearbyPOIsOSMJSON?lat=" . $lat . "&lng=" . $lng . "&radius=1&maxRows=3&username=" . $username;
+=======
+$url = "http://api.geonames.org/findNearbyPOIsOSMJSON?lat=" . $lat . "&lng=" . $lng . "&radius=1&username=" . $username;
+>>>>>>> f354cb9 (Adding nearby points of interest)
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
