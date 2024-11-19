@@ -675,11 +675,11 @@ $(window).on("load", function () {
               dataType: "json",
               data: { lat, lng },
               success: function (response) {
-                console.log(response);
+                //console.log(response);
                 if (response.status.name === "ok" && Array.isArray(response.data) && response.data.length > 0) {
                       response.data.forEach(poi => {
                         let markerIcon;
-
+                      if (markerIcon) {}
                         if (poi.typeClass === "building"){
                           markerIcon = L.ExtraMarkers.icon({
                             icon: "fa-solid fa-building",
@@ -799,11 +799,67 @@ $(window).on("load", function () {
                             iconColor: "white",
                             extraClasses: "fa-2x",
                           })
+                        } else if (poi.typeClass === "railway") {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-train",
+                            markerColor: "blue",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+                        } else if (poi.typeClass === "man_made") {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-factory",
+                            markerColor: "blue",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          }) 
+                        } else if (poi.typeClass === "office") {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-building",
+                            markerColor: "blue",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+                        } else if (poi.typeClass === "place_of_worship") {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-church",
+                            markerColor: "blue",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+                        } else if (poi.typeClass === "power") {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-plug",
+                            markerColor: "blue",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
+                        } else {
+                          markerIcon = L.ExtraMarkers.icon({
+                            icon: "fa-solid fa-map-marker",
+                            markerColor: "blue",
+                            shape: "circle",
+                            prefix: "fa",
+                            iconColor: "white",
+                            extraClasses: "fa-2x",
+                          })
                         }
                         if (markerIcon) {
                           L.marker([poi.lat, poi.lng], { icon: markerIcon })
                           .addTo(poiMarkersGroup)
                           .bindPopup(`${poi.name || "Unnamed " + poi.typeClass + " marker"} `);
+                        } else {
+                          console.warn(`No icon available for POI type: ${poi.typeClass}`);
                         }
                       });
                   } else {
@@ -836,12 +892,12 @@ $(window).on("load", function () {
                             shape: "circle",
                             prefix: "fa"
                         });
-    
+                        if (cityMarker) {
                         L.marker([city.lat, city.lng], { icon: cityMarker })
                             .addTo(cityMarkersGroup)
                             .bindPopup(`${city.name}`);
                             fetchNearbyPOIs(city.lat, city.lng);
-
+                        }
                     });
                 } else {
                     console.log("No cities found for the selected country.");
