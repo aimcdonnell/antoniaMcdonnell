@@ -7,13 +7,19 @@ error_reporting(E_ALL);
 $executionStartTime = microtime(true);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b8651ec (Removing sensitive data from app)
 define('SECURE_ACCESS', true);
 require_once './config.php';
 
 $username = NEARBY_POIS_USERNAME;
+<<<<<<< HEAD
 =======
 $username = "amcdonnell";
 >>>>>>> f354cb9 (Adding nearby points of interest)
+=======
+>>>>>>> b8651ec (Removing sensitive data from app)
 $lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : null;
 $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : null;
 

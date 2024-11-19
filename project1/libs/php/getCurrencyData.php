@@ -13,6 +13,7 @@ ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 define('SECURE_ACCESS', true);
 require_once './config.php';
 
@@ -24,6 +25,14 @@ $executionStartTime = microtime(true);
 
 $apiKey = "ac1427d7ddbc49abb7374c7e40489199";
 >>>>>>> 032e89d (Adding currency converter to app)
+=======
+define('SECURE_ACCESS', true);
+require_once './config.php';
+
+$executionStartTime = microtime(true);
+
+$apiKey = CURRENCY_API_KEY;
+>>>>>>> b8651ec (Removing sensitive data from app)
 
 $url = "https://openexchangerates.org/api/latest.json?app_id=" . $apiKey;
 

@@ -6,6 +6,7 @@ ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 define('SECURE_ACCESS', true);
 require_once './config.php';
 
@@ -17,6 +18,14 @@ $executionStartTime = microtime(true);
 
 $apiKey = "7f4a1ebae420da2cc92d2f9d2ac7cbf5";
 >>>>>>> b32b2f7 (Adding weather info for each country's capital city)
+=======
+define('SECURE_ACCESS', true);
+require_once './config.php';
+
+$executionStartTime = microtime(true);
+
+$apiKey = WEATHER_API_KEY;
+>>>>>>> b8651ec (Removing sensitive data from app)
 
 if (isset($_REQUEST["lat"]) && isset($_REQUEST["lng"])) {
     $lat = $_REQUEST["lat"];

@@ -6,6 +6,7 @@ ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 define('SECURE_ACCESS', true);
 require_once './config.php';
 
@@ -18,10 +19,15 @@ $country = isset($_REQUEST["isoCode"]) ? $_REQUEST["isoCode"] : null;
 // URL to fetch all cities globally from Geonames API
 $url = "http://api.geonames.org/searchJSON?formatted=true&country=". $country . "&cities=cities1000&username=" . $username . "&style=full&maxRows=25";
 =======
+=======
+define('SECURE_ACCESS', true);
+require_once './config.php';
+
+>>>>>>> b8651ec (Removing sensitive data from app)
 $executionStartTime = microtime(true);
 
 // No country ISO code is needed anymore
-$username = "amcdonnell";
+$username = GEONAMES_USERNAME;
 $country = isset($_REQUEST["isoCode"]) ? $_REQUEST["isoCode"] : null;
 
 // URL to fetch all cities globally from Geonames API

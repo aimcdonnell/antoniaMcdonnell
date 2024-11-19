@@ -8,11 +8,17 @@ error_reporting(E_ALL);
 $executionStartTime = microtime(true);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 define('SECURE_ACCESS', true);
 require_once './config.php';
 
 =======
 >>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
+=======
+define('SECURE_ACCESS', true);
+require_once './config.php';
+
+>>>>>>> b8651ec (Removing sensitive data from app)
 $countryMappings = [
     "Bosnia and Herz." => "Bosnia and Herzegovina",
     "Central African Rep." => "Central African Republic",
@@ -36,10 +42,14 @@ $countryMappings = [
 ];
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 $username = WIKIPEDIA_USERNAME;
 =======
 $username="amcdonnell";
 >>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
+=======
+$username = WIKIPEDIA_USERNAME;
+>>>>>>> b8651ec (Removing sensitive data from app)
 
 //these parameters link to the parameters in the AJAX's data object
 if (isset($_REQUEST["country"]) && isset($_REQUEST["isoCode"])) {
