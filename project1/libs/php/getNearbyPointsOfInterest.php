@@ -23,10 +23,14 @@ if (!$lat || !$lng) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 $url = "http://api.geonames.org/findNearbyPOIsOSMJSON?lat=" . $lat . "&lng=" . $lng . "&radius=1&maxRows=3&username=" . $username;
 =======
 $url = "http://api.geonames.org/findNearbyPOIsOSMJSON?lat=" . $lat . "&lng=" . $lng . "&radius=1&username=" . $username;
 >>>>>>> f354cb9 (Adding nearby points of interest)
+=======
+$url = "http://api.geonames.org/findNearbyPOIsOSMJSON?lat=" . $lat . "&lng=" . $lng . "&radius=1&maxRows=3&username=" . $username;
+>>>>>>> a6e78ee (Adding marker clusters and overlays so that Points of interest and cities can be toggled on and off)
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
