@@ -1920,6 +1920,7 @@ navigator.geolocation.watchPosition(success, error);
     let poiMarkersGroup = L.markerClusterGroup().addTo(map);
 
     function fetchNearbyPOIs(lat, lng) {
+      poiMarkersGroup.clearLayers();
           $.ajax({
               url: "libs/php/getNearbyPointsOfInterest.php",
               type: "GET",
