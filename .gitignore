@@ -8,6 +8,9 @@
 
 # Don't ignore the .gitignore file itself
 !.gitignore
+!assets
+!forms
+!index.html
 
 # Ignore the config.php file
 config.php
