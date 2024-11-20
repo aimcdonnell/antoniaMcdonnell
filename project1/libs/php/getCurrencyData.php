@@ -1,38 +1,16 @@
 <?php
 //Getting currency data from the Open Exchange Rates API
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 032e89d (Adding currency converter to app)
-=======
->>>>>>> fc006f9 (Adding getNewsData.php file)
 header("Content-Type: application/json; charset=UTF-8");
 
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-define('SECURE_ACCESS', true);
-require_once './config.php';
-
 $executionStartTime = microtime(true);
+
+define('SECURE_ACCESS', true);
+$config = require './config.php';
 
 $apiKey = CURRENCY_API_KEY;
-=======
-$executionStartTime = microtime(true);
-
-$apiKey = "ac1427d7ddbc49abb7374c7e40489199";
->>>>>>> 032e89d (Adding currency converter to app)
-=======
-define('SECURE_ACCESS', true);
-require_once './config.php';
-
-$executionStartTime = microtime(true);
-
-$apiKey = CURRENCY_API_KEY;
->>>>>>> b8651ec (Removing sensitive data from app)
 
 $url = "https://openexchangerates.org/api/latest.json?app_id=" . $apiKey;
 
@@ -57,19 +35,7 @@ if (isset($decode["rates"])) {
 
     echo json_encode($output);
 } else {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     echo json_encode(["error" => "No currency data results found"]);
-=======
-    echo "No results found";
->>>>>>> 032e89d (Adding currency converter to app)
-=======
-    echo json_encode(["error" => "No results found"]);
->>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
-=======
-    echo json_encode(["error" => "No currency data results found"]);
->>>>>>> 2b5de68 (Unifying php status code if/else statements)
 }
 
 ?>

@@ -6,20 +6,11 @@ error_reporting(E_ALL);
 
 $executionStartTime = microtime(true);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> b8651ec (Removing sensitive data from app)
 define('SECURE_ACCESS', true);
-require_once './config.php';
+$config = require './config.php';
 
-$username = NEARBY_POIS_USERNAME;
-<<<<<<< HEAD
-=======
-$username = "amcdonnell";
->>>>>>> f354cb9 (Adding nearby points of interest)
-=======
->>>>>>> b8651ec (Removing sensitive data from app)
+$username = GEONAMES_USERNAME;
+
 $lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : null;
 $lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : null;
 
@@ -28,15 +19,7 @@ if (!$lat || !$lng) {
     exit;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 $url = "http://api.geonames.org/findNearbyPOIsOSMJSON?lat=" . $lat . "&lng=" . $lng . "&radius=1&maxRows=3&username=" . $username;
-=======
-$url = "http://api.geonames.org/findNearbyPOIsOSMJSON?lat=" . $lat . "&lng=" . $lng . "&radius=1&username=" . $username;
->>>>>>> f354cb9 (Adding nearby points of interest)
-=======
-$url = "http://api.geonames.org/findNearbyPOIsOSMJSON?lat=" . $lat . "&lng=" . $lng . "&radius=1&maxRows=3&username=" . $username;
->>>>>>> a6e78ee (Adding marker clusters and overlays so that Points of interest and cities can be toggled on and off)
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

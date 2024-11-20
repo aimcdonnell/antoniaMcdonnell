@@ -7,18 +7,6 @@ error_reporting(E_ALL);
 
 $executionStartTime = microtime(true);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-define('SECURE_ACCESS', true);
-require_once './config.php';
-
-=======
->>>>>>> fc006f9 (Adding getNewsData.php file)
-=======
-define('SECURE_ACCESS', true);
-require_once './config.php';
-
->>>>>>> b8651ec (Removing sensitive data from app)
 $isoCode = isset($_REQUEST["isoCode"]) ? $_REQUEST["isoCode"] : null;
 
 if (!$isoCode) {
@@ -26,27 +14,16 @@ if (!$isoCode) {
     exit;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> eb2b536 (Added NewsData API to app)
 // Validate ISO code (2-letter code)
 if (!preg_match("/^[A-Z]{2}$/", $isoCode)) {
     echo json_encode(["error" => "Invalid ISO code format"]);
     exit;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+define('SECURE_ACCESS', true);
+$config = require './config.php';
+
 $apiKey = NEWS_DATA_API_KEY;
-=======
-=======
->>>>>>> eb2b536 (Added NewsData API to app)
-$apiKey = "pub_589596ff54fa50004cfd22c7a69da957ccedc";
->>>>>>> fc006f9 (Adding getNewsData.php file)
-=======
-$apiKey = NEWS_DATA_API_KEY;
->>>>>>> b8651ec (Removing sensitive data from app)
 
 $url = "https://newsdata.io/api/1/news?apikey=" . $apiKey . "&country=" . $isoCode . "&language=en";
 
@@ -63,43 +40,19 @@ curl_close($ch);
 $decode = json_decode($result, true);
 
 if (isset($decode["results"])) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 3d3d168 (Adding wikipedia articles to the wiki modal, updating countryBorders.geo.json file and saving renewable energy percentages)
     
     // Limit the results to the first 5 articles
     $limitedResults = array_slice($decode["results"], 0, 5);
 
-<<<<<<< HEAD
-=======
->>>>>>> fc006f9 (Adding getNewsData.php file)
-=======
->>>>>>> 3d3d168 (Adding wikipedia articles to the wiki modal, updating countryBorders.geo.json file and saving renewable energy percentages)
     $output["status"]["code"] = "200";
     $output["status"]["name"] = "ok";
     $output["status"]["description"] = "success";
     $output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 3d3d168 (Adding wikipedia articles to the wiki modal, updating countryBorders.geo.json file and saving renewable energy percentages)
     $output["data"]["results"] = $limitedResults;
 
     echo json_encode($output);
 } else {
     echo json_encode(["error" => "No results found"]);
-=======
-    $output["data"] = $decode;
-
-    echo json_encode($output);
-} else {
-<<<<<<< HEAD
-    echo "No results found";
->>>>>>> fc006f9 (Adding getNewsData.php file)
-=======
-    echo json_encode(["error" => "No results found"]);
->>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
 }
 
 ?>

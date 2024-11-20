@@ -7,30 +7,11 @@ error_reporting(E_ALL);
 
 $executionStartTime = microtime(true);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-define('SECURE_ACCESS', true);
-require_once './config.php';
-
-=======
->>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
-=======
-define('SECURE_ACCESS', true);
-require_once './config.php';
-
->>>>>>> b8651ec (Removing sensitive data from app)
 $countryMappings = [
     "Bosnia and Herz." => "Bosnia and Herzegovina",
     "Central African Rep." => "Central African Republic",
     "Czech Rep." => "Czech Republic",
-<<<<<<< HEAD
-<<<<<<< HEAD
     "Czech Rep." => "Czechia",
-=======
->>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
-=======
-    "Czech Rep." => "Czechia",
->>>>>>> 4c204db (Adding information on natural disasters to my code)
     "Dem. Rep. Congo" => "Democratic Republic of the Congo",
     "Dem. Rep. Korea" => "Democratic Republic of Korea",
     "Dominican Rep." => "Dominican Republic",
@@ -41,15 +22,10 @@ $countryMappings = [
 
 ];
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-$username = WIKIPEDIA_USERNAME;
-=======
-$username="amcdonnell";
->>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
-=======
-$username = WIKIPEDIA_USERNAME;
->>>>>>> b8651ec (Removing sensitive data from app)
+define('SECURE_ACCESS', true);
+$config = require './config.php';
+
+$username= GEONAMES_USERNAME;
 
 //these parameters link to the parameters in the AJAX's data object
 if (isset($_REQUEST["country"]) && isset($_REQUEST["isoCode"])) {
@@ -66,23 +42,7 @@ $fullCountryName = array_key_exists($searchedCountry, $countryMappings) ? $count
 // URL-encode the final country name for safe usage in the URL
 $encodedCountry = urlencode($fullCountryName);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 $url = "http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=5&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
-=======
-$url = "http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=10&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
->>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
-=======
-$url = "http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=5&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
->>>>>>> 3d3d168 (Adding wikipedia articles to the wiki modal, updating countryBorders.geo.json file and saving renewable energy percentages)
-=======
-$url = "https://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=5&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
->>>>>>> 1aef87f (Working on fixing uncentred icons)
-=======
-$url = "http://api.geonames.org/wikipediaSearchJSON?formatted=true&q=" . $encodedCountry . "&maxRows=5&username=" . $username . "&style=full&country=" . $isoCode . "&title=" . $encodedCountry;
->>>>>>> db384b4 (Fixing issue with Geonames Wiki api)
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -104,14 +64,6 @@ if (isset($decode["geonames"])) {
 
     echo  json_encode($output);
 } else {
-<<<<<<< HEAD
-<<<<<<< HEAD
     echo json_encode(["error" => "No wiki geonames results found"]);
-=======
-    echo json_encode(["error" => "No results found"]);
->>>>>>> cda1cca (Adding Wikipedia PHP and jQuery AJAX request)
-=======
-    echo json_encode(["error" => "No wiki geonames results found"]);
->>>>>>> 2b5de68 (Unifying php status code if/else statements)
 }
 ?>
