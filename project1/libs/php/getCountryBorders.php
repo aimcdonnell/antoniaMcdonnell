@@ -1,5 +1,4 @@
 <?php
-
 //header is needed to set the content type of the response to JSON
 header("Content-Type: application/json; charset=UTF-8;");
 
@@ -68,5 +67,4 @@ if (isset($countryBorders["features"])) {
 } else {
     echo json_encode(["error" => "No country border data results found"]);
 }
-
 ?>

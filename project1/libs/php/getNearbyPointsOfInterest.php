@@ -41,5 +41,4 @@ if (isset($decode["poi"])) {
 } else {
     echo json_encode(["error" => "No points of interest data results found"]);
 }
-
 ?>

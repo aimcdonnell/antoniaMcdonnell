@@ -1,5 +1,4 @@
 <?php
-
 header("Content-Type: application/json; charset=UTF-8");
 
 ini_set('display_errors', 'On');
@@ -42,5 +41,4 @@ if (isset($output["data"])) {
 } else {
     echo json_encode(["error" => "No renewable energy results found"]);
 }
-
 ?>

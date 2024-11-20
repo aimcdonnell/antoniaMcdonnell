@@ -1,5 +1,4 @@
 <?php
-
 header("Content-Type: application/json; charset=UTF-8");
 
 //enable error reporting for debugging
@@ -51,5 +50,4 @@ if (isset($decode["features"])) {
 } else {
     echo json_encode(["error" => "No country data results found"]);
 }
-
 ?>

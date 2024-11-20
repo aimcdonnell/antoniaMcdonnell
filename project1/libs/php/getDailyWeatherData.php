@@ -1,5 +1,4 @@
 <?php
-
 header("Content-Type: application/json; charset=UTF-8");
 
 ini_set('display_errors', 'On');
@@ -44,5 +43,4 @@ if (isset($decode["list"][0])) {
 } else {
     echo json_encode(["error" => "No weather results found"]);
 }
-
 ?>

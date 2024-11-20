@@ -54,5 +54,4 @@ if (isset($decode["results"])) {
 } else {
     echo json_encode(["error" => "No results found"]);
 }
-
 ?>
