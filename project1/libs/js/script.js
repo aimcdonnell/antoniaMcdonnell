@@ -109,9 +109,7 @@ $(window).on("load", function () {
             data: { isoCode: selectedISOCode },
 
             success: function(result) {
-              //const response = JSON.parse(result);
               //checking the response format
-              //console.log(JSON.stringify(result.data.name.common));
 
               //adding the data to the modal
               if (result.status.name === "ok") {
@@ -164,11 +162,8 @@ $(window).on("load", function () {
       success: function (response) {
         //decodes the response from the php script
         //const result = JSON.parse(response);
-        //console.log(JSON.stringify(result.data[0].components["ISO_3166-1_alpha-2"]));
         if (response.data && response.data.length > 0) {
-          //console.log("Response results:", response)
           const userCountry = response.data[0].components["ISO_3166-1_alpha-2"];
-          //console.log(`User country: ${userCountry}`);
 
           //trigger the change event to select the user's country location
           $("#countrySelect").val(userCountry).trigger("change");
@@ -211,7 +206,6 @@ $(window).on("load", function () {
 
           // Determine whether the structure is MultiPolygon or Polygon
           const isMultiPolygon = Array.isArray(borderCoordinates[0][0]) && Array.isArray(borderCoordinates[0][0][0]);
-          //console.log("isMultiPolygon: ", isMultiPolygon);
 
           const geoJsonData = {
             type: "Feature",
@@ -225,7 +219,6 @@ $(window).on("load", function () {
 
           try {
             // Log the structure of geoJsonData to check format
-            //console.log("GeoJSON data structure:", JSON.stringify(geoJsonData, null, 2));
 
             let geoJsonLayer = L.geoJSON(geoJsonData, {
               style: {
@@ -265,7 +258,6 @@ $(window).on("load", function () {
         success: function (response) {
           if (response.status.name === "ok") {
             const capital = response.data.capitalInfo.latlng;
-            //console.log("Capital city:", capital);
 
             //pass the capital city lat and lng values from openCage data to the openWeather API
             $.ajax({
@@ -288,12 +280,10 @@ $(window).on("load", function () {
                       const humidity = day.main.humidity;
                       
                       // Add data to existing modal elements using day number
-                      //console.log("Icon URL:", `https://openweathermap.org/img/wn/${day.weather[0].icon}.png`);
                       $(`#weather-icon-${index/8}`).html(`<img src="https://openweathermap.org/img/w/${day.weather[0].icon}.png" alt="Weather Icon">`);
                       $(`#weather-description-${index/8}`).html(`${day.weather[0].description}`);
                       $(`#weather-temp-${index/8}`).html(`${temp}°C`);
                       $(`#weather-humidity-${index/8}`).html(`${humidity}`);
-                      //console.log("Weather icon code:", day.weather[0].icon);
                     }
                   });
                   //Show the weather modal
@@ -330,11 +320,9 @@ $(window).on("load", function () {
         dataType: "json",
         data: { isoCode: currencyISOCode },
         success: function (response) {
-          //console.log(JSON.stringify("GetCountryInformationResponse", response));
           if (response.status.name === "ok") {
             var currency = response.data.currencies;
             var currencyCode = Object.keys(currency)[0];
-            //console.log("Currency ISO code", currencyCode);
 
             // AJAX request to get currency exchange rates
             $.ajax({
@@ -422,7 +410,6 @@ $(window).on("load", function () {
           data: { isoCode: newsISOCode },
           success: function (response) {
             if (response.status.name === "ok" && response.data.results.length > 0) {
-              //console.log("News data response", response.data.results[0]);
 
               //display news articles matching the selected country's ISO code
               // Helper function to format date
@@ -500,7 +487,6 @@ $(window).on("load", function () {
           isoCode: wikipediaISOCode
         },
         success: function (response) {
-          console.log(response);
           if (response.status.name === "ok" && response.data.length > 0) {
             response.data.forEach(function (article) {
               $("#wikipedia-modal-body").append(`
@@ -552,10 +538,8 @@ $(window).on("load", function () {
           isoCode: energyIsoCode
         }, 
         success: function (response) {
-          //console.log(response.data);
 
           if (response.status.name === "ok") {
-            //console.log(response.data);
             $("#renewable-energy-country").html(response.data.country);
             $("#renewable-energy-generation").html(response.data.generation_GWh + " GWh");
             $("#renewable-energy-percentage").html(response.data.renewable_percentage + "%");
@@ -601,7 +585,6 @@ $(window).on("load", function () {
           country: naturalDisasterCountry
         },
         success: function (response) {
-          //console.log(response);
           if (response.status.name === "ok" && response.data.length > 0) {
             response.data.forEach(function (event){
               
@@ -676,7 +659,6 @@ $(window).on("load", function () {
               dataType: "json",
               data: { lat, lng },
               success: function (response) {
-                //console.log(response);
                 if (response && response.status && response.status.name === "ok" && Array.isArray(response.data) && response.data.length > 0) {
                       response.data.forEach(poi => {
                         let markerIcon;
@@ -883,10 +865,8 @@ $(window).on("load", function () {
             dataType: "json",
             data: { isoCode: countryIsoCode },
             success: function (response) {
-              //console.log(response);
                 if (response.status.name === "ok" && response.data.length > 0) {
                     response.data.forEach(city => {
-                      //console.log("Coordinates:", city.lat, city.lng);
                         const cityMarker = L.ExtraMarkers.icon({
                             icon: "fa-solid fa-city",
                             markerColor: "black",
