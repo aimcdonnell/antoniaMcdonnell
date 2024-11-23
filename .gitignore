@@ -14,3 +14,4 @@
 
 # Ignore the config.php file
 config.php
+modelErrorCode.php
