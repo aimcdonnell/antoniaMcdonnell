@@ -424,6 +424,7 @@ $(window).on("load", function () {
           dataType: "json",
           data: { isoCode: newsISOCode },
           success: function (response) {
+            console.log(response.data.results)
             if (
               response.status.name === "ok" &&
               response.data.results.length > 0
