@@ -428,47 +428,13 @@ $(window).on("load", function () {
               response.status.name === "ok" &&
               response.data.results.length > 0
             ) {
-              //display news articles matching the selected country's ISO code
-              // Helper function to format date
-              // Helper function to format date
-              function formatDate(dateString) {
-                const date = new Date(dateString);
-                const day = date.getDate();
-                const daySuffix = getDaySuffix(day);
-                const month = date.toLocaleString("default", { month: "long" });
-                const year = date.getFullYear();
-
-                // Format the time component
-                let hours = date.getHours();
-                const minutes = date.getMinutes().toString().padStart(2, "0");
-                const ampm = hours >= 12 ? "PM" : "AM";
-                hours = hours % 12 || 12; // Convert to 12-hour format
-
-                return `${day}${daySuffix} ${month} ${year}, ${hours}:${minutes} ${ampm}`;
-              }
-
-              function getDaySuffix(day) {
-                if (day >= 11 && day <= 13) return "th";
-                switch (day % 10) {
-                  case 1:
-                    return "st";
-                  case 2:
-                    return "nd";
-                  case 3:
-                    return "rd";
-                  default:
-                    return "th";
-                }
-              }
               Object.entries(response.data.results).forEach(([key, value]) => {
-                let formattedDate = formatDate(value.pubDate);
                 $("#news-modal-body").append(`
                   <tr>
                     <td colspan="3" </td>
                       <div style="display: flex; flex-direction: column;">
-                        <span class="font-weight-bold">${value.title}</span>
-                        <span>${formattedDate}</span>
-                        <a href="${value.link}" target="_blank">Read more...</a>
+                        <span class="fw-bold"><a href="${value.link}" target="_blank">${value.title}</a></span>
+                        
                       </div>
                     </td>
                   </tr>
@@ -515,7 +481,7 @@ $(window).on("load", function () {
                   <tr>
                     <td colspan="3">
                       <div style="display: flex; flex-direction: column;">
-                        <span class="font-weight-bold">${article.title}</span>
+                        <span class="fw-bold">${article.title}</span>
                         <span>${article.summary}</span>
                         <a href="https://${article.wikipediaUrl}" target="_blank"> Read more...</a>
                       </div>
