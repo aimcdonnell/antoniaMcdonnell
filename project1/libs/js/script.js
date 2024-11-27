@@ -432,11 +432,16 @@ $(window).on("load", function () {
               Object.entries(response.data.results).forEach(([key, value]) => {
                 $("#news-modal-body").append(`
                   <tr>
-                    <td colspan="3" </td>
-                      <div style="display: flex; flex-direction: column;">
-                        <span class="fw-bold"><a href="${value.link}" target="_blank">${value.title}</a></span>
-                        
-                      </div>
+                    <td rowspan="2" width="50%">
+                      <img class="img-fluid rounded news-img" src=${value.source_icon || value.image_url} alt=${value.title}> 
+                    </td>
+                    <td>
+                      <a href="${value.link}" class="fw-bold fs-6 text-black" target="_blank">${value.title}</a>
+                    </td>
+                  </tr>
+                  <tr class="bottom-table-border">
+                    <td class="align-bottom pb-0">
+                      <p class="fw-light fs-6 mb-2">${value.source_name}</p>
                     </td>
                   </tr>
                 `);

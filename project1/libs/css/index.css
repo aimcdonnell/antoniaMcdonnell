@@ -166,6 +166,17 @@ color: #c19015;
   }
 }
 
+.bottom-table-border {
+  border-bottom: 1px solid #989797;
+  
+}
+
+.news-img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
 .newsBtn {
 color: #c338c3;
 }
