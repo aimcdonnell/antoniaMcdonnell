@@ -18,6 +18,155 @@ $(window).on("load", function () {
   // Store the tile layer interface to change map layers
   var layerControl;
 
+  var buildingIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-building",
+    markerColor: "red",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+  var attractionIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-star",
+    markerColor: "blue",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+
+  var tourismIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-camera",
+    markerColor: "purple",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+  var natureIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-tree",
+    markerColor: "green",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+  var amenityIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-shop",
+    markerColor: "orange",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+  var shopIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-store",
+    markerColor: "orange-dark",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+  var highwayIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-road",
+    markerColor: "blue",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+  var restaurantIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-utensils",
+    markerColor: "white",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+  var leisureIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-umbrella-beach",
+    markerColor: "pink",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+  var transportIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-bus",
+    markerColor: "purple",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+  var educationIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-graduation-cap",
+    markerColor: "green-light",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+  var healthcareIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-briefcase-medical",
+    markerColor: "red",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+  var railwayIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-train",
+    markerColor: "blue",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+  var manMadeIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-industry",
+    markerColor: "white",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+
+  var officeIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-building",
+    markerColor: "blue",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+  var placesOfWorshipIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-church",
+    markerColor: "pink",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+  var powerFacilitiesIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-plug",
+    markerColor: "yellow",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+  var otherIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-map-marker",
+    markerColor: "green-dark",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+
+
+
   var countryData = [];
 
   // Street map layer
@@ -55,7 +204,15 @@ $(window).on("load", function () {
       layers: [streets],
     });
 
-    let overlays;
+  var cityMarkersGroup = L.markerClusterGroup().addTo(map);
+  var poiMarkersGroup = L.markerClusterGroup().addTo(map);
+
+  var overlays = {
+    "Points of Interest": poiMarkersGroup,
+    Cities: cityMarkersGroup,
+  };
+
+  layerControl = L.control.layers(basemaps, overlays).addTo(map);
 
     // Add a layer group for the border
     let borderLayer = L.layerGroup().addTo(map);
@@ -658,9 +815,6 @@ $(window).on("load", function () {
 
     naturalDisasterBtn.addTo(map);
 
-    let cityMarkersGroup = L.markerClusterGroup().addTo(map);
-    let poiMarkersGroup = L.markerClusterGroup().addTo(map);
-
     function fetchNearbyPOIs(lat, lng) {
       poiMarkersGroup.clearLayers();
       $.ajax({
@@ -677,181 +831,114 @@ $(window).on("load", function () {
             response.data.length > 0
           ) {
             response.data.forEach((poi) => {
-              let markerIcon;
-              if (markerIcon) {
-              }
-              if (poi.typeClass === "building") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-building",
-                  markerColor: "red",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "attraction") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-star",
-                  markerColor: "blue",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "tourism") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-camera",
-                  markerColor: "purple",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "natural") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-tree",
-                  markerColor: "green",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "amenity") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-shop",
-                  markerColor: "orange",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "shop") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-store",
-                  markerColor: "orange-dark",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "highway") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-road",
-                  markerColor: "blue",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "food") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-utensils",
-                  markerColor: "white",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "leisure") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-umbrella-beach",
-                  markerColor: "pink",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "transport") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-bus",
-                  markerColor: "purple",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "education") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-graduation-cap",
-                  markerColor: "green-light",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "healthcare") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-briefcase-medical",
-                  markerColor: "red",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "railway") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-train",
-                  markerColor: "blue",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "man_made") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-industry",
-                  markerColor: "white",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "office") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-building",
-                  markerColor: "blue",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "place_of_worship") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-church",
-                  markerColor: "pink",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else if (poi.typeClass === "power") {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-plug",
-                  markerColor: "yellow",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              } else {
-                markerIcon = L.ExtraMarkers.icon({
-                  icon: "fa-solid fa-map-marker",
-                  markerColor: "green-dark",
-                  shape: "circle",
-                  prefix: "fa",
-                  iconColor: "white",
-                  extraClasses: "fa-2x",
-                });
-              }
-              if (markerIcon) {
-                L.marker([poi.lat, poi.lng], { icon: markerIcon })
+              if (poi.typeClass === "building" && buildingIcon) {
+                L.marker([poi.lat, poi.lng], { icon: buildingIcon })
                   .addTo(poiMarkersGroup)
                   .bindPopup(
                     `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
                   );
+
+              } else if (poi.typeClass === "attraction" && attractionIcon) {
+                L.marker([poi.lat, poi.lng], { icon: attractionIcon })
+                  .addTo(poiMarkersGroup)
+                  .bindPopup(
+                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                  );
+              } else if (poi.typeClass === "tourism" && tourismIcon) {
+                L.marker([poi.lat, poi.lng], { icon: tourismIcon })
+                  .addTo(poiMarkersGroup)
+                  .bindPopup(
+                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                  );
+              } else if (poi.typeClass === "natural" && natureIcon) {
+                L.marker([poi.lat, poi.lng], { icon: natureIcon })
+                  .addTo(poiMarkersGroup)
+                  .bindPopup(
+                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                  );
+              } else if (poi.typeClass === "amenity" && amenityIcon) {
+                L.marker([poi.lat, poi.lng], { icon: amenityIcon })
+                  .addTo(poiMarkersGroup)
+                  .bindPopup(
+                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                  );
+              } else if (poi.typeClass === "shop" && shopIcon) {
+                L.marker([poi.lat, poi.lng], { icon: shopIcon })
+                  .addTo(poiMarkersGroup)
+                  .bindPopup(
+                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                  );
+              } else if (poi.typeClass === "highway" && highwayIcon) {
+                L.marker([poi.lat, poi.lng], { icon: highwayIcon })
+                  .addTo(poiMarkersGroup)
+                  .bindPopup(
+                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                  );
+              } else if (poi.typeClass === "food" && restaurantIcon) {
+                L.marker([poi.lat, poi.lng], { icon: restaurantIcon })
+                  .addTo(poiMarkersGroup)
+                  .bindPopup(
+                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                  );
+              } else if (poi.typeClass === "leisure" && leisureIcon) {
+                L.marker([poi.lat, poi.lng], { icon: leisureIcon })
+                  .addTo(poiMarkersGroup)
+                  .bindPopup(
+                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                  );
+              } else if (poi.typeClass === "transport" && transportIcon) {
+                L.marker([poi.lat, poi.lng], { icon: transportIcon })
+                  .addTo(poiMarkersGroup)
+                  .bindPopup(
+                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                  );
+              } else if (poi.typeClass === "education" && educationIcon) {
+                L.marker([poi.lat, poi.lng], { icon: educationIcon })
+                .addTo(poiMarkersGroup)
+                .bindPopup(
+                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                );
+              } else if (poi.typeClass === "healthcare" && healthcareIcon) {
+                L.marker([poi.lat, poi.lng], { icon: healthcareIcon })
+                .addTo(poiMarkersGroup)
+                .bindPopup(
+                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                );
+              } else if (poi.typeClass === "railway" && railwayIcon) {
+                L.marker([poi.lat, poi.lng], { icon: railwayIcon })
+                .addTo(poiMarkersGroup)
+                .bindPopup(
+                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                );
+              } else if (poi.typeClass === "man_made" && manMadeIcon) {
+                L.marker([poi.lat, poi.lng], { icon: manMadeIcon })
+                .addTo(poiMarkersGroup)
+                .bindPopup(
+                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                );
+              } else if (poi.typeClass === "office" && officeIcon) {
+                L.marker([poi.lat, poi.lng], { icon: officeIcon })
+                .addTo(poiMarkersGroup)
+                .bindPopup(
+                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                );
+              } else if (poi.typeClass === "place_of_worship" && placesOfWorshipIcon) {
+                L.marker([poi.lat, poi.lng], { icon: placesOfWorshipIcon })
+                .addTo(poiMarkersGroup)
+                .bindPopup(
+                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                );
+              } else if (poi.typeClass === "power" && powerFacilitiesIcon) {
+                L.marker([poi.lat, poi.lng], { icon: powerFacilitiesIcon })
+                .addTo(poiMarkersGroup)
+                .bindPopup(
+                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
+                );
               } else {
-                console.warn(
-                  `No icon available for POI type: ${poi.typeClass}`
+                L.marker([poi.lat, poi.lng], { icon: otherIcon })
+                .addTo(poiMarkersGroup)
+                .bindPopup(
+                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
                 );
               }
             });
@@ -900,10 +987,5 @@ $(window).on("load", function () {
     $("#countrySelect").on("change", function () {
       addCityMarkers();
     });
-    overlays = {
-      "Points of Interest": poiMarkersGroup,
-      Cities: cityMarkersGroup,
-    };
-    layerControl = L.control.layers(basemaps, overlays).addTo(map);
   });
 });
