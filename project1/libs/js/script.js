@@ -15,8 +15,57 @@ $(window).on("load", function () {
   // Store the leaflet map instance
   var map;
 
+  // Street map layer
+  var streets = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+    {
+      attribution:
+        "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012",
+    }
+  );
+
+  // Satellite map layer
+  var satellite = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    {
+      attribution:
+        "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+    }
+  );
+
+  // Layers are stored in basemaps variable to facilitate easy switching
+  var basemaps = {
+    Streets: streets,
+    Satellite: satellite,
+  };
+
   // Store the tile layer interface to change map layers
   var layerControl;
+
+  var cityMarkersGroup = L.markerClusterGroup({
+    polygonOptions: {
+      fillColor: "#fff",
+      color: "#000",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.5
+    }
+  });
+
+  var poiMarkersGroup = L.markerClusterGroup({
+    polygonOptions: {
+      fillColor: "#fff",
+      color: "#000",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.5
+    }
+  });
+
+  var overlays = {
+    "Points of Interest": poiMarkersGroup,
+    Cities: cityMarkersGroup,
+  };
 
   var buildingIcon = L.ExtraMarkers.icon({
     icon: "fa-solid fa-building",
@@ -165,33 +214,7 @@ $(window).on("load", function () {
     extraClasses: "fa-2x",
   });
 
-
-
   var countryData = [];
-
-  // Street map layer
-  var streets = L.tileLayer(
-    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
-    {
-      attribution:
-        "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012",
-    }
-  );
-
-  // Satellite map layer
-  var satellite = L.tileLayer(
-    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    {
-      attribution:
-        "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
-    }
-  );
-
-  // Layers are stored in basemaps variable to facilitate easy switching
-  var basemaps = {
-    Streets: streets,
-    Satellite: satellite,
-  };
 
   // ---------------------------------------------------------
   // EVENT HANDLERS
@@ -204,13 +227,10 @@ $(window).on("load", function () {
       layers: [streets],
     });
 
-  var cityMarkersGroup = L.markerClusterGroup().addTo(map);
-  var poiMarkersGroup = L.markerClusterGroup().addTo(map);
+    cityMarkersGroup.addTo(map);
+    poiMarkersGroup.addTo(map);
 
-  var overlays = {
-    "Points of Interest": poiMarkersGroup,
-    Cities: cityMarkersGroup,
-  };
+  
 
   layerControl = L.control.layers(basemaps, overlays).addTo(map);
 
@@ -471,7 +491,7 @@ $(window).on("load", function () {
     );
     weatherBtn.addTo(map);
 
-    var currencyBtn = L.easyButton(
+     var currencyBtn = L.easyButton(
       '<i class="fa-solid fa-dollar-sign fa-xl modalBtn currencyBtn"></i>',
       function (btn, map) {
         // AJAX request to get country information
@@ -671,7 +691,7 @@ $(window).on("load", function () {
     );
     wikipediaBtn.addTo(map);
 
-    var energyBtn = L.easyButton(
+   var energyBtn = L.easyButton(
       '<i class="fa-solid fa-bolt fa-xl modalBtn energyBtn"></i>',
       function (btn, map) {
         // 1st AJAX request to geocode to get latitude and longitude values
