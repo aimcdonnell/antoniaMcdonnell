@@ -462,45 +462,90 @@ $(window).on("load", function () {
                     $("#weather-modal-title").html(`${weatherResult.data.city.name}, ${chosenCountry}`)
                     $("#weather-capital").html(weatherResult.data.city.name);
                     // Loop through 5 day forecast
-                    weatherResult.data.list.forEach((day, index) => {
-                      if (index % 8 === 0) {
-                        const minTemp = Math.round(day.main.temp_min);
-                        const maxTemp = Math.round(day.main.temp_max);
-                        // Add data to existing modal elements depending on the day
-                        $(`#weather-icon-${index / 8}`).attr(
-                          "src",
-                          `https://openweathermap.org/img/w/${day.weather[0].icon}.png`
-                        );
-                        $(`#weather-description-${index / 8}`).html(
-                          `${day.weather[0].description}`
-                        );
-                        $(`#weather-temp-min-${index / 8}`).html(`${minTemp}°C`);
-                        $(`#weather-temp-max-${index / 8}`).html(`${maxTemp}°C`);
+                  // Group forecast data by date
+                const dailyForecasts = {};
+                weatherResult.data.list.forEach((entry) => {
+                  const date = new Date(entry.dt_txt).toISOString().split("T")[0];
+                  if (!dailyForecasts[date]) {
+                    dailyForecasts[date] = [];
+                  }
+                  dailyForecasts[date].push(entry);
+            });
 
-                        // Function to get the ordinal suffix
-                        function getOrdinal(num) {
-                          const suffixes = ["th", "st", "nd", "rd"];
-                          const mod = num % 100;
-                          return num + (suffixes[(mod - 20) % 10] || suffixes[mod] || suffixes[0]);
-                        }
+            // Get today's date and calculate dates for tomorrow and the day after
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+            const dayAfterTomorrow = new Date(today);
+            dayAfterTomorrow.setDate(today.getDate() + 2);
 
-                        // Assuming day.dt_txt is something like "2024-11-30 09:00:00"
-                        const date = new Date(day.dt_txt);
+            //Take a date object as input and format it into a string in the YYYY-MM-DD format
+            //Split the ISO string at character T (1st part (0) is the date portion and the 2nd part (1) is the time portion)
+            //extracting DD-MM-YYYY
+            const formatDate = (date) => date.toISOString().split("T")[0];
 
-                        // Get the day (numeric value)
-                        const dayOfMonth = date.getDate();
+            const todayData = dailyForecasts[formatDate(today)];
+            const tomorrowData = dailyForecasts[formatDate(tomorrow)];
+            const dayAfterData = dailyForecasts[formatDate(dayAfterTomorrow)];
 
-                        // Format the date with ordinal suffix
-                        const formattedDate = new Intl.DateTimeFormat('en-GB', {
-                          weekday: 'short', // e.g., 'Mon'
-                          month: 'short',   // e.g., 'Dec'
-                        }).format(date) + " " + getOrdinal(dayOfMonth);
+            // Function to calculate min, max temperatures and description
+            const processForecastData = (forecastData) => {
+              if (!forecastData) return null;
+              const minTemp = Math.min(...forecastData.map((entry) => entry.main.temp_min));
+              const maxTemp = Math.max(...forecastData.map((entry) => entry.main.temp_max));
+              const description = forecastData[0].weather[0].description; // Using the first entry's description
+              const icon = forecastData[0].weather[0].icon; // Using the first entry's icon
+              return { minTemp, maxTemp, description, icon };
+            };
 
-                        // Update your elements with the formatted date
-                        $('#day1Date').text(formattedDate);
-                        $('#day2Date').text(formattedDate);
-                      }
-                    });
+            // Process data for today
+            const todayForecast = processForecastData(todayData);
+            if (todayForecast) {
+              $("#day0Date").text(
+                `${today.toLocaleString("en-GB", { weekday: "short" })} ${getOrdinal(
+                  today.getDate()
+                )} ${today.toLocaleString("en-GB", { month: "short" })}`
+              );
+              $("#weather-temp-min-0").text(`${Math.round(todayForecast.minTemp)}°C`);
+              $("#weather-temp-max-0").text(`${Math.round(todayForecast.maxTemp)}°C`);
+              $("#weather-description-0").text(todayForecast.description);
+              $("#weather-icon-0").attr(
+                "src",
+                `https://openweathermap.org/img/w/${todayForecast.icon}.png`
+              );
+            }
+
+            // Process data for tomorrow
+            const tomorrowForecast = processForecastData(tomorrowData);
+            if (tomorrowForecast) {
+              $("#day1Date").text(
+                `${tomorrow.toLocaleString("en-GB", { weekday: "short" })} ${getOrdinal(
+                  tomorrow.getDate()
+                )} ${tomorrow.toLocaleString("en-GB", { month: "short" })}`
+              );
+              $("#weather-temp-min-1").text(`${Math.round(tomorrowForecast.minTemp)}°C`);
+              $("#weather-temp-max-1").text(`${Math.round(tomorrowForecast.maxTemp)}°C`);
+              $("#weather-icon-1").attr(
+                "src",
+                `https://openweathermap.org/img/w/${tomorrowForecast.icon}.png`
+              );
+            }
+
+            // Process data for the day after tomorrow
+            const dayAfterForecast = processForecastData(dayAfterData);
+            if (dayAfterForecast) {
+              $("#day2Date").text(
+                `${dayAfterTomorrow.toLocaleString("en-GB", { weekday: "short" })} ${getOrdinal(
+                  dayAfterTomorrow.getDate()
+                )} ${dayAfterTomorrow.toLocaleString("en-GB", { month: "short" })}`
+              );
+              $("#weather-temp-min-2").text(`${Math.round(dayAfterForecast.minTemp)}°C`);
+              $("#weather-temp-max-2").text(`${Math.round(dayAfterForecast.maxTemp)}°C`);
+              $("#weather-icon-2").attr(
+                "src",
+                `https://openweathermap.org/img/w/${dayAfterForecast.icon}.png`
+              );
+            }
                     //Show the weather modal
                     $("#weather-info-modal").modal("show");
                   }
@@ -510,6 +555,12 @@ $(window).on("load", function () {
                   console.log(`Error: ${textStatus} - ${errorThrown}`);
                 },
               });
+              // Function to get the ordinal suffix
+              function getOrdinal(num) {
+                const suffixes = ["th", "st", "nd", "rd"];
+                const mod = num % 100;
+                return num + (suffixes[(mod - 20) % 10] || suffixes[mod] || suffixes[0]);
+              }
             }
           },
         });
