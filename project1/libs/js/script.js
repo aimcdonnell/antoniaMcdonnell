@@ -600,53 +600,41 @@ $(window).on("load", function () {
                 data: { currency: currencyCode },
                 success: function (currencyResult) {
                   if (currencyResult.status.name === "ok") {
-                    // Display currency exchange rates
-                    //loop through the rates in currencyResult.data.rates and display them in the modal
-                    Object.entries(currencyResult.data.rates).forEach(
-                      ([code, rate]) => {
-                        if (code === currencyCode) {
-                          $("#currency-modal-code").append(`${code}`);
-                          $("#currency-modal-rates").append(`${rate}`);
-                        }
-                      }
-                    );
-                    // Function to calculate and display result
-                    function calculateCurrencyConversion() {
-                      var inputAmount = $("#currency-input").val();
-                      var currencyRate =
-                        parseFloat($("#currency-modal-rates").text()) || 0;
-                      /// Check if input is a valid number
-                      if (isNaN(inputAmount)) {
-                        alert("Please enter a valid number.");
-                        $("#currency-input").val("");
-                        $("#currency-modal-results").html("0.00");
-                        return;
-                      }
-                      // Calculate the result
-                      var result = inputAmount * currencyRate;
-                      // Display the result in the designated area
-                      $("#currency-modal-results").html(result.toFixed(2)); // Adjust decimal places as needed
+                    function calcResult() {
+   
+                    $('#toAmount').val(numeral($('#fromAmount').val() * $('#exchangeRate').val()).format("0,0.00"));
+                      
                     }
-                    // Attach change event handlers
-                    $("#currency-input").on(
-                      "input",
-                      calculateCurrencyConversion
-                    );
-                    $("#currency-modal-rates").on(
-                      "input",
-                      calculateCurrencyConversion
-                    );
-                    // Trigger calculation on modal show to ensure it initializes with the current values
-                    $("#currency-modal").on(
-                      "show.bs.modal",
-                      calculateCurrencyConversion
-                    );
-                    // Clear input value on modal hide
-                    $("#currency-modal").on("hide.bs.modal", function () {
-                      $("#currency-input").val(""); // Clear the input value
-                    });
-                    $("#currency-modal-base").html(currencyResult.data.base);
-                    $("#currency-modal").modal("show");
+                    
+                    $('#fromAmount').on('keyup', function () {
+                    
+                      calcResult();
+                    
+                    })
+                    
+                    $('#fromAmount').on('change', function () {
+                    
+                      calcResult();
+                    
+                    })
+                    
+                    $('#exchangeRate').on('change', function () {
+                    
+                      calcResult();
+                    
+                    })
+                    
+                    $('#currency-modal').on('show.bs.modal', function () {
+                    
+                      calcResult();
+                    
+                    })
+                    
+                    $('#currency-modal').on('hidden.bs.modal', function () {
+                    
+                      $('#fromAmount').val(1);
+                    
+                    })
                   }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
