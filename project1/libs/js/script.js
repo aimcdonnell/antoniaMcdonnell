@@ -433,6 +433,7 @@ $(window).on("load", function () {
       function (btn, map) {
         // 1st AJAX request to geocode to get latitude and longitude values
         var chosenIsoCode = $("#countrySelect").val();
+        var chosenCountry = $("#countrySelect option:selected").text();
         if (!chosenIsoCode) {
           console.warn("No ISO code selected.");
           return;
@@ -458,21 +459,46 @@ $(window).on("load", function () {
                 success: function (weatherResult) {
                   if (weatherResult.status.name === "ok") {
                     // Display current weather for capital city
+                    $("#weather-modal-title").html(`${weatherResult.data.city.name}, ${chosenCountry}`)
                     $("#weather-capital").html(weatherResult.data.city.name);
                     // Loop through 5 day forecast
                     weatherResult.data.list.forEach((day, index) => {
                       if (index % 8 === 0) {
-                        const temp = Math.round(day.main.temp);
-                        const humidity = day.main.humidity;
-                        // Add data to existing modal elements using day number
-                        $(`#weather-icon-${index / 8}`).html(
-                          `<img src="https://openweathermap.org/img/w/${day.weather[0].icon}.png" alt="Weather Icon">`
+                        const minTemp = Math.round(day.main.temp_min);
+                        const maxTemp = Math.round(day.main.temp_max);
+                        // Add data to existing modal elements depending on the day
+                        $(`#weather-icon-${index / 8}`).attr(
+                          "src",
+                          `https://openweathermap.org/img/w/${day.weather[0].icon}.png`
                         );
                         $(`#weather-description-${index / 8}`).html(
                           `${day.weather[0].description}`
                         );
-                        $(`#weather-temp-${index / 8}`).html(`${temp}°C`);
-                        $(`#weather-humidity-${index / 8}`).html(`${humidity}`);
+                        $(`#weather-temp-min-${index / 8}`).html(`${minTemp}°C`);
+                        $(`#weather-temp-max-${index / 8}`).html(`${maxTemp}°C`);
+
+                        // Function to get the ordinal suffix
+                        function getOrdinal(num) {
+                          const suffixes = ["th", "st", "nd", "rd"];
+                          const mod = num % 100;
+                          return num + (suffixes[(mod - 20) % 10] || suffixes[mod] || suffixes[0]);
+                        }
+
+                        // Assuming day.dt_txt is something like "2024-11-30 09:00:00"
+                        const date = new Date(day.dt_txt);
+
+                        // Get the day (numeric value)
+                        const dayOfMonth = date.getDate();
+
+                        // Format the date with ordinal suffix
+                        const formattedDate = new Intl.DateTimeFormat('en-GB', {
+                          weekday: 'short', // e.g., 'Mon'
+                          month: 'short',   // e.g., 'Dec'
+                        }).format(date) + " " + getOrdinal(dayOfMonth);
+
+                        // Update your elements with the formatted date
+                        $('#day1Date').text(formattedDate);
+                        $('#day2Date').text(formattedDate);
                       }
                     });
                     //Show the weather modal

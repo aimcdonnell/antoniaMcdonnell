@@ -107,90 +107,118 @@
           <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content shadow">
               <div class="modal-header bg-info bg-gradient text-white d-flex w-100">
-                <h5 class="modal-title">Capital City Weather</h5>
+                <h5 class="modal-title" id="weather-modal-title"></h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <div class="table-responsive">
-                  <table class="table table-striped">
-                    <tr>
-                      <!--- Day 1 icon -->
-                      <td id="weather-icon-0" class="forecast-day">
-                        <img src="" alt="Weather Icon">
-                      </td>
-                      <!--- Day 1 -->
-                      <td class="forecast-day border-right">
-                        <h6>Today</h6>
-                        <p>Conditions: <span id="weather-description-0"></span></p>
-                        <p>Temperature: <span id="weather-temp-0"></span></p>
-                        <p>Humidity: <span id="weather-humidity-0"></span>%</p>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <!--- Day 2 icon -->
-                      <td id="weather-icon-1" class="forecast-day">
-                        <img src="" alt="Weather Icon">
-                      </td>
-                      <td class="forecast-day border-right">
-                      <!-- Day 2 -->
-                        <h6>Tomorrow</h6>
-                        <p>Conditions: <span id="weather-description-1"></span></p>
-                        <p>Temperature: <span id="weather-temp-1"></span></p>
-                        <p>Humidity: <span id="weather-humidity-1"></span>%</p>
-                      </td>
-                      </tr>
+        
+                <div class="row">
+        
+                  <div class="col border mt-1 ms-3 me-3 mb-2">
+        
+                    <p class="fw-bold fs-6 mt-1">TODAY</p>
+                    
+                    <div class="row">
                       
-                      <tr>
-                        <!--- Day 3 icon -->
-                        <td id="weather-icon-2" class="forecast-day">
-                        <img src="" alt="Weather Icon">
-                        </td>
-                        <td class="forecast-day border-right">
-                          <!-- Day 3 -->
-                          <h6>Day after tomorrow</h6>
-                          <p>Conditions: <span id="weather-description-2"></span></p>
-                          <p>Temperature: <span id="weather-temp-2"></span></p>
-                          <p>Humidity: <span id="weather-humidity-2"></span>%</p>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <!--- Day 4 icon -->
-                        <td id="weather-icon-3" class="forecast-day">
-                            <img src="" alt="Weather Icon">
-                        </td>
-                        <td class="forecast-day border-right">
-                          <!-- Day 4 -->
-                          <h6>Day 4</h6>
-                          <p>Conditions: <span id="weather-description-3"></span></p>
-                          <p>Temperature: <span id="weather-temp-3"></span></p>
-                          <p>Humidity: <span id="weather-humidity-3"></span>%</p>
-                        </td>  
-                      </tr>
-
-                      <tr>
-                        <!--- Day 5 icon -->
-                        <td id="weather-icon-4" class="forecast-day">
-                          <img src="" alt="Weather Icon">
-                        </td>
-                        <td class="forecast-day border-right">
-                          <!-- Day 5 -->
-                          <h6>Day 5</h6>
-                          <p>Conditions: <span id="weather-description-4"></span></p>
-                          <p>Temperature: <span id="weather-temp-4"></span></p>
-                          <p>Humidity: <span id="weather-humidity-4"></span>%</p>
-                        </td>
-                    </tr>
-                  </table>
+                      <div class="col text-center">
+                        
+                        <p id="weather-description-0" class="fw-bold fs-6 mt-3"></p>
+                          
+                      </div>
+                      
+                      <div class="col text-center">
+                        
+                        <img id="weather-icon-0" class="img-fluid mt-0">
+                          
+                      </div>              
+        
+                      <div class="col text-center">
+                        
+                        <p class="fw-bold fs-4 mb-0"><span id="weather-temp-max-0">3</span><sup>o</sup><span class="tempMetric">c</span></p>
+                        <p class="fs-5 mt-0 text-secondary"><span id="weather-temp-min-0"></span></p>
+                          
+                      </div>              
+                      
+                    </div>
+        
+                  </div>   
+        
                 </div>
+        
+                <div class="row">
+        
+                  <div class="col border mt-2 ms-3 me-3 mb-0">
+                    
+                    <div class="row">
+                      
+                      <div class="col text-center">
+        
+                        <p id="day1Date" class="fw-bold fs-6 mt-3"></p>
+                        
+                      </div>
+                      
+                    </div>
+                    
+                    <div class="row">
+                      
+                      <div class="col text-center">
+                        
+                        <img id="weather-icon-1">
+                        
+                      </div>
+                      
+                      <div class="col text-center">
+                        
+                        <p class="fw-bold fs-4 mb-0"><span id="weather-temp-max-1"></span></p>
+                        <p class="fs-5 mt-0 text-secondary"><span id="weather-temp-min-1"></span></p>
+                        
+                      </div>    
+                      
+                    </div>
+                    
+                  </div>   
+        
+                  <div class="col border mt-2 ms-1 me-3 mb-0">
+        
+                    <div class="row">
+                      
+                      <div class="col text-center">
+        
+                        <p id="day2Date" class="fw-bold fs-6 mt-3">Fri 16th</p>
+                        
+                      </div>
+                      
+                    </div>
+                    
+                    <div class="row">
+                      
+                      <div class="col text-center">
+                        
+                        <img id="weather-icon-2">
+                        
+                      </div>  
+                      
+                      <div class="col text-center">
+                        
+                        <p class="fw-bold fs-4 mb-0"><span id="weather-temp-max-2"></span></p>
+                        <p class="fs-5 mt-0 text-secondary"><span id="weather-temp-min-2"></span></p>
+                        
+                      </div>
+                      
+                    </div>
+                    
+                  </div>         
+        
+               </div>   
+            
               </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-info btn-sm" data-bs-dismiss="modal">Close</button>
-                </div>
+              
+              <div class="modal-footer">
+                <p class="fs-6 fw-light">Last updated <span id="lastUpdated"></span>. Powered by <a href="https://openweathermap.org/" target="_blank" title="Free Weather API">OpenWeather</a></p>
               </div>
             </div>
           </div>
+        </div>
 
           <div id="currency-modal" class="modal fade" data-bs-backdrop="false" tabindex="-1" aria-labelledby="currency-modal-label" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">

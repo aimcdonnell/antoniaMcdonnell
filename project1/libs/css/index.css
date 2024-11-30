@@ -9,7 +9,7 @@
   background: #fff;
 }
 
-  #preloader:before {
+#preloader:before {
   content: "";
   position: fixed;
   top: calc(50% - 30px);
@@ -22,7 +22,7 @@
   -webkit-animation: animate-preloader 1s linear infinite;
   animation: animate-preloader 1s linear infinite;
 }
-  @-webkit-keyframes animate-preloader {
+@-webkit-keyframes animate-preloader {
   0% {
   -webkit-transform: rotate(0deg);
   transform: rotate(0deg);
@@ -32,7 +32,7 @@
   transform: rotate(360deg);
 }
 }
-  @keyframes animate-preloader {
+@keyframes animate-preloader {
   0% {
   -webkit-transform: rotate(0deg);
   transform: rotate(0deg);
@@ -43,12 +43,12 @@
   }
 }    
 
-  html, body {
+html, body {
     margin: 0;
     padding: 0;
   }
   
-  #map {
+#map {
     width: 100%;
     height: 100vh;
     margin: 0;
@@ -128,9 +128,6 @@ color: #c19015;
 /* Ensure the table layout adapts */
 
 /* Ensure the modal content is responsive */
-.modal-body {
-  overflow-x: auto; /* Enable horizontal scrolling if necessary */
-}
 
 .table {
   table-layout: fixed; /* Prevents cells from expanding beyond modal width */
@@ -163,8 +160,12 @@ color: #c19015;
 
   .modal-body {
     padding: 10px; /* Reduce padding for a better fit */
+    overflow: hidden;
+    height: 317px;
+    overflow-x: auto; 
   }
 }
+
 
 .bottom-table-border {
   border-bottom: 1px solid #989797;
