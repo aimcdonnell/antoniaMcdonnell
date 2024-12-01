@@ -290,10 +290,8 @@ $(window).on("load", function () {
           dataType: "json",
           //retrieving the iso code value from the countrySelect dropdown
           data: { isoCode: selectedISOCode },
-
           success: function (result) {
             //checking the response format
-
             //adding the data to the modal
             if (result.status.name === "ok") {
               $("#country-name").html(result.data.name.common);
@@ -349,9 +347,7 @@ $(window).on("load", function () {
           //decodes the response from the php script
           //const result = JSON.parse(response);
           if (response.data && response.data.length > 0) {
-            const userCountry =
-              response.data[0].components["ISO_3166-1_alpha-2"];
-
+            const userCountry = response.data[0].components["ISO_3166-1_alpha-2"];
             //trigger the change event to select the user's country location
             $("#countrySelect").val(userCountry).trigger("change");
           } else {
@@ -446,21 +442,28 @@ $(window).on("load", function () {
           data: { isoCode: chosenIsoCode },
           success: function (response) {
             if (response.status.name === "ok") {
-              const capital = response.data.capitalInfo.latlng;
-              //pass the capital city lat and lng values from openCage data to the openWeather API
+              const capitalName = response.data.capital[0];
               $.ajax({
-                url: "libs/php/getDailyWeatherData.php",
+                url: "libs/php/getGeocodeData.php",
                 type: "GET",
-                dataType: "json",
-                data: {
-                  lat: capital[0],
-                  lng: capital[1],
-                },
+                data: { capital: capitalName }, 
+                success: function (geocodeResponse) {
+                  if (geocodeResponse.status.name === "ok") {
+                    const lat = geocodeResponse.data[0].geometry.lat;
+                    const lng = geocodeResponse.data[0].geometry.lng;
+                    //pass the capital city lat and lng values from openCage data to the openWeather API
+                    $.ajax({
+                      url: "libs/php/getDailyWeatherData.php",
+                      type: "GET",
+                      dataType: "json",
+                      data: {
+                        lat: lat,
+                        lng: lng,
+                      },
                 success: function (weatherResult) {
                   if (weatherResult.status.name === "ok") {
                     // Display current weather for capital city
-                    $("#weather-modal-title").html(`${weatherResult.data.city.name}, ${chosenCountry}`)
-                    $("#weather-capital").html(weatherResult.data.city.name);
+                    $("#weather-modal-title").html(`${capitalName}, ${chosenCountry}`);
                     // Loop through 5 day forecast
                   // Group forecast data by date
                 const dailyForecasts = {};
@@ -555,6 +558,12 @@ $(window).on("load", function () {
                   console.log(`Error: ${textStatus} - ${errorThrown}`);
                 },
               });
+                  }
+                }, 
+                error: function (jqXHR, textStatus, errorThrown) {
+                  console.log(`Error: ${textStatus} - ${errorThrown}`);
+                }           
+              })
               // Function to get the ordinal suffix
               function getOrdinal(num) {
                 const suffixes = ["th", "st", "nd", "rd"];
@@ -635,7 +644,6 @@ $(window).on("load", function () {
                       $("#fromAmount").val(1);
                     
                     })
-                    console.log("About to show modal");
                     $("#currency-modal").modal("show");
                   }
                 },
