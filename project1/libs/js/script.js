@@ -223,6 +223,9 @@ $(window).on("load", function () {
   // Initialise map with streets as the default layer
   //$(function () {} means run the code only after the DOM is fully loaded
   $(function () {
+
+    showToast("This is a test toast message", 3000, true);
+
     map = L.map("map", {
       layers: [streets],
     });
@@ -270,7 +273,7 @@ $(window).on("load", function () {
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        console.log(`Error: ${textStatus} - ${errorThrown}`);
+        showToast("Failed to append country names to the dropdown", 4000, false);
       },
     });
     // Info button to open the info modal
@@ -280,7 +283,7 @@ $(window).on("load", function () {
         var selectedISOCode = $("#countrySelect").val();
 
         if (!selectedISOCode) {
-          console.warn("No ISO code selected.");
+          showToast("No ISO code selected for the country info modal", 4000, false);
         }
 
         //Handles the information button window data
@@ -311,7 +314,7 @@ $(window).on("load", function () {
             }
           },
           error: function (jqXHR, textStatus, errorThrown) {
-            console.log(`Error: ${textStatus} - ${errorThrown}`);
+            showToast("Error fetching country information", 4000, false);
           },
         });
       }
@@ -322,7 +325,7 @@ $(window).on("load", function () {
 
     // Check if the user has geolocation enabled
     if (!navigator.geolocation) {
-      alert("Your browser does not support geolocation");
+      showToast("Your browser does not support geolocation.", 4000, false);
     } else {
       navigator.geolocation.getCurrentPosition(getPosition);
     }
@@ -351,13 +354,11 @@ $(window).on("load", function () {
             //trigger the change event to select the user's country location
             $("#countrySelect").val(userCountry).trigger("change");
           } else {
-            console.warn("No country code found for the user's location");
+            showToast("No geocode data found for the user's given location.", 4000, false);
           }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-          console.error(
-            `Reverse geocoding error: ${textStatus} - ${errorThrown}`
-          );
+          showToast("Reverse geocoding failed", 4000, false);
         },
       });
     }
@@ -368,7 +369,7 @@ $(window).on("load", function () {
       var selectedISOCode = $(this).val();
 
       if (!selectedISOCode) {
-        console.warn("No ISO code selected.");
+        showToast("No ISO code selected to get the country borders", 4000, false);
         return;
       }
 
@@ -415,11 +416,11 @@ $(window).on("load", function () {
             let bounds = geoJsonLayer.getBounds();
             map.fitBounds(bounds);
           } catch (error) {
-            console.error("Error adding GeoJSON layer:", error);
+            showToast("Error fetching country border layer", 4000, false);
           }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-          console.log(`Error: ${textStatus} - ${errorThrown}`);
+          showToast("Error fetching country border data:", 4000, false);
         },
       });
     });
@@ -431,7 +432,7 @@ $(window).on("load", function () {
         var chosenIsoCode = $("#countrySelect").val();
         var chosenCountry = $("#countrySelect option:selected").text();
         if (!chosenIsoCode) {
-          console.warn("No ISO code selected.");
+          showToast("No ISO code selected for the weather modal", 4000, false);
           return;
         }
         //get the lat and lng values for the capital city from geocodeData
@@ -555,13 +556,13 @@ $(window).on("load", function () {
                   //Handling errors
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                  console.log(`Error: ${textStatus} - ${errorThrown}`);
+                  showToast("Error fetching weather data", 4000, false);
                 },
               });
                   }
                 }, 
                 error: function (jqXHR, textStatus, errorThrown) {
-                  console.log(`Error: ${textStatus} - ${errorThrown}`);
+                  showToast("Error fetching geocode data for weather modal", 4000, false);
                 }           
               })
               // Function to get the ordinal suffix
@@ -588,7 +589,7 @@ $(window).on("load", function () {
 
         //if no ISO code selected, return
         if (!currencyISOCode) {
-          console.warn("No ISO code selected for the weather modal.");
+          showToast("No iso code selected for the currency modal", 4000, false);
           return;
         }
 
@@ -648,7 +649,7 @@ $(window).on("load", function () {
                   }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                  console.log(`Error: ${textStatus} - ${errorThrown}`);
+                  showToast("Error fetching currency data", 4000, false);
                 },
               });
             }
@@ -665,7 +666,7 @@ $(window).on("load", function () {
         $("#news-modal-body").empty();
         var newsISOCode = $("#countrySelect").val();
         if (!newsISOCode) {
-          console.warn("No ISO code selected for the news modal.");
+          showToast("No iso code selected for the news modal", 4000, false);
           return;
         }
 
@@ -709,7 +710,7 @@ $(window).on("load", function () {
               }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-              console.log(`Error: ${textStatus} - ${errorThrown}`);
+              showToast("Error fetching news articles", 4000, false);
             },
           });
       }
@@ -759,7 +760,7 @@ $(window).on("load", function () {
             }
           },
           error: function (jqXHR, textStatus, errorThrown) {
-            console.log(`Error: ${textStatus} - ${errorThrown}`);
+            showToast("Error fetching Wikipedia data", 4000, false);
           },
         });
       }
@@ -772,7 +773,7 @@ $(window).on("load", function () {
         // 1st AJAX request to geocode to get latitude and longitude values
         var energyIsoCode = $("#countrySelect").val();
         if (!energyIsoCode) {
-          console.warn("No ISO code selected for the energy modal.");
+          showToast("No ISO code selected for the energy modal", 4000, false);
           return;
         }
 
@@ -822,7 +823,7 @@ $(window).on("load", function () {
         $("#natural-disaster-modal-body").empty();
         var naturalDisasterCountry = $("#countrySelect option:selected").text();
         if (!naturalDisasterCountry) {
-          console.warn("No country selected for the natural disaster modal.");
+          showToast("No country selected for the natural disaster modal", 4000, false);
           return;
         }
 
@@ -902,7 +903,7 @@ $(window).on("load", function () {
             }
           },
           error: function (jqXHR, textStatus, errorThrown) {
-            console.log(`Error: ${textStatus} - ${errorThrown}`);
+            showToast("Error fetching natural disaster data", 4000, false);
           },
         });
       }
@@ -1038,11 +1039,11 @@ $(window).on("load", function () {
               }
             });
           } else {
-            console.log("No POIs found near the given coordinates.");
+            showToast("No POIs found for the given coordinates.");
           }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-          console.error(`Error fetching POIs: ${textStatus} - ${errorThrown}`);
+          showToast("Error fetching POIs", 4000, false);
         },
       });
     }
@@ -1071,11 +1072,11 @@ $(window).on("load", function () {
               }
             });
           } else {
-            console.log("No cities found for the selected country.");
+            showToast("No cities found for the selected country", 4000, false);
           }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-          console.error(`Error: ${textStatus} - ${errorThrown}`);
+          showToast("Error fetching cities", 4000, false);
         },
       });
     }
@@ -1083,4 +1084,22 @@ $(window).on("load", function () {
       addCityMarkers();
     });
   });
+
+  function showToast(message, duration, close) {
+  
+    Toastify({
+      text: message,
+      duration: duration,
+      newWindow: true,
+      close: close,
+      gravity: "top", // `top` or `bottom`
+      position: "center", // `left`, `center` or `right`
+      stopOnFocus: true, // Prevents dismissing of toast on hover
+      style: {
+        background: "#004687"
+      },
+      onClick: function () {} // Callback after click
+    }).showToast();
+    
+  }
 });
