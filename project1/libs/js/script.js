@@ -509,8 +509,8 @@ $(window).on("load", function () {
                   today.getDate()
                 )} ${today.toLocaleString("en-GB", { month: "short" })}`
               );
-              $("#weather-temp-min-0").text(`${Math.round(todayForecast.minTemp)}°C`);
-              $("#weather-temp-max-0").text(`${Math.round(todayForecast.maxTemp)}°C`);
+              $("#weather-temp-min-0").text(`${numeral(todayForecast.minTemp).format('0')}°C`);
+              $("#weather-temp-max-0").text(`${numeral(todayForecast.maxTemp).format('0')}°C`);
               $("#weather-description-0").text(todayForecast.description);
               $("#weather-icon-0").attr(
                 "src",
@@ -526,8 +526,8 @@ $(window).on("load", function () {
                   tomorrow.getDate()
                 )} ${tomorrow.toLocaleString("en-GB", { month: "short" })}`
               );
-              $("#weather-temp-min-1").text(`${Math.round(tomorrowForecast.minTemp)}°C`);
-              $("#weather-temp-max-1").text(`${Math.round(tomorrowForecast.maxTemp)}°C`);
+              $("#weather-temp-min-1").text(`${numeral(tomorrowForecast.minTemp).format('0')}°C`);
+              $("#weather-temp-max-1").text(`${numeral(tomorrowForecast.maxTemp).format('0')}°C`);
               $("#weather-icon-1").attr(
                 "src",
                 `https://openweathermap.org/img/w/${tomorrowForecast.icon}.png`
@@ -542,8 +542,8 @@ $(window).on("load", function () {
                   dayAfterTomorrow.getDate()
                 )} ${dayAfterTomorrow.toLocaleString("en-GB", { month: "short" })}`
               );
-              $("#weather-temp-min-2").text(`${Math.round(dayAfterForecast.minTemp)}°C`);
-              $("#weather-temp-max-2").text(`${Math.round(dayAfterForecast.maxTemp)}°C`);
+              $("#weather-temp-min-2").text(`${numeral(dayAfterForecast.minTemp).format('0')}°C`);
+              $("#weather-temp-max-2").text(`${numeral(dayAfterForecast.maxTemp).format('0')}°C`);
               $("#weather-icon-2").attr(
                 "src",
                 `https://openweathermap.org/img/w/${dayAfterForecast.icon}.png`
@@ -661,61 +661,61 @@ $(window).on("load", function () {
     var newsBtn = L.easyButton(
       '<i class="fa-solid fa-newspaper fa-xl modalBtn newsBtn"></i>',
       function (btn, map) {
-        // Get the selected country's ISO code
+        // Clear the modal body before appending new stories
         $("#news-modal-body").empty();
         var newsISOCode = $("#countrySelect").val();
         if (!newsISOCode) {
-          console.warn("No ISO code selected for the currency modal.");
+          console.warn("No ISO code selected for the news modal.");
           return;
         }
 
-        // AJAX request to get news articles
-        $.ajax({
-          url: "libs/php/getNewsData.php",
-          type: "GET",
-          dataType: "json",
-          data: { isoCode: newsISOCode },
-          success: function (response) {
-            console.log(response.data.results)
-            if (
-              response.status.name === "ok" &&
-              response.data.results.length > 0
-            ) {
-              Object.entries(response.data.results).forEach(([key, value]) => {
+          // AJAX request to get news articles
+          $.ajax({
+            url: "libs/php/getNewsData.php",
+            type: "GET",
+            dataType: "json",
+            data: { isoCode: newsISOCode }, // You might need to pass the page number if the API supports pagination
+            success: function (response) { 
+    
+              if (response.status.name === "ok" && response.data.results.length > 0) {
+                // Process the news articles
+                Object.entries(response.data.results).forEach(([key, value]) => {
+                    // Append the article
+                    $("#news-modal-body").append(`
+                      <tr>
+                        <td rowspan="2" width="50%" class="news-icon-container">
+                          <i class="fa-solid fa-newspaper img-fluid news-icon"></i> 
+                        </td>
+                        <td>
+                          <a href="${value.link}" class="fw-bold fs-6 text-black" target="_blank">${value.title}</a>
+                        </td>
+                      </tr>
+                      <tr class="bottom-table-border">
+                        <td class="align-bottom pb-0">
+                          <p class="fw-light fs-6 mb-2">${value.source_name}</p>
+                        </td>
+                      </tr>
+                    `);
+
+                  $("#news-modal").modal("show");
+                });
+              } else {
                 $("#news-modal-body").append(`
                   <tr>
-                    <td rowspan="2" width="50%">
-                      <img class="img-fluid rounded news-img" src=${value.source_icon || value.image_url} alt=${value.title}> 
-                    </td>
-                    <td>
-                      <a href="${value.link}" class="fw-bold fs-6 text-black" target="_blank">${value.title}</a>
-                    </td>
-                  </tr>
-                  <tr class="bottom-table-border">
-                    <td class="align-bottom pb-0">
-                      <p class="fw-light fs-6 mb-2">${value.source_name}</p>
-                    </td>
+                    <td colspan="2">No news available from the selected country</td>
                   </tr>
                 `);
-              });
-
-              $("#news-modal").modal("show");
-            } else {
-              $("#news-modal-body").append(`
-                <tr>
-                    <td colspan="2">No news available from the selected country</td>
-                </tr>
-            `);
-              $("#news-modal").modal("show");
-            }
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-            console.log(`Error: ${textStatus} - ${errorThrown}`);
-          },
-        });
+                $("#news-modal").modal("show");
+              }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+              console.log(`Error: ${textStatus} - ${errorThrown}`);
+            },
+          });
       }
     );
-    newsBtn.addTo(map);
+    newsBtn.addTo(map);    
+    
 
     var wikipediaBtn = L.easyButton(
       '<i class="fa-brands fa-wikipedia-w fa-xl modalBtn wikipediaBtn"></i>',
@@ -738,7 +738,7 @@ $(window).on("load", function () {
                 $("#wikipedia-modal-body").append(`
                   <tr>
                     <td colspan="3">
-                      <div style="display: flex; flex-direction: column;">
+                      <div class="wikipedia-article-container">
                         <span class="fw-bold">${article.title}</span>
                         <span>${article.summary}</span>
                         <a href="https://${article.wikipediaUrl}" target="_blank"> Read more...</a>
