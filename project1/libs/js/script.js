@@ -460,19 +460,19 @@ $(window).on("load", function () {
                         lat: lat,
                         lng: lng,
                       },
-                success: function (weatherResult) {
-                  if (weatherResult.status.name === "ok") {
-                    // Display current weather for capital city
-                    $("#weather-modal-title").html(`${capitalName}, ${chosenCountry}`);
-                    // Loop through 5 day forecast
-                  // Group forecast data by date
-                const dailyForecasts = {};
-                weatherResult.data.list.forEach((entry) => {
-                  const date = new Date(entry.dt_txt).toISOString().split("T")[0];
-                  if (!dailyForecasts[date]) {
-                    dailyForecasts[date] = [];
-                  }
-                  dailyForecasts[date].push(entry);
+                      success: function (weatherResult) {
+                        if (weatherResult.status.name === "ok") {
+                          // Display current weather for capital city
+                          $("#weather-modal-title").html(`${capitalName}, ${chosenCountry}`);
+                          // Loop through 5 day forecast
+                        // Group forecast data by date
+                      const dailyForecasts = {};
+                      weatherResult.data.list.forEach((entry) => {
+                        const date = new Date(entry.dt_txt).toISOString().split("T")[0];
+                        if (!dailyForecasts[date]) {
+                          dailyForecasts[date] = [];
+                        }
+                        dailyForecasts[date].push(entry);
             });
 
             // Get today's date and calculate dates for tomorrow and the day after
