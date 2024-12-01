@@ -568,7 +568,7 @@ $(window).on("load", function () {
     );
     weatherBtn.addTo(map);
 
-     var currencyBtn = L.easyButton(
+    var currencyBtn = L.easyButton(
       '<i class="fa-solid fa-dollar-sign fa-xl modalBtn currencyBtn"></i>',
       function (btn, map) {
         // AJAX request to get country information
@@ -602,39 +602,41 @@ $(window).on("load", function () {
                   if (currencyResult.status.name === "ok") {
                     function calcResult() {
    
-                    $('#toAmount').val(numeral($('#fromAmount').val() * $('#exchangeRate').val()).format("0,0.00"));
+                    $("#toAmount").val(numeral($("#fromAmount").val() * $("#exchangeRate").val()).format("0,0.00"));
                       
                     }
                     
-                    $('#fromAmount').on('keyup', function () {
+                    $("#fromAmount").on("keyup", function () {
                     
                       calcResult();
                     
                     })
                     
-                    $('#fromAmount').on('change', function () {
+                    $("#fromAmount").on("change", function () {
                     
                       calcResult();
                     
                     })
                     
-                    $('#exchangeRate').on('change', function () {
+                    $("#exchangeRate").on("change", function () {
                     
                       calcResult();
                     
                     })
                     
-                    $('#currency-modal').on('show.bs.modal', function () {
+                    $("#currency-modal").on("show.bs.modal", function () {
                     
                       calcResult();
                     
                     })
                     
-                    $('#currency-modal').on('hidden.bs.modal', function () {
+                    $("#currency-modal").on("hidden.bs.modal", function () {
                     
-                      $('#fromAmount').val(1);
+                      $("#fromAmount").val(1);
                     
                     })
+                    console.log("About to show modal");
+                    $("#currency-modal").modal("show");
                   }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
