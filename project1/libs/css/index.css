@@ -116,52 +116,6 @@ color: #0a4047;
 .weatherBtn {
 color: #6fa1e8
 }
-
-/* Specific styles for individual weather conditions */
-.fa-sun {
-  color: #f7d701; /* Bright yellow for sun */
-}
-
-.fa-moon {
-  color: #b2b8d2; /* Soft blue-gray for moon */
-}
-
-.fa-cloud-sun {
-  color: #f4d03f; /* Sun with a mix of gray */
-}
-
-.fa-cloud-moon {
-  color: #d1d9e6; /* Moon with a mix of gray */
-}
-
-.fa-cloud {
-  color: #a6acaf; /* Neutral gray for clouds */
-}
-
-.fa-cloud-showers-heavy {
-  color: #5dade2; /* Light blue for heavy rain */
-}
-
-.fa-cloud-rain {
-  color: #3498db; /* Medium blue for light rain */
-}
-
-.fa-bolt {
-  color: #f1c40f; /* Bright yellow for thunderstorm */
-}
-
-.fa-snowflake {
-  color: #85c1e9; /* Light blue for snow */
-}
-
-.fa-smog {
-  color: #7f8c8d; /* Muted gray for smog */
-}
-
-.currencyBtn{
-color: #c19015;
-}
-
 /* Ensure the table layout adapts */
 
 /* Ensure the modal content is responsive */

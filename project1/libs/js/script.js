@@ -475,31 +475,6 @@ $(window).on("load", function () {
                         dailyForecasts[date].push(entry);
             });
 
-            function getFontAwesomeClass(iconCode) {
-              const iconMap = {
-                "01d": "fa-sun fa-xl",
-                "01n": "fa-moon",
-                "02d": "fa-cloud-sun",
-                "02n": "fa-cloud-moon",
-                "03d": "fa-cloud",
-                "03n": "fa-cloud",
-                "04d": "fa-cloud",
-                "04n": "fa-cloud",
-                "09d": "fa-cloud-showers-heavy",
-                "09n": "fa-cloud-showers-heavy",
-                "10d": "fa-cloud-rain",
-                "10n": "fa-cloud-rain",
-                "11d": "fa-bolt",
-                "11n": "fa-bolt",
-                "13d": "fa-snowflake",
-                "13n": "fa-snowflake",
-                "50d": "fa-smog",
-                "50n": "fa-smog",
-              };
-            
-              return iconMap[iconCode] || "fa-question";
-            }
-
             // Get today's date and calculate dates for tomorrow and the day after
             const today = new Date();
             const tomorrow = new Date(today);
