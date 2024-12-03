@@ -925,6 +925,7 @@ $(window).on("load", function () {
 
     naturalDisasterBtn.addTo(map);
 
+    let countryPoisAvailable = false;
     function fetchNearbyPOIs(lat, lng) {
       poiMarkersGroup.clearLayers();
       $.ajax({
@@ -940,6 +941,9 @@ $(window).on("load", function () {
             Array.isArray(response.data) &&
             response.data.length > 0
           ) {
+
+            countryPoisAvailable = true;
+
             response.data.forEach((poi) => {
               if (poi.typeClass === "building" && buildingIcon) {
                 L.marker([poi.lat, poi.lng], { icon: buildingIcon })
@@ -1052,12 +1056,14 @@ $(window).on("load", function () {
                 );
               }
             });
-          } else {
+          } else if (!countryPoisAvailable) {
             showToast("No POIs found for the given coordinates.");
           }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-          showToast("Error fetching POIs", 4000, false);
+          if (!countryPoisAvailable) {
+            showToast("Error fetching POIs", 4000, false);
+          }
         },
       });
     }
