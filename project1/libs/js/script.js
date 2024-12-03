@@ -475,6 +475,31 @@ $(window).on("load", function () {
                         dailyForecasts[date].push(entry);
             });
 
+            function getFontAwesomeClass(iconCode) {
+              const iconMap = {
+                "01d": "fa-sun fa-xl",
+                "01n": "fa-moon",
+                "02d": "fa-cloud-sun",
+                "02n": "fa-cloud-moon",
+                "03d": "fa-cloud",
+                "03n": "fa-cloud",
+                "04d": "fa-cloud",
+                "04n": "fa-cloud",
+                "09d": "fa-cloud-showers-heavy",
+                "09n": "fa-cloud-showers-heavy",
+                "10d": "fa-cloud-rain",
+                "10n": "fa-cloud-rain",
+                "11d": "fa-bolt",
+                "11n": "fa-bolt",
+                "13d": "fa-snowflake",
+                "13n": "fa-snowflake",
+                "50d": "fa-smog",
+                "50n": "fa-smog",
+              };
+            
+              return iconMap[iconCode] || "fa-question";
+            }
+
             // Get today's date and calculate dates for tomorrow and the day after
             const today = new Date();
             const tomorrow = new Date(today);
@@ -514,7 +539,7 @@ $(window).on("load", function () {
               $("#weather-description-0").text(todayForecast.description);
               $("#weather-icon-0").attr(
                 "src",
-                `https://openweathermap.org/img/w/${todayForecast.icon}.png`
+                `https://rodrigokamada.github.io/openweathermap/images/${todayForecast.icon}_t.png`
               );
             }
 
@@ -530,7 +555,7 @@ $(window).on("load", function () {
               $("#weather-temp-max-1").text(`${numeral(tomorrowForecast.maxTemp).format('0')}°C`);
               $("#weather-icon-1").attr(
                 "src",
-                `https://openweathermap.org/img/w/${tomorrowForecast.icon}.png`
+                `https://rodrigokamada.github.io/openweathermap/images/${tomorrowForecast.icon}_t.png`
               );
             }
 
@@ -546,7 +571,7 @@ $(window).on("load", function () {
               $("#weather-temp-max-2").text(`${numeral(dayAfterForecast.maxTemp).format('0')}°C`);
               $("#weather-icon-2").attr(
                 "src",
-                `https://openweathermap.org/img/w/${dayAfterForecast.icon}.png`
+                `https://rodrigokamada.github.io/openweathermap/images/${dayAfterForecast.icon}_t.png`
               );
             }
                     //Show the weather modal
