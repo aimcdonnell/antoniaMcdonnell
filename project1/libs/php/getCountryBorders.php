@@ -1,70 +1,100 @@
 <?php
-//header is needed to set the content type of the response to JSON
-header("Content-Type: application/json; charset=UTF-8;");
 
-//enable error reporting for debugging
+// Enable error reporting for debugging purposes.
 ini_set("display_errors", "On");
 error_reporting(E_ALL);
 
-//measuring the script"s execution time
+// Set return headers for JSON response.
+header("Content-Type: application/json; charset=UTF-8");
+
+// Record the script start time for performance monitoring.
 $executionStartTime = microtime(true);
 
-//request comes from script.js (i.e. the client)
+// Retrieve the ISO code from the request.
 $isoCode = isset($_REQUEST["isoCode"]) ? $_REQUEST["isoCode"] : null;
 
+// Check if the ISO code is provided.
+if (!$isoCode) {
+    $output["status"]["code"] = 400;
+    $output["status"]["name"] = "Failure - Missing Parameter";
+    $output["status"]["description"] = "ISO code is required.";
+    $output["status"]["seconds"] = number_format((microtime(true) - $executionStartTime), 3);
+    $output["data"] = null;
 
-//if iso code is not provided, return an error message
-if(!$isoCode) {
-    echo json_encode(["error" => "ISO code is required"]);
+    echo json_encode($output);
     exit;
 }
 
-
-//Read the contents of the JSON file
+// Attempt to read the contents of the JSON file.
 $json = file_get_contents("../js/countryBorders.geo.json");
 
-//if the file fails to load or is not found, display an error message
-if (!$json) {
-    echo json_encode(["error" => "Failed to load JSON file"]);
+// Check if the file was successfully read.
+if ($json === false) {
+    $output["status"]["code"] = 500;
+    $output["status"]["name"] = "Failure - File Read";
+    $output["status"]["description"] = "Error reading the countryBorders.geo.json file.";
+    $output["status"]["seconds"] = number_format((microtime(true) - $executionStartTime), 3);
+    $output["data"] = null;
+
+    echo json_encode($output);
     exit;
 }
 
-//Decode the JSON string into countryBorderData
+// Decode the JSON string into an associative array.
 $countryBorders = json_decode($json, true);
 
+// Handle potential JSON decoding errors.
+if (json_last_error() !== JSON_ERROR_NONE) {
+    $output["status"]["code"] = 500;
+    $output["status"]["name"] = "Failure - JSON Decode";
+    $output["status"]["description"] = json_last_error_msg();
+    $output["status"]["seconds"] = number_format((microtime(true) - $executionStartTime), 3);
+    $output["data"] = null;
 
-//set found to false
+    echo json_encode($output);
+    exit;
+}
+
+// Check if the decoded JSON contains the "features" key.
+if (!isset($countryBorders["features"])) {
+    $output["status"]["code"] = 404;
+    $output["status"]["name"] = "Failure - Data Missing";
+    $output["status"]["description"] = "No 'features' key found in the decoded JSON.";
+    $output["status"]["seconds"] = number_format((microtime(true) - $executionStartTime), 3);
+    $output["data"] = null;
+
+    echo json_encode($output);
+    exit;
+}
+
+// Initialize variables.
 $found = false;
 
-//for each countryBorder in countryBorders["features"]
+// Search for the country with the matching ISO code.
 foreach ($countryBorders["features"] as $countryBorder) {
-    //if the countryBorder's properties["iso_a2"] from countryBorders.geo.json is equal to the iso code from script.js/the request ($isoCode)
     if ($countryBorder["properties"]["iso_a2"] === $isoCode) {
-        //set the output array to the coordinates of the countryBorder
         $output["data"] = $countryBorder["geometry"]["coordinates"];
-        //set found to true
         $found = true;
-        //break out of the loop
         break;
     }
-
 }
 
-if (isset($countryBorders["features"])) {
-    //if the countryBorder was found then return json
-    //status details - 200 = success
-    $output["status"]["code"] = "200";
-    //text status = ok
+// Return the appropriate response based on the result of the search.
+if ($found) {
+    $output["status"]["code"] = 200;
     $output["status"]["name"] = "ok";
-    //description = a success message
-    $output["status"]["description"] = "success";
-    //the execution time calculated by subtracting the start time by the current time
-    $output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
-
-    //encodes the entire output array as JSON and sends it as the response
-    //automatically converts the entire output array into JSON
-    echo json_encode($output);
+    $output["status"]["description"] = "Country border data retrieved successfully.";
 } else {
-    echo json_encode(["error" => "No country border data results found"]);
+    $output["status"]["code"] = 404;
+    $output["status"]["name"] = "Failure - Not Found";
+    $output["status"]["description"] = "No country data found for the given ISO code.";
+    $output["data"] = null;
 }
+
+// Include the script execution time in the response.
+$output["status"]["seconds"] = number_format((microtime(true) - $executionStartTime), 3);
+
+// Output the response as JSON.
+echo json_encode($output);
+
 ?>

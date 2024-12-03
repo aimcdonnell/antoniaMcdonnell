@@ -1,53 +1,72 @@
 <?php
-header("Content-Type: application/json; charset=UTF-8");
 
-//enable error reporting for debugging
+// Enable error reporting for debugging purposes.
 ini_set("display_errors", "On");
 error_reporting(E_ALL);
 
-//measuring the script"s execution time
+// Set return headers for JSON response.
+header("Content-Type: application/json; charset=UTF-8");
+
+// Record the script start time for performance monitoring.
 $executionStartTime = microtime(true);
+
 //Read the contents of the JSON file
 $json = file_get_contents("../js/countryBorders.geo.json");
 
-//if the file fails to load or is not found, display an error message
 if ($json === false) {
-    die("Error reading file");
+    $output["status"]["code"] = 500;
+    $output["status"]["name"] = "Failure - File Read";
+    $output["status"]["description"] = "Error reading the countryBorders.geo.json file.";
+    $output["status"]["seconds"] = number_format((microtime(true) - $executionStartTime), 3);
+    $output["data"] = null;
+
+    echo json_encode($output);
+    exit;
 }
 
 //Decode the JSON string
 $decode = json_decode($json, true);
 
-//iterate over the $decode["features"] array of objects
+// Handle potential JSON decoding errors.
+if (json_last_error() !== JSON_ERROR_NONE) {
+    $output["status"]["code"] = 500;
+    $output["status"]["name"] = "Failure - JSON Decode";
+    $output["status"]["description"] = json_last_error_msg();
+    $output["status"]["seconds"] = number_format((microtime(true) - $executionStartTime), 3);
+    $output["data"] = null;
+
+    echo json_encode($output);
+    exit;
+}
+
+// Check if the decoded JSON contains the "features" key.
+if (!isset($decode["features"])) {
+    $output["status"]["code"] = 404;
+    $output["status"]["name"] = "Failure - Data Missing";
+    $output["status"]["description"] = "No 'features' key found in the decoded JSON.";
+    $output["status"]["seconds"] = number_format((microtime(true) - $executionStartTime), 3);
+    $output["data"] = null;
+
+    echo json_encode($output);
+    exit;
+}
+
+// Iterate over the "features" array to extract country data.
+$countryData = [];
 foreach ($decode["features"] as $country) {
     $countryData[] = [
-        //each country in the loop is an associative array with a properties key
-        //the properties key contains data on iso_a2 and name
-        //each array apends a new array entry to countryData, so that countryData
-        //becomes an array of country entries in the following format:
-        //["iso_a2 => "US", "name" => "United States"]
         "iso_a2" => $country["properties"]["iso_a2"],
         "name" => $country["properties"]["name"]
     ];
 }
 
-if (isset($decode["features"])) {
-    //status details - 200 = success
-    $output["status"]["code"] = "200";
-    //text status = ok
-    $output["status"]["name"] = "ok";
-    //description = a success message
-    $output["status"]["description"] = "success";
-    // the execution time calculated by subtracting the start time by the current time
-    $output["status"]["returnedIn"] = intval((microtime(true) - $executionStartTime) * 1000) . " ms";
-    //structuring the response in a well organized way (status, name, description, execution time, and data)
-    //in one structured array
-    $output["data"] = $countryData;
+// Return the successful response with the country data.
+$output["status"]["code"] = 200;
+$output["status"]["name"] = "ok";
+$output["status"]["description"] = "Data retrieved successfully.";
+$output["status"]["seconds"] = number_format((microtime(true) - $executionStartTime), 3);
+$output["data"] = $countryData;
 
-    //encodes the entire output array as JSON and sends it as the response
-    //automatically converts the entire utput array into JSON
-    echo json_encode($output);
-} else {
-    echo json_encode(["error" => "No country data results found"]);
-}
+echo json_encode($output);
+
 ?>
