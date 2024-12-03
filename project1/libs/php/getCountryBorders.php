@@ -16,8 +16,8 @@ $isoCode = isset($_REQUEST["isoCode"]) ? $_REQUEST["isoCode"] : null;
 // Check if the ISO code is provided.
 if (!$isoCode) {
     $output["status"]["code"] = 400;
-    $output["status"]["name"] = "Failure - Missing Parameter";
-    $output["status"]["description"] = "ISO code is required.";
+    $output["status"]["name"] = "Failure - Missing iso code from getCountryBorders.php";
+    $output["status"]["description"] = "ISO code is required for getCountryBorders.php file.";
     $output["status"]["seconds"] = number_format((microtime(true) - $executionStartTime), 3);
     $output["data"] = null;
 
@@ -25,14 +25,14 @@ if (!$isoCode) {
     exit;
 }
 
-// Attempt to read the contents of the JSON file.
+// Read the contents of the JSON file.
 $json = file_get_contents("../js/countryBorders.geo.json");
 
 // Check if the file was successfully read.
 if ($json === false) {
     $output["status"]["code"] = 500;
-    $output["status"]["name"] = "Failure - File Read";
-    $output["status"]["description"] = "Error reading the countryBorders.geo.json file.";
+    $output["status"]["name"] = "Failure - File Read of countryBorders.geo.json in getCountryBorders.php";
+    $output["status"]["description"] = "Error reading the countryBorders.geo.json file in getCountryBorders.php.";
     $output["status"]["seconds"] = number_format((microtime(true) - $executionStartTime), 3);
     $output["data"] = null;
 
@@ -46,7 +46,7 @@ $countryBorders = json_decode($json, true);
 // Handle potential JSON decoding errors.
 if (json_last_error() !== JSON_ERROR_NONE) {
     $output["status"]["code"] = 500;
-    $output["status"]["name"] = "Failure - JSON Decode";
+    $output["status"]["name"] = "Failure - JSON Decode from getCountryBorders.php";
     $output["status"]["description"] = json_last_error_msg();
     $output["status"]["seconds"] = number_format((microtime(true) - $executionStartTime), 3);
     $output["data"] = null;
@@ -58,7 +58,7 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 // Check if the decoded JSON contains the "features" key.
 if (!isset($countryBorders["features"])) {
     $output["status"]["code"] = 404;
-    $output["status"]["name"] = "Failure - Data Missing";
+    $output["status"]["name"] = "Failure - Data Missing from getCountryBorders.php";
     $output["status"]["description"] = "No 'features' key found in the decoded JSON.";
     $output["status"]["seconds"] = number_format((microtime(true) - $executionStartTime), 3);
     $output["data"] = null;
@@ -67,7 +67,7 @@ if (!isset($countryBorders["features"])) {
     exit;
 }
 
-// Initialize variables.
+// Initialize variables
 $found = false;
 
 // Search for the country with the matching ISO code.
