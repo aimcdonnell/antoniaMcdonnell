@@ -54,6 +54,12 @@ html, body {
     margin: 0;
     padding: 0;
   }
+
+  .table {
+    table-layout: fixed; /* Prevents cells from expanding beyond modal width */
+    width: 100%; /* Ensure the table fits the modal */
+    overflow-wrap: break-word; /* Ensures long text wraps */
+  }
   
 #selectContainer {
 position: fixed;
@@ -95,12 +101,7 @@ border-radius: 4px;
 background: #555;
 }
 
-.toastify-center {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
+/*Buttons and icons*/
 .modalBtn {
 display: flex;
 justify-content: center;
@@ -116,50 +117,16 @@ color: #0a4047;
 .weatherBtn {
 color: #6fa1e8
 }
-/* Ensure the table layout adapts */
 
-/* Ensure the modal content is responsive */
-
-.table {
-  table-layout: fixed; /* Prevents cells from expanding beyond modal width */
-  width: 100%; /* Ensure the table fits the modal */
-  overflow-wrap: break-word; /* Ensures long text wraps */
+.currencyBtn{
+color: #c19015;
 }
+
 
 .wikipedia-article-container {
   display: flex; 
   flex-direction: column;
   padding-bottom: 10px;
-}
-
-/* Prevent large numbers from overflowing */
-#currency-modal-results {
-  white-space: nowrap; /* Allow wrapping of text */
-  max-width: 100%; /* Constrain width within the modal */
-  overflow: hidden; /* Hide any overflow */
-}
-
-/* Input box adjustments for mobile */
-#currency-input {
-  width: 100%; /* Ensure input box stays within container */
-  max-width: 100%; /* Prevent input from exceeding container width */
-  box-sizing: border-box; /* Include padding and border in width */
-  white-space: nowrap; /* Prevent text from wrapping */
-  overflow: hidden; /* Hide any overflow */
-}
-
-.bottom-table-border {
-  border-bottom: 1px solid #989797;
-  
-}
-
-.news-icon {
-  color: #003366;
-  font-size: 150px;
-  display: flex;
-  justify-content: center;  /* Horizontally centers the icon */
-  align-items: center;      /* Vertically centers the icon */
-  height: 100%;
 }
 
 .newsBtn {
@@ -176,6 +143,15 @@ color: #4caf50;
 
 .naturalDisasterBtn {
 color: #d32f2f;
+}
+
+.news-icon {
+  color: #003366;
+  font-size: 150px;
+  display: flex;
+  justify-content: center;  /* Horizontally centers the icon */
+  align-items: center;      /* Vertically centers the icon */
+  height: 100%;
 }
 
 /* Modal adjustments for small screens */
