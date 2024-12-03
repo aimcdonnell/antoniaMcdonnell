@@ -26,8 +26,8 @@ if (empty($username)) {
     exit;
 }
 
-$lat = isset($_REQUEST["lat"]);
-$lng = isset($_REQUEST["lng"]);
+$lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : null;
+$lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : null;
 
 if(!$lat || !$lng) {
     $output["status"]["code"] = 400;
@@ -74,7 +74,7 @@ if ($cURLERROR) {
         $output["data"] = null;
     } else {
         // Check for API-specific errors.
-        if (isset($pois["error"])) {
+        if (isset($poiResults["error"])) {
             $output["status"]["code"] = $poiResults["error"]["code"];
             $output["status"]["name"] = "Failure - Geonames API";
             $output["status"]["description"] = $poiResults["error"]["message"];
@@ -94,5 +94,4 @@ if ($cURLERROR) {
 // Return the output as a JSON response.
 echo json_encode($output);
 
-?>
 ?>

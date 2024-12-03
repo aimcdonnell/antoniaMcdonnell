@@ -973,12 +973,12 @@ $(window).on("load", function () {
                 .bindPopup(`${poi.name || "Unnamed " + poi.typeClass + " marker"}`);
             });
           } else {
-            // If POIs are missing, do not show an error
+            // If no POIs are found, don't show error and keep the flag false
             countryPoisAvailable = false;
           }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-          // Show error only if the request itself failed, not for missing POIs
+          // Only show an error if the request itself failed, not for missing POIs
           if (!countryPoisAvailable) {
             showToast("Error fetching POIs", 4000, false);
           }
