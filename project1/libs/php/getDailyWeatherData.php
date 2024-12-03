@@ -28,8 +28,8 @@ if(empty($weatherApiKey)) {
     exit;
 }
 
-$lat = isset($_REQUEST["lat"]) ? $_REQUEST["lat"] : null;
-$lng = isset($_REQUEST["lng"]) ? $_REQUEST["lng"] : null;
+$lat = isset($_REQUEST["lat"]);
+$lng = isset($_REQUEST["lng"]);
 
 if(!$lat || !$lng) {
     $output["status"]["code"] = 400;
