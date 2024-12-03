@@ -19,6 +19,7 @@ if (!$json) {
 
 $countries = json_decode($json, true);
 
+//amend this
 foreach($countries as $country) {
     if ($country["cca2"] === $isoCode) {
         $output["data"] = $country;

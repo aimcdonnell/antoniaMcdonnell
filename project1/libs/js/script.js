@@ -285,7 +285,7 @@ $(window).on("load", function () {
         if (!selectedISOCode) {
           showToast("No ISO code selected for the country info modal", 4000, false);
         }
-
+        //AMEND TO INCORPORATE PHP
         //Handles the information button window data
         $.ajax({
           url: "libs/php/getCountryInformation.php",
@@ -600,8 +600,11 @@ $(window).on("load", function () {
           data: { isoCode: currencyISOCode },
           success: function (response) {
             if (response.status.name === "ok") {
-              var currency = response.data.currencies;
-              var currencyCode = Object.keys(currency)[0];
+              var currencies = response.data.currencies;
+              var currencyCode = Object.keys(currencies)[0];
+              console.log(currencyCode);
+              var currencyNames = currencies[currencyCode].name;
+              console.log(currencyNames);
               // AJAX request to get currency exchange rates
               $.ajax({
                 url: "libs/php/getCurrencyData.php",
@@ -610,6 +613,17 @@ $(window).on("load", function () {
                 data: { currency: currencyCode },
                 success: function (currencyResult) {
                   if (currencyResult.status.name === "ok") {
+                    //loop through exchange rates, compare them to the currencyCode, and add them to the modal
+
+                    const exchangeRates = currencyResult.data.rates;
+                    
+                    $("#exchangeRate").empty();
+
+                    for (const [code, rate] of Object.entries(exchangeRates)) {
+                      $("#exchangeRate").append(
+                        `<option value="${rate}">${currencyNames}</option>`
+                      )
+                    }
                     function calcResult() {
    
                     $("#toAmount").val(numeral($("#fromAmount").val() * $("#exchangeRate").val()).format("0,0.00"));
@@ -1092,7 +1106,7 @@ $(window).on("load", function () {
       duration: duration,
       newWindow: true,
       close: close,
-      gravity: "top", // `top` or `bottom`
+      gravity: "bottom", // `top` or `bottom`
       position: "center", // `left`, `center` or `right`
       stopOnFocus: true, // Prevents dismissing of toast on hover
       style: {
