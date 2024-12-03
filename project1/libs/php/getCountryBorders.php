@@ -32,7 +32,7 @@ $json = file_get_contents("../js/countryBorders.geo.json");
 if ($json === false) {
     $output["status"]["code"] = 500;
     $output["status"]["name"] = "Failure - File Read of countryBorders.geo.json in getCountryBorders.php";
-    $output["status"]["description"] = "Error reading the countryBorders.geo.json file in getCountryBorders.php.";
+    $output["status"]["description"] = "Error reading the file.";
     $output["status"]["seconds"] = number_format((microtime(true) - $executionStartTime), 3);
     $output["data"] = null;
 
