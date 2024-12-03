@@ -15,7 +15,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "JOD": { "name": "Jordanian dinar", "symbol": "د.ا" } },
+      "currencies": { "JOD": { "name": "Jordanian Dinar", "symbol": "د.ا" } },
       "idd": { "root": "+9", "suffixes": ["62"] },
       "capital": ["Amman"],
       "altSpellings": [
@@ -153,7 +153,7 @@
       "independent": false,
       "status": "officially-assigned",
       "unMember": false,
-      "currencies": { "USD": { "name": "United States dollar", "symbol": "$" } },
+      "currencies": { "USD": { "name": "United States Dollar", "symbol": "$" } },
       "idd": { "root": "+1", "suffixes": ["670"] },
       "capital": ["Saipan"],
       "altSpellings": [
@@ -291,7 +291,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "RSD": { "name": "Serbian dinar", "symbol": "дин." } },
+      "currencies": { "RSD": { "name": "Serbian Dinar", "symbol": "дин." } },
       "idd": { "root": "+3", "suffixes": ["81"] },
       "capital": ["Belgrade"],
       "altSpellings": [
@@ -462,7 +462,7 @@
       "independent": false,
       "status": "officially-assigned",
       "unMember": false,
-      "currencies": { "USD": { "name": "United States dollar", "symbol": "$" } },
+      "currencies": { "USD": { "name": "United States Dollar", "symbol": "$" } },
       "idd": { "root": "+1", "suffixes": ["649"] },
       "capital": ["Cockburn Town"],
       "altSpellings": ["TC"],
@@ -601,7 +601,7 @@
       "independent": false,
       "status": "officially-assigned",
       "unMember": false,
-      "currencies": { "BMD": { "name": "Bermudian dollar", "symbol": "$" } },
+      "currencies": { "BMD": { "name": "Bermudian Dollar", "symbol": "$" } },
       "idd": { "root": "+1", "suffixes": ["441"] },
       "capital": ["Hamilton"],
       "altSpellings": [
@@ -769,7 +769,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "BOB": { "name": "Bolivian boliviano", "symbol": "Bs." } },
+      "currencies": { "BOB": { "name": "Bolivian Boliviano", "symbol": "Bs." } },
       "idd": { "root": "+5", "suffixes": ["91"] },
       "capital": ["Sucre"],
       "altSpellings": [
@@ -913,7 +913,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "LYD": { "name": "Libyan dinar", "symbol": "ل.د" } },
+      "currencies": { "LYD": { "name": "Libyan Dinar", "symbol": "ل.د" } },
       "idd": { "root": "+2", "suffixes": ["18"] },
       "capital": ["Tripoli"],
       "altSpellings": ["LY", "State of Libya", "Dawlat Libya"],
@@ -997,7 +997,7 @@
       "status": "officially-assigned",
       "unMember": true,
       "currencies": {
-        "XOF": { "name": "West African CFA franc", "symbol": "Fr" }
+        "XOF": { "name": "West African CFA Franc", "symbol": "Fr" }
       },
       "idd": { "root": "+2", "suffixes": ["23"] },
       "capital": ["Bamako"],
@@ -1079,7 +1079,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "AMD": { "name": "Armenian dram", "symbol": "֏" } },
+      "currencies": { "AMD": { "name": "Armenian Dram", "symbol": "֏" } },
       "idd": { "root": "+3", "suffixes": ["74"] },
       "capital": ["Yerevan"],
       "altSpellings": [
@@ -1168,7 +1168,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "MUR": { "name": "Mauritian rupee", "symbol": "₨" } },
+      "currencies": { "MUR": { "name": "Mauritian Rupee", "symbol": "₨" } },
       "idd": { "root": "+2", "suffixes": ["30"] },
       "capital": ["Port Louis"],
       "altSpellings": ["MU", "Republic of Mauritius", "République de Maurice"],
@@ -1255,7 +1255,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "MVR": { "name": "Maldivian rufiyaa", "symbol": ".ރ" } },
+      "currencies": { "MVR": { "name": "Maldivian Rufiyaa", "symbol": ".ރ" } },
       "idd": { "root": "+9", "suffixes": ["60"] },
       "capital": ["Malé"],
       "altSpellings": [
@@ -1342,7 +1342,7 @@
       "independent": false,
       "status": "officially-assigned",
       "unMember": false,
-      "currencies": { "USD": { "name": "United States dollar", "symbol": "$" } },
+      "currencies": { "USD": { "name": "United States Dollar", "symbol": "$" } },
       "idd": { "root": "+1", "suffixes": ["684"] },
       "capital": ["Pago Pago"],
       "altSpellings": ["AS", "Amerika Sāmoa", "Amelika Sāmoa", "Sāmoa Amelika"],
@@ -1429,7 +1429,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "MKD": { "name": "denar", "symbol": "den" } },
+      "currencies": { "MKD": { "name": "Macedonian Denar", "symbol": "den" } },
       "idd": { "root": "+3", "suffixes": ["89"] },
       "capital": ["Skopje"],
       "altSpellings": [
@@ -1574,7 +1574,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "ETB": { "name": "Ethiopian birr", "symbol": "Br" } },
+      "currencies": { "ETB": { "name": "Ethiopian Birr", "symbol": "Br" } },
       "idd": { "root": "+2", "suffixes": ["51"] },
       "capital": ["Addis Ababa"],
       "altSpellings": [
@@ -1729,7 +1729,7 @@
       "independent": false,
       "status": "officially-assigned",
       "unMember": false,
-      "currencies": { "DKK": { "name": "krone", "symbol": "kr." } },
+      "currencies": { "DKK": { "name": "Danish Krone", "symbol": "kr." } },
       "idd": { "root": "+2", "suffixes": ["99"] },
       "capital": ["Nuuk"],
       "altSpellings": ["GL", "Grønland"],
@@ -1809,7 +1809,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "IQD": { "name": "Iraqi dinar", "symbol": "ع.د" } },
+      "currencies": { "IQD": { "name": "Iraqi Dinar", "symbol": "ع.د" } },
       "idd": { "root": "+9", "suffixes": ["64"] },
       "capital": ["Baghdad"],
       "altSpellings": ["IQ", "Republic of Iraq", "Jumhūriyyat al-‘Irāq"],
@@ -1891,7 +1891,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "GTQ": { "name": "Guatemalan quetzal", "symbol": "Q" } },
+      "currencies": { "GTQ": { "name": "Guatemalan Quetzal", "symbol": "Q" } },
       "idd": { "root": "+5", "suffixes": ["02"] },
       "capital": ["Guatemala City"],
       "altSpellings": ["GT"],
@@ -1977,7 +1977,7 @@
       "status": "officially-assigned",
       "unMember": true,
       "currencies": {
-        "TTD": { "name": "Trinidad and Tobago dollar", "symbol": "$" }
+        "TTD": { "name": "Trinidad and Tobago Dollar", "symbol": "$" }
       },
       "idd": { "root": "+1", "suffixes": ["868"] },
       "capital": ["Port of Spain"],
@@ -2132,7 +2132,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "PEN": { "name": "Peruvian sol", "symbol": "S/ " } },
+      "currencies": { "PEN": { "name": "Peruvian Sol", "symbol": "S/ " } },
       "idd": { "root": "+5", "suffixes": ["1"] },
       "capital": ["Lima"],
       "altSpellings": ["PE", "Republic of Peru", "República del Perú"],
@@ -2214,7 +2214,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "SRD": { "name": "Surinamese dollar", "symbol": "$" } },
+      "currencies": { "SRD": { "name": "Surinamese Dollar", "symbol": "$" } },
       "idd": { "root": "+5", "suffixes": ["97"] },
       "capital": ["Paramaribo"],
       "altSpellings": [
@@ -2301,7 +2301,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "SEK": { "name": "Swedish krona", "symbol": "kr" } },
+      "currencies": { "SEK": { "name": "Swedish Krona", "symbol": "kr" } },
       "idd": { "root": "+4", "suffixes": ["6"] },
       "capital": ["Stockholm"],
       "altSpellings": ["SE", "Kingdom of Sweden", "Konungariket Sverige"],
@@ -2385,7 +2385,7 @@
       "independent": false,
       "status": "officially-assigned",
       "unMember": false,
-      "currencies": { "XPF": { "name": "CFP franc", "symbol": "₣" } },
+      "currencies": { "XPF": { "name": "CFP Franc", "symbol": "₣" } },
       "idd": { "root": "+6", "suffixes": ["87"] },
       "capital": ["Nouméa"],
       "altSpellings": ["NC"],
@@ -2469,7 +2469,7 @@
       "independent": false,
       "status": "officially-assigned",
       "unMember": false,
-      "currencies": { "XPF": { "name": "CFP franc", "symbol": "₣" } },
+      "currencies": { "XPF": { "name": "CFP Franc", "symbol": "₣" } },
       "idd": { "root": "+6", "suffixes": ["89"] },
       "capital": ["Papeetē"],
       "altSpellings": [
@@ -2604,7 +2604,7 @@
       "status": "officially-assigned",
       "unMember": true,
       "currencies": {
-        "XOF": { "name": "West African CFA franc", "symbol": "Fr" }
+        "XOF": { "name": "West African CFA Franc", "symbol": "Fr" }
       },
       "idd": { "root": "+2", "suffixes": ["29"] },
       "capital": ["Porto-Novo"],
@@ -2768,7 +2768,7 @@
       "status": "officially-assigned",
       "unMember": false,
       "currencies": {
-        "FKP": { "name": "Falkland Islands pound", "symbol": "£" }
+        "FKP": { "name": "Falkland Islands Pound", "symbol": "£" }
       },
       "idd": { "root": "+5", "suffixes": ["00"] },
       "capital": ["Stanley"],
@@ -2860,7 +2860,7 @@
       "independent": false,
       "status": "officially-assigned",
       "unMember": false,
-      "currencies": { "USD": { "name": "United States dollar", "symbol": "$" } },
+      "currencies": { "USD": { "name": "United States Dollar", "symbol": "$" } },
       "idd": { "root": "+1", "suffixes": ["671"] },
       "capital": ["Hagåtña"],
       "altSpellings": ["GU", "Guåhån"],
@@ -2950,7 +2950,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "ZWL": { "name": "Zimbabwean dollar", "symbol": "$" } },
+      "currencies": { "ZWL": { "name": "Zimbabwean Dollar", "symbol": "$" } },
       "idd": { "root": "+2", "suffixes": ["63"] },
       "capital": ["Harare"],
       "altSpellings": ["ZW", "Republic of Zimbabwe"],
@@ -3223,7 +3223,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "USD": { "name": "United States dollar", "symbol": "$" } },
+      "currencies": { "USD": { "name": "United States Dollar", "symbol": "$" } },
       "idd": { "root": "+5", "suffixes": ["93"] },
       "capital": ["Quito"],
       "altSpellings": ["EC", "Republic of Ecuador", "República del Ecuador"],
@@ -3308,7 +3308,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "SAR": { "name": "Saudi riyal", "symbol": "ر.س" } },
+      "currencies": { "SAR": { "name": "Saudi Riyal", "symbol": "ر.س" } },
       "idd": { "root": "+9", "suffixes": ["66"] },
       "capital": ["Riyadh"],
       "altSpellings": [
@@ -3449,7 +3449,7 @@
       "status": "officially-assigned",
       "unMember": true,
       "currencies": {
-        "AED": { "name": "United Arab Emirates dirham", "symbol": "د.إ" }
+        "AED": { "name": "United Arab Emirates Dirham", "symbol": "د.إ" }
       },
       "idd": { "root": "+9", "suffixes": ["71"] },
       "capital": ["Abu Dhabi"],
@@ -7258,7 +7258,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "AOA": { "name": "Angolan kwanza", "symbol": "Kz" } },
+      "currencies": { "AOA": { "name": "Angolan Kwanza", "symbol": "Kz" } },
       "idd": { "root": "+2", "suffixes": ["44"] },
       "capital": ["Luanda"],
       "altSpellings": ["AO", "República de Angola", "ʁɛpublika de an'ɡɔla"],
@@ -20404,7 +20404,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "GEL": { "name": "lari", "symbol": "₾" } },
+      "currencies": { "GEL": { "name": "Georgian lari", "symbol": "₾" } },
       "idd": { "root": "+9", "suffixes": ["95"] },
       "capital": ["Tbilisi"],
       "altSpellings": ["GE", "Sakartvelo"],
@@ -22581,7 +22581,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "GMD": { "name": "dalasi", "symbol": "D" } },
+      "currencies": { "GMD": { "name": "Gambian dalasi", "symbol": "D" } },
       "idd": { "root": "+2", "suffixes": ["20"] },
       "capital": ["Banjul"],
       "altSpellings": ["GM", "Republic of the Gambia"],

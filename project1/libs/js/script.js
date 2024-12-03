@@ -174,7 +174,7 @@ $(window).on("load", function () {
   });
   var manMadeIcon = L.ExtraMarkers.icon({
     icon: "fa-solid fa-industry",
-    markerColor: "white",
+    markerColor: "black",
     shape: "circle",
     prefix: "fa",
     iconColor: "white",
@@ -580,96 +580,97 @@ $(window).on("load", function () {
     var currencyBtn = L.easyButton(
       '<i class="fa-solid fa-dollar-sign fa-xl modalBtn currencyBtn"></i>',
       function (btn, map) {
-        // AJAX request to get country information
-        $("#currency-modal-rates").empty();
-        $("#currency-modal-code").empty();
-        $("#currency-input").empty();
-        var currencyISOCode = $("#countrySelect").val();
-
-        //if no ISO code selected, return
-        if (!currencyISOCode) {
-          showToast("No iso code selected for the currency modal", 4000, false);
-          return;
-        }
-
+        let currencyData = {};
         $.ajax({
           url: "libs/php/getCountryInformation.php",
           type: "GET",
           dataType: "json",
-          data: { isoCode: currencyISOCode },
           success: function (response) {
             if (response.status.name === "ok") {
-              var currencies = response.data.currencies;
-              var currencyCode = Object.keys(currencies)[0];
-              console.log(currencyCode);
-              var currencyNames = currencies[currencyCode].name;
-              console.log(currencyNames);
+              response.data.forEach(function (country) {
+                if (country.currencies && Object.keys(country.currencies).length > 0) {
+                  const currencyCode = Object.keys(country.currencies)[0];
+                  const currencyName = country.currencies[currencyCode].name;
+                  Object.assign(currencyData, {
+                    [currencyCode]: currencyName
+                  });
+                }
+              });
+              
               // AJAX request to get currency exchange rates
+              $("#exchangeRate").empty();
+    
               $.ajax({
                 url: "libs/php/getCurrencyData.php",
                 type: "GET",
                 dataType: "json",
-                data: { currency: currencyCode },
                 success: function (currencyResult) {
                   if (currencyResult.status.name === "ok") {
-                    //loop through exchange rates, compare them to the currencyCode, and add them to the modal
-
                     const exchangeRates = currencyResult.data.rates;
-                    
-                    $("#exchangeRate").empty();
+                    Object.entries(exchangeRates).forEach(([rateCode, rateValue]) => {
+                      if (currencyData[rateCode]) {
+                        // Capitalizing the first letter of the currency name
+                        
+                        const capitalizeWords = (str) => {
+                          return str.replace(/\b\w/g, char => char.toUpperCase());
+                        };
+                        // Capitalize the currency name
+                        const capitalizedCurrencyName = capitalizeWords(currencyData[rateCode]);
+                        $("#exchangeRate").append(
+                          `<option value="${rateValue}">${capitalizedCurrencyName}</option>`
+                        );
 
-                    for (const [code, rate] of Object.entries(exchangeRates)) {
-                      $("#exchangeRate").append(
-                        `<option value="${rate}">${currencyNames}</option>`
-                      )
-                    }
+                        var currencyOptions = $("#exchangeRate option").toArray();
+                        currencyOptions.sort(function (c, d) {
+                          let cc = c.textContent.trim().toUpperCase(); // Added trim() to remove extra spaces
+                          let dd = d.textContent.trim().toUpperCase(); // Added trim() to remove extra spaces
+
+                          if (cc < dd) return -1;
+                          else if (cc > dd) return 1;
+                          else return 0;
+                        });
+                        $("#exchangeRate").empty().append(currencyOptions);
+                      }
+                    });
+    
+                    // Function for currency calculation
                     function calcResult() {
-   
-                    $("#toAmount").val(numeral($("#fromAmount").val() * $("#exchangeRate").val()).format("0,0.00"));
-                      
+                      $("#toAmount").val(numeral($("#fromAmount").val() * $("#exchangeRate").val()).format("0,0.00"));
                     }
-                    
+    
                     $("#fromAmount").on("keyup", function () {
-                    
                       calcResult();
-                    
-                    })
-                    
+                    });
+    
                     $("#fromAmount").on("change", function () {
-                    
                       calcResult();
-                    
-                    })
-                    
+                    });
+    
                     $("#exchangeRate").on("change", function () {
-                    
                       calcResult();
-                    
-                    })
-                    
+                    });
+    
                     $("#currency-modal").on("show.bs.modal", function () {
-                    
                       calcResult();
-                    
-                    })
-                    
+                    });
+    
                     $("#currency-modal").on("hidden.bs.modal", function () {
-                    
                       $("#fromAmount").val(1);
-                    
-                    })
+                    });
+    
                     $("#currency-modal").modal("show");
                   }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                   showToast("Error fetching currency data", 4000, false);
-                },
+                }
               });
             }
-          },
+          }
         });
       }
     );
+    
     currencyBtn.addTo(map);
 
     var newsBtn = L.easyButton(
