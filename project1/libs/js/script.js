@@ -224,7 +224,6 @@ $(window).on("load", function () {
   //$(function () {} means run the code only after the DOM is fully loaded
   $(function () {
 
-    showToast("This is a test toast message", 3000, true);
 
     map = L.map("map", {
       layers: [streets],
@@ -926,6 +925,7 @@ $(window).on("load", function () {
     naturalDisasterBtn.addTo(map);
 
     let countryPoisAvailable = false;
+
     function fetchNearbyPOIs(lat, lng) {
       poiMarkersGroup.clearLayers();
       $.ajax({
@@ -934,6 +934,9 @@ $(window).on("load", function () {
         dataType: "json",
         data: { lat, lng },
         success: function (response) {
+          countryPoisAvailable = false; // Reset the flag before checking POIs
+        
+          // Check if the response is valid and contains POIs
           if (
             response &&
             response.status &&
@@ -941,126 +944,41 @@ $(window).on("load", function () {
             Array.isArray(response.data) &&
             response.data.length > 0
           ) {
-
-            countryPoisAvailable = true;
-
+            countryPoisAvailable = true; // Set the flag if POIs are found
+            const poiTypes = {
+              building: buildingIcon,
+              attraction: attractionIcon,
+              tourism: tourismIcon,
+              natural: natureIcon,
+              amenity: amenityIcon,
+              shop: shopIcon,
+              highway: highwayIcon,
+              food: restaurantIcon,
+              leisure: leisureIcon,
+              transport: transportIcon,
+              education: educationIcon,
+              healthcare: healthcareIcon,
+              railway: railwayIcon,
+              man_made: manMadeIcon,
+              office: officeIcon,
+              place_of_worship: placesOfWorshipIcon,
+              power: powerFacilitiesIcon,
+            };
+            
+            // Loop through the POIs and add them to the map
             response.data.forEach((poi) => {
-              if (poi.typeClass === "building" && buildingIcon) {
-                L.marker([poi.lat, poi.lng], { icon: buildingIcon })
-                  .addTo(poiMarkersGroup)
-                  .bindPopup(
-                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                  );
-
-              } else if (poi.typeClass === "attraction" && attractionIcon) {
-                L.marker([poi.lat, poi.lng], { icon: attractionIcon })
-                  .addTo(poiMarkersGroup)
-                  .bindPopup(
-                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                  );
-              } else if (poi.typeClass === "tourism" && tourismIcon) {
-                L.marker([poi.lat, poi.lng], { icon: tourismIcon })
-                  .addTo(poiMarkersGroup)
-                  .bindPopup(
-                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                  );
-              } else if (poi.typeClass === "natural" && natureIcon) {
-                L.marker([poi.lat, poi.lng], { icon: natureIcon })
-                  .addTo(poiMarkersGroup)
-                  .bindPopup(
-                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                  );
-              } else if (poi.typeClass === "amenity" && amenityIcon) {
-                L.marker([poi.lat, poi.lng], { icon: amenityIcon })
-                  .addTo(poiMarkersGroup)
-                  .bindPopup(
-                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                  );
-              } else if (poi.typeClass === "shop" && shopIcon) {
-                L.marker([poi.lat, poi.lng], { icon: shopIcon })
-                  .addTo(poiMarkersGroup)
-                  .bindPopup(
-                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                  );
-              } else if (poi.typeClass === "highway" && highwayIcon) {
-                L.marker([poi.lat, poi.lng], { icon: highwayIcon })
-                  .addTo(poiMarkersGroup)
-                  .bindPopup(
-                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                  );
-              } else if (poi.typeClass === "food" && restaurantIcon) {
-                L.marker([poi.lat, poi.lng], { icon: restaurantIcon })
-                  .addTo(poiMarkersGroup)
-                  .bindPopup(
-                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                  );
-              } else if (poi.typeClass === "leisure" && leisureIcon) {
-                L.marker([poi.lat, poi.lng], { icon: leisureIcon })
-                  .addTo(poiMarkersGroup)
-                  .bindPopup(
-                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                  );
-              } else if (poi.typeClass === "transport" && transportIcon) {
-                L.marker([poi.lat, poi.lng], { icon: transportIcon })
-                  .addTo(poiMarkersGroup)
-                  .bindPopup(
-                    `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                  );
-              } else if (poi.typeClass === "education" && educationIcon) {
-                L.marker([poi.lat, poi.lng], { icon: educationIcon })
+              const icon = poiTypes[poi.typeClass] || otherIcon; // Default to `otherIcon` if no match is found
+              L.marker([poi.lat, poi.lng], { icon })
                 .addTo(poiMarkersGroup)
-                .bindPopup(
-                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                );
-              } else if (poi.typeClass === "healthcare" && healthcareIcon) {
-                L.marker([poi.lat, poi.lng], { icon: healthcareIcon })
-                .addTo(poiMarkersGroup)
-                .bindPopup(
-                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                );
-              } else if (poi.typeClass === "railway" && railwayIcon) {
-                L.marker([poi.lat, poi.lng], { icon: railwayIcon })
-                .addTo(poiMarkersGroup)
-                .bindPopup(
-                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                );
-              } else if (poi.typeClass === "man_made" && manMadeIcon) {
-                L.marker([poi.lat, poi.lng], { icon: manMadeIcon })
-                .addTo(poiMarkersGroup)
-                .bindPopup(
-                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                );
-              } else if (poi.typeClass === "office" && officeIcon) {
-                L.marker([poi.lat, poi.lng], { icon: officeIcon })
-                .addTo(poiMarkersGroup)
-                .bindPopup(
-                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                );
-              } else if (poi.typeClass === "place_of_worship" && placesOfWorshipIcon) {
-                L.marker([poi.lat, poi.lng], { icon: placesOfWorshipIcon })
-                .addTo(poiMarkersGroup)
-                .bindPopup(
-                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                );
-              } else if (poi.typeClass === "power" && powerFacilitiesIcon) {
-                L.marker([poi.lat, poi.lng], { icon: powerFacilitiesIcon })
-                .addTo(poiMarkersGroup)
-                .bindPopup(
-                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                );
-              } else {
-                L.marker([poi.lat, poi.lng], { icon: otherIcon })
-                .addTo(poiMarkersGroup)
-                .bindPopup(
-                  `${poi.name || "Unnamed " + poi.typeClass + " marker"} `
-                );
-              }
+                .bindPopup(`${poi.name || "Unnamed " + poi.typeClass + " marker"}`);
             });
-          } else if (!countryPoisAvailable) {
-            showToast("No POIs found for the given coordinates.");
+          } else {
+            // If POIs are missing, do not show an error
+            countryPoisAvailable = false;
           }
         },
         error: function (jqXHR, textStatus, errorThrown) {
+          // Show error only if the request itself failed, not for missing POIs
           if (!countryPoisAvailable) {
             showToast("Error fetching POIs", 4000, false);
           }
@@ -1112,12 +1030,13 @@ $(window).on("load", function () {
       duration: duration,
       newWindow: true,
       close: close,
-      gravity: "bottom", // `top` or `bottom`
-      position: "center", // `left`, `center` or `right`
+      gravity: "top", // `top` or `bottom`
+      position: "right", // `left`, `center` or `right`
       stopOnFocus: true, // Prevents dismissing of toast on hover
       style: {
-        background: "#004687"
+        background: "#ffff"
       },
+      className: "toastify-center",
       onClick: function () {} // Callback after click
     }).showToast();
     

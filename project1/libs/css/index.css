@@ -95,9 +95,10 @@ border-radius: 4px;
 background: #555;
 }
 
-input {
-border: none;
-outline: none;
+.toastify-center {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .modalBtn {
