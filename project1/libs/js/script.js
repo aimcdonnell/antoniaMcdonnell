@@ -612,7 +612,14 @@ $(window).on("load", function () {
                         // Capitalizing the first letter of the currency name
                         
                         const capitalizeWords = (str) => {
-                          return str.replace(/\b\w/g, char => char.toUpperCase());
+                          return str.replace(/\b\w/g, (char, index) => {
+                            // Check if the character is the start of a word and needs to be capitalized
+                            if (index === 0 || str[index - 1] === ' ') {
+                              return char.toUpperCase();
+                            } else {
+                              return char.toLowerCase(); // Lowercase the rest, including after accents
+                            }
+                          });
                         };
                         // Capitalize the currency name
                         const capitalizedCurrencyName = capitalizeWords(currencyData[rateCode]);

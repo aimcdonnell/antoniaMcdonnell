@@ -18323,7 +18323,7 @@
       "independent": true,
       "status": "officially-assigned",
       "unMember": true,
-      "currencies": { "MNT": { "name": "Mongolian tögrög", "symbol": "₮" } },
+      "currencies": { "MNT": { "name": "Mongolian Tugrik", "symbol": "₮" } },
       "idd": { "root": "+9", "suffixes": ["76"] },
       "capital": ["Ulan Bator"],
       "altSpellings": ["MN"],
