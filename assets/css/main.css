@@ -684,38 +684,18 @@ section,
 /*--------------------------------------------------------------
 # Skills Section
 --------------------------------------------------------------*/
-.skills .progress {
-  height: 60px;
-  display: block;
-  background: none;
-  border-radius: 0;
+/* Ensuring all divs containing images are styled */
+.skills-content .col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2px;
 }
 
-.skills .progress .skill {
-  color: var(--heading-color);
-  padding: 0;
-  margin: 0 0 6px 0;
-  text-transform: uppercase;
-  display: block;
-  font-weight: 600;
-  font-family: var(--heading-font);
-}
-
-.skills .progress .skill .val {
-  float: right;
-  font-style: normal;
-}
-
-.skills .progress-bar-wrap {
-  background: color-mix(in srgb, var(--default-color), transparent 90%);
-  height: 10px;
-}
-
-.skills .progress-bar {
-  width: 1px;
-  height: 10px;
-  transition: 0.9s;
-  background-color: var(--accent-color);
+.skills-content .col img {
+  width: 70%; /* Set the desired width */
+  height: auto; /* Set the desired height */
+  object-fit: contain;
 }
 
 /*--------------------------------------------------------------
@@ -775,6 +755,21 @@ section,
   top: 0;
   background: var(--background-color);
   border: 2px solid var(--accent-color);
+}
+
+#resumeBtn button {
+  color: var(--contrast-color);
+  background: var(--accent-color);
+  border: 0;
+  padding: 10px 30px;
+  transition: 0.4s;
+  border-radius: 50px;
+}
+
+#resumeBtn button:hover {
+  background: color-mix(in srgb, var(--accent-color), transparent 25%);
+  /* Fallback for unsupported browsers */
+  background-color: rgba(52, 152, 219, 0.75);
 }
 
 /*--------------------------------------------------------------
@@ -1139,7 +1134,7 @@ section,
 
 .contact .php-email-form button[type=submit]:hover {
   background: color-mix(in srgb, var(--accent-color), transparent 25%);
-}
+}*/
 
 /*--------------------------------------------------------------
 # Portfolio Details Section
@@ -1265,11 +1260,4 @@ section,
   font-size: 20px;
   margin-right: 8px;
   color: var(--accent-color);
-}
-
-/*--------------------------------------------------------------
-# Starter Section Section
---------------------------------------------------------------*/
-.starter-section {
-  /* Add your styles here */
 }
