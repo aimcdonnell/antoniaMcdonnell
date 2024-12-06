@@ -226,4 +226,27 @@
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
 
+    $(".php-email-form").on("submit", function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        // Serialize form data
+        const formData = $(this).serialize();
+
+        // Send the AJAX request
+        $.ajax({
+            url: "../forms/contact.php", // Path to your PHP script
+            type: "POST",
+            data: formData,
+            beforeSend: function () {
+                $("#response").html("<p>Sending message...</p>");
+            },
+            success: function (response) {
+                $("#response").html("<p>" + response + "</p>");
+            },
+            error: function (xhr, status, error) {
+                $("#response").html("<p>Error: " + error + "</p>");
+            },
+        });
+    });
+
 })();
