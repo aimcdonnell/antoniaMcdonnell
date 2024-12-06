@@ -234,7 +234,7 @@
 
         // Send the AJAX request
         $.ajax({
-            url: "../forms/contact.php", // Path to your PHP script
+            url: "../../forms/contact.php", // Path to your PHP script
             type: "POST",
             data: formData,
             beforeSend: function () {
