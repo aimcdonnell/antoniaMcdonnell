@@ -67,6 +67,7 @@ $("#searchInp").on("keyup", function () {
         // Retrieve the data-id attribute from the calling button
         // see https://getbootstrap.com/docs/5.0/components/modal/#varying-modal-content
         // for the non-jQuery JavaScript alternative
+        //Look into e.relatedTarget
         id: $(e.relatedTarget).attr("data-id") 
       },
       success: function (result) {
