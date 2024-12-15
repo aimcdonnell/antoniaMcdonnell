@@ -9,9 +9,10 @@
 # Don't ignore the .gitignore file itself
 !.gitignore
 
-# Ignore the config.php file
+# Ignore the following files
 config.php
 modelErrorCode.php
-index.html
+htdocs/index.html
 assets/
 forms/
+project2/libs/sql/companydirectory.sql
