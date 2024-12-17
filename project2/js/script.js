@@ -67,7 +67,7 @@ $("#searchInp").on("keyup", function () {
         // Retrieve the data-id attribute from the calling button
         // see https://getbootstrap.com/docs/5.0/components/modal/#varying-modal-content
         // for the non-jQuery JavaScript alternative
-        //Look into e.relatedTarget
+        //e.relatedTarget refers to the button that triggered the modal to open/ close
         id: $(e.relatedTarget).attr("data-id") 
       },
       success: function (result) {
