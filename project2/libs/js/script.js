@@ -15,12 +15,22 @@ $(window).on("load", function () {
     dataType: "json",
     success: function (result) {
       if (result.status.name == "ok") {
+        console.log(result.data);
         result.data.forEach((personnel) => {
           $("#personnelTableBody").append(`
             <tr>
-              <td>${personnel.firstName}</td>
-              <td>${personnel.lastName}</td>
+              <td>${personnel.lastName}, ${personnel.firstName}</td>
               <td>${personnel.department}</td>
+              <td>${personnel.location}</td>
+              <td>${personnel.email}</td>
+              <td class="text-end text-nowrap">
+                  <button type="button" class="btn btn-primary btn-sm edit-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
+                    <i class="fa-solid fa-pencil fa-fw"></i>
+                  </button>
+                  <button type="button" class="btn btn-primary btn-sm delete-btn" data-bs-toggle="modal" data-bs-target="#deletePersonnelModal" data-id=${personnel.id}>
+                    <i class="fa-solid fa-trash fa-fw"></i>
+                  </button>
+                </td>
             </tr>
           `);
         });
@@ -30,6 +40,18 @@ $(window).on("load", function () {
       showToast("Error fetching personnel data", 4000, false);
     }
   });
+
+  //get a particular personnel by ID for editing
+  /*$(document).on("click", ".edit-btn", function () {
+    //continue here
+    //how to get the id of the personnel that was clicked
+
+  })*/
+
+  //get all locations to appear dynamically
+
+
+  //get all departments to appear dynamically
 
 
 $("#searchInp").on("keyup", function () {
