@@ -1042,7 +1042,8 @@ $(window).on("load", function () {
       position: "right", // `left`, `center` or `right`
       stopOnFocus: true, // Prevents dismissing of toast on hover
       style: {
-        background: "#ffff"
+        background: "#ff0000",
+        color: "#ffffff"
       },
       className: "toastify-center",
       onClick: function () {} // Callback after click

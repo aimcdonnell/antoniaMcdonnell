@@ -1,3 +1,37 @@
+// Preloader handling
+$(window).on("load", function () {
+  if ($("#preloader").length) {
+    $("#preloader")
+      .delay(1500)
+      .fadeOut("slow", function () {
+        $(this).remove();
+      });
+  }
+
+//get all personnel to appear dynamically
+  $.ajax({
+    url: "libs/php/getAll.php",
+    type: "GET",
+    dataType: "json",
+    success: function (result) {
+      if (result.status.name == "ok") {
+        result.data.forEach((personnel) => {
+          $("#personnelTableBody").append(`
+            <tr>
+              <td>${personnel.firstName}</td>
+              <td>${personnel.lastName}</td>
+              <td>${personnel.department}</td>
+            </tr>
+          `);
+        });
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      showToast("Error fetching personnel data", 4000, false);
+    }
+  });
+
+
 $("#searchInp").on("keyup", function () {
   
     // your code
@@ -125,3 +159,23 @@ $("#searchInp").on("keyup", function () {
     
   });
   
+  function showToast(message, duration, close) {
+  
+    Toastify({
+      text: message,
+      duration: duration,
+      newWindow: true,
+      close: close,
+      gravity: "top", // `top` or `bottom`
+      position: "right", // `left`, `center` or `right`
+      stopOnFocus: true, // Prevents dismissing of toast on hover
+      style: {
+        background: "#ff0000",
+        color: "#ffffff"
+      },
+      className: "toastify-center",
+      onClick: function () {} // Callback after click
+    }).showToast();
+    
+  }
+});
