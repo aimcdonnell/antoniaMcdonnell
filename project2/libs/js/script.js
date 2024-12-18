@@ -126,6 +126,8 @@ $("#searchInp").on("keyup", function () {
         id: $(e.relatedTarget).attr("data-id") 
       },
       success: function (result) {
+
+  
         if (result.status.name == "ok") {
           
           // Update the hidden input with the employee id so that
@@ -173,10 +175,10 @@ $("#searchInp").on("keyup", function () {
     // stop the default browser behviour
   
     e.preventDefault();
-  //CONTINUE WORKING ON FORM
+  
     // AJAX call to save form data
     $.ajax({
-      url: "libs/php/updatePersonnelByID.php",
+      url: "libs/php/updatePersonnel.php",
       type: "POST",
       dataType: "json",
       data: {
@@ -188,7 +190,8 @@ $("#searchInp").on("keyup", function () {
         departmentID: $("#editPersonnelDepartment").val()
       },
       success: function (result) {
-        if (result.status.name =="ok") {
+
+        if (result.status.name == "ok") {
           // Close the modal
           $("#editPersonnelModal").modal("hide");
 
@@ -202,6 +205,10 @@ $("#searchInp").on("keyup", function () {
           showToast("Error updating personnel", 4000, false);
         }
       },
+      error: function (jqXHR, textStatus, errorThrown) {
+        // Show a toast message
+        showToast("Error updating personnel", 4000, false);
+      }
     
   });
   
@@ -224,4 +231,5 @@ $("#searchInp").on("keyup", function () {
     }).showToast();
     
   }
+})
 });
