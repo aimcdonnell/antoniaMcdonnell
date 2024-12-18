@@ -15,14 +15,13 @@ $(window).on("load", function () {
     dataType: "json",
     success: function (result) {
       if (result.status.name == "ok") {
-        console.log(result.data);
         result.data.forEach((personnel) => {
           $("#personnelTableBody").append(`
             <tr>
-              <td>${personnel.lastName}, ${personnel.firstName}</td>
-              <td>${personnel.department}</td>
-              <td>${personnel.location}</td>
-              <td>${personnel.email}</td>
+              <td class="align-middle text-nowrap">${personnel.lastName}, ${personnel.firstName}</td>
+              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.department}</td>
+              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
+              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
               <td class="text-end text-nowrap">
                   <button type="button" class="btn btn-primary btn-sm edit-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
                     <i class="fa-solid fa-pencil fa-fw"></i>
@@ -116,7 +115,7 @@ $("#searchInp").on("keyup", function () {
     
     $.ajax({
       url:
-        "https://coding.itcareerswitch.co.uk/companydirectory/libs/php/getPersonnelByID.php",
+        "libs/php/getPersonnelByID.php",
       type: "POST",
       dataType: "json",
       data: {
