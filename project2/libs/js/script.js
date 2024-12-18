@@ -126,9 +126,7 @@ $("#searchInp").on("keyup", function () {
         id: $(e.relatedTarget).attr("data-id") 
       },
       success: function (result) {
-        var resultCode = result.status.code;
-  
-        if (resultCode == 200) {
+        if (result.status.name == "ok") {
           
           // Update the hidden input with the employee id so that
           // it can be referenced when the form is submitted
@@ -175,8 +173,35 @@ $("#searchInp").on("keyup", function () {
     // stop the default browser behviour
   
     e.preventDefault();
-  
+  //CONTINUE WORKING ON FORM
     // AJAX call to save form data
+    $.ajax({
+      url: "libs/php/updatePersonnelByID.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: $("#editPersonnelEmployeeID").val(),
+        firstName: $("#editPersonnelFirstName").val(),
+        lastName: $("#editPersonnelLastName").val(),
+        jobTitle: $("#editPersonnelJobTitle").val(),
+        email: $("#editPersonnelEmailAddress").val(),
+        departmentID: $("#editPersonnelDepartment").val()
+      },
+      success: function (result) {
+        if (result.status.name =="ok") {
+          // Close the modal
+          $("#editPersonnelModal").modal("hide");
+
+          // Refresh the personnel table
+          $("#personnelBtn").click();
+
+          // Show a toast message
+          showToast("Personnel updated successfully", 4000, true);
+        } else {
+          // Show a toast message
+          showToast("Error updating personnel", 4000, false);
+        }
+      },
     
   });
   

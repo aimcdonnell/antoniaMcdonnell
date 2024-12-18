@@ -66,6 +66,7 @@
     
       </div>
     
+      <!-- Personnel Tab -->
       <div class="tab-content bg-white">
     
         <div class="tab-pane show active" id="personnel-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
@@ -80,6 +81,7 @@
           
         </div>
     
+        <!-- Departments Tab -->
         <div class="tab-pane" id="departments-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
           
           <table class="table table-hover">
@@ -116,6 +118,7 @@
           
           <table class="table table-hover">
           
+          <!--Locations Table-->
             <tbody id="locationTableBody">
               
               <!-- Below is an example row. Create a JS function that interogates the database and 
@@ -150,8 +153,9 @@
       </footer>
     
     </section>
-        
-    <div id="editPersonnelModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    
+    <!--Edit Personnel Modal -->
+    <div id="editPersonnelModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
       
       <!--   the last two classes centre the modal and, if the content is too long, ensures  -->
       <!--   that the header and footer are always on display by making the body scroll -->
@@ -203,6 +207,39 @@
     
           <div class="modal-footer">
             <button type="submit" form="editPersonnelForm" class="btn btn-outline-primary btn-sm myBtn">SAVE</button>
+            <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CANCEL</button>
+          </div>
+    
+        </div>
+        
+      </div>
+      
+    </div>
+
+    <!--Employee Delete Confirmation Modal-->
+    <div id="deletePersonnelConfirmationModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      
+      <!--   the last two classes centre the modal and, if the content is too long, ensures  -->
+      <!--   that the header and footer are always on display by making the body scroll -->
+      
+      <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+          
+        <div class="modal-content shadow"> 
+          
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title">Confirm Employee Deletion</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+    
+          <div class="modal-body">
+            <form id="deletePersonnelConfirmationForm"></form>
+              
+            <p>Are you sure you want to delete this employee?</p>
+    
+          </div>
+    
+          <div class="modal-footer">
+            <button type="submit" form="deletePersonnelConfirmationForm" class="btn btn-outline-primary btn-sm myBtn">DELETE</button>
             <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CANCEL</button>
           </div>
     
