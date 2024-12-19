@@ -40,6 +40,8 @@ $(window).on("load", function () {
     }
   });
 
+
+
   //get a particular personnel by ID for editing
   /*$(document).on("click", ".edit-btn", function () {
     //continue here
@@ -47,11 +49,61 @@ $(window).on("load", function () {
 
   })*/
 
-  //get all locations to appear dynamically
-
-
   //get all departments to appear dynamically
+  $.ajax({
+    url: "libs/php/getAll.php",
+    type: "GET",
+    dataType: "json",
+    success: function (result) {
+      result.data.forEach((department) => {
+        $("#departmentTableBody").append(`
+          <tr>
+                <td class="align-middle text-nowrap">
+                  ${department.department}
+                </td>
+                <td class="align-middle text-nowrap d-none d-md-table-cell">
+                  ${department.location}
+                </td>
+                <td class="align-middle text-end text-nowrap">
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${department.id}>
+                    <i class="fa-solid fa-pencil fa-fw"></i>
+                  </button>
+                  <button type="button" class="btn btn-primary btn-sm deleteDepartmentBtn" data-id=${department.id}>
+                    <i class="fa-solid fa-trash fa-fw"></i>
+                  </button>
+                </td>
+              </tr>     
+          `)
+      })
+    }
+  })
 
+  //get all locations to appear dynamically
+  $.ajax({
+    url: "libs/php/getAll.php",
+    type: "GET",
+    dataType: "json",
+    success: function (result) {
+      console.log("Location data", result.data)
+      result.data.forEach((location) => {
+        $("#locationTableBody").append(`
+          <tr>
+            <td class="align-middle text-nowrap">
+              ${location.location}
+            </td>
+            <td class="align-middle text-end text-nowrap">
+              <button type="button" class="btn btn-primary btn-sm">
+                <i class="fa-solid fa-pencil fa-fw"></i>
+              </button>
+              <button type="button" class="btn btn-primary btn-sm">
+                <i class="fa-solid fa-trash fa-fw"></i>
+              </button>
+            </td>
+          </tr>
+          `)
+      })
+    }
+  })
 
 $("#searchInp").on("keyup", function () {
   
@@ -113,6 +165,7 @@ $("#searchInp").on("keyup", function () {
   
   $("#editPersonnelModal").on("show.bs.modal", function (e) {
     
+    //AMEND SO THAT IT USES A FOR LOOP
     $.ajax({
       url:
         "libs/php/getPersonnelByID.php",
@@ -127,7 +180,7 @@ $("#searchInp").on("keyup", function () {
       },
       success: function (result) {
 
-  
+        console.log("getPersonnelByID data", result.data)
         if (result.status.name == "ok") {
           
           // Update the hidden input with the employee id so that
