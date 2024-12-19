@@ -44,7 +44,7 @@
 	//Selecting columns from the personnel table, joining the department table on the departmentID column, and joining the location table on the locationID column. The ORDER BY clause orders the results by last name, first name, department name, and location name
 	//LEFT JOIN department d ON (d.id = p.departmentID) joins the department table to the personnel table using the departmentId column in the personnel table and the d.id column in the department table
 	//LEFT JOIN location l ON (l.id = d.locationID) joins the location table to the department table using the l.id column in the location table and the d.locationID column in the department table
-	$query = 'SELECT p.id, p.lastName, p.firstName, p.jobTitle, p.email, d.id, d.name as department, l.name as location FROM personnel p LEFT JOIN department d ON (d.id = p.departmentID) LEFT JOIN location l ON (l.id = d.locationID) ORDER BY p.lastName, p.firstName, d.name, l.name';
+	$query = 'SELECT p.id AS personnelId, p.lastName, p.firstName, p.jobTitle, p.email, d.id AS departmentId, d.name as department, l.name as location FROM personnel p LEFT JOIN department d ON (d.id = p.departmentID) LEFT JOIN location l ON (l.id = d.locationID) ORDER BY p.lastName, p.firstName, d.name, l.name';
 
 	//executing the query
 	$result = $conn->query($query);

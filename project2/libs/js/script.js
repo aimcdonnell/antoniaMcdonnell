@@ -15,7 +15,8 @@ $(window).on("load", function () {
     dataType: "json",
     success: function (result) {
       if (result.status.name == "ok") {
-        result.data.forEach((personnel) => {
+        console.log("Testing", result.data[0])
+        result.data.forEach((personnel, i) => {
           $("#personnelTableBody").append(`
             <tr>
               <td class="align-middle text-nowrap">${personnel.lastName}, ${personnel.firstName}</td>
@@ -23,10 +24,10 @@ $(window).on("load", function () {
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
               <td class="text-end text-nowrap">
-                  <button type="button" class="btn btn-primary btn-sm edit-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
+                  <button type="button" class="btn btn-primary btn-sm edit-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.personnelId}>
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-btn" data-bs-toggle="modal" data-bs-target="#deletePersonnelModal" data-id=${personnel.id}>
+                  <button type="button" class="btn btn-primary btn-sm delete-btn" data-bs-toggle="modal" data-bs-target="#deletePersonnelModal" data-id=${personnel.personnelId}>
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
@@ -84,7 +85,6 @@ $(window).on("load", function () {
     type: "GET",
     dataType: "json",
     success: function (result) {
-      console.log("Location data", result.data)
       result.data.forEach((location) => {
         $("#locationTableBody").append(`
           <tr>
@@ -164,65 +164,59 @@ $("#searchInp").on("keyup", function () {
   });
   
   $("#editPersonnelModal").on("show.bs.modal", function (e) {
-    
-    //AMEND SO THAT IT USES A FOR LOOP
+    // Use `e.relatedTarget` to access the button that triggered the modal
+    const clickedButton = $(e.relatedTarget);
+  
+    // Retrieve the `data-id` of the clicked edit button
+    const personnelId = clickedButton.attr("data-id");
+  
+    // Perform the AJAX request using the retrieved personnel ID
     $.ajax({
-      url:
-        "libs/php/getPersonnelByID.php",
+      url: "libs/php/getPersonnelByID.php",
       type: "POST",
       dataType: "json",
       data: {
-        // Retrieve the data-id attribute from the calling button
-        // see https://getbootstrap.com/docs/5.0/components/modal/#varying-modal-content
-        // for the non-jQuery JavaScript alternative
-        //e.relatedTarget refers to the button that triggered the modal to open/ close
-        id: $(e.relatedTarget).attr("data-id") 
+        id: personnelId, // Pass the correct ID to the server
       },
       success: function (result) {
-
-        console.log("getPersonnelByID data", result.data)
-        if (result.status.name == "ok") {
-          
-          // Update the hidden input with the employee id so that
-          // it can be referenced when the form is submitted
+        console.log("Employee ID sent to server:", personnelId);
   
+        if (result.status.name === "ok") {
+          // Update the modal fields with the employee's data
           $("#editPersonnelEmployeeID").val(result.data.personnel[0].id);
-  
+          console.log("Employee ID received from server:", result.data.personnel[0].id);
           $("#editPersonnelFirstName").val(result.data.personnel[0].firstName);
           $("#editPersonnelLastName").val(result.data.personnel[0].lastName);
           $("#editPersonnelJobTitle").val(result.data.personnel[0].jobTitle);
           $("#editPersonnelEmailAddress").val(result.data.personnel[0].email);
   
+          // Populate the department dropdown
           $("#editPersonnelDepartment").html("");
-  
           $.each(result.data.department, function () {
             $("#editPersonnelDepartment").append(
               $("<option>", {
                 value: this.id,
-                text: this.name
+                text: this.name,
               })
             );
           });
   
+          // Set the department value to match the employee's department
           $("#editPersonnelDepartment").val(result.data.personnel[0].departmentID);
-          
         } else {
-          $("#editPersonnelModal .modal-title").replaceWith(
-            "Error retrieving data"
-          );
+          $("#editPersonnelModal .modal-title").text("Error retrieving data");
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        $("#editPersonnelModal .modal-title").replaceWith(
-          "Error retrieving data"
-        );
-      }
+        $("#editPersonnelModal .modal-title").text("Error retrieving data");
+      },
     });
   });
   
+  
   // Executes when the form button with type="submit" is clicked
   
-  $("#editPersonnelForm").on("submit", function (e) {
+  /*$("#editPersonnelForm").on("submit", function (e) {
     
     // Executes when the form button with type="submit" is clicked
     // stop the default browser behviour
@@ -265,24 +259,24 @@ $("#searchInp").on("keyup", function () {
     
   });
   
-  function showToast(message, duration, close) {
+})*/
+function showToast(message, duration, close) {
   
-    Toastify({
-      text: message,
-      duration: duration,
-      newWindow: true,
-      close: close,
-      gravity: "top", // `top` or `bottom`
-      position: "right", // `left`, `center` or `right`
-      stopOnFocus: true, // Prevents dismissing of toast on hover
-      style: {
-        background: "#ff0000",
-        color: "#ffffff"
-      },
-      className: "toastify-center",
-      onClick: function () {} // Callback after click
-    }).showToast();
-    
-  }
-})
+  Toastify({
+    text: message,
+    duration: duration,
+    newWindow: true,
+    close: close,
+    gravity: "top", // `top` or `bottom`
+    position: "right", // `left`, `center` or `right`
+    stopOnFocus: true, // Prevents dismissing of toast on hover
+    style: {
+      background: "#ff0000",
+      color: "#ffffff"
+    },
+    className: "toastify-center",
+    onClick: function () {} // Callback after click
+  }).showToast();
+  
+}
 });
