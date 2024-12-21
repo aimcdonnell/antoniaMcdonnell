@@ -224,7 +224,6 @@ $("#searchInp").on("keyup", function () {
               departmentID: $("#addPersonnelDepartment").val(),
           },
           success: function (result) {
-              console.log(result);
               if (result.status.name == "ok") {
                   // Optionally close the modal or refresh the table
                   $("#addPersonnelModal").modal('hide');
