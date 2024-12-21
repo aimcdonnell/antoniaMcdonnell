@@ -115,6 +115,9 @@ $("#searchInp").on("keyup", function () {
     if ($("#personnelBtn").hasClass("active")) {      
       // Refresh personnel table
       refreshPersonnelTable();
+
+      showToast("Personnel refreshed successfully", 4000, true);
+      
     } else {
       
       if ($("#departmentsBtn").hasClass("active")) {
@@ -137,12 +140,78 @@ $("#searchInp").on("keyup", function () {
     
   });
   
-  $("#addBtn").on("click", function () {
-    
-    // Replicate the logic of the refresh button click to open the add modal for the table that is currently on display
-    
+
+  //add locations and departments buttons
+    $("#addBtn").on("click", function () {
+      // Check if personnel button is active
+      if ($("#personnelBtn").hasClass("active")) {
+          // Trigger the modal to show
+          $("#addPersonnelModal").modal('show');
+
+          // Populate the department dropdown
+          $.ajax({
+            url: "libs/php/getAllDepartments.php", // Adjust endpoint as needed
+            type: "GET",
+            dataType: "json",
+            success: function (result) {
+              console.log(result.data);
+                if (result.status.name === "ok") {
+                    // Clear existing options
+                    $("#addPersonnelDepartment").html("");
+
+                    // Populate the dropdown with fetched data
+                    result.data.forEach((department) => {
+                        $("#addPersonnelDepartment").append(
+                            $("<option>", {
+                                value: department.id,
+                                text: department.name,
+                            })
+                        );
+                    });
+                } else {
+                    console.error("Failed to fetch departments.");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error fetching departments: " + textStatus);
+            },
+        });
+      }
   });
   
+  //Work out why code is coming up as null, null
+  // Submit the form when the user confirms the addition
+  $("#addPersonnelModal").on("submit", "#addPersonnelForm", function (e) {
+      e.preventDefault(); // Prevent the default form submission
+  
+      // Send the form data via AJAX
+      $.ajax({
+          url: "libs/php/addPersonnel.php",
+          type: "POST",
+          dataType: "json",
+          data: {
+              firstName: $("#addPersonnelFirstName").val(),
+              lastName: $("#addPersonnelLastName").val(),
+              email: $("#addPersonnelEmailAddress").val(),
+              jobTitle: $("#addPersonnelJobTitle").val(),
+              department: $("#addPersonnelDepartment").val(),
+          },
+          success: function (result) {
+              console.log(result);
+              if (result.status.name == "ok") {
+                  // Optionally close the modal or refresh the table
+                  $("#addPersonnelModal").modal('hide');
+                  alert("Personnel added successfully!");
+              }
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+              console.error("Error: " + textStatus + " - " + errorThrown);
+          }
+      });
+  });
+  
+
+
   $("#departmentsBtn").on("click", function () {
     
     // Call function to refresh department table
@@ -154,7 +223,9 @@ $("#searchInp").on("keyup", function () {
     // Call function to refresh location table
     
   });
+
   
+  //Function to edit personnel
   $("#editPersonnelModal").on("show.bs.modal", function (e) {
     // Use `e.relatedTarget` to access the button that triggered the modal
     const editPersonnelId = $(e.relatedTarget).attr("data-id");
