@@ -19,7 +19,7 @@ $(window).on("load", function () {
           $("#personnelTableBody").append(`
             <tr>
               <td class="align-middle text-nowrap">${personnel.lastName}, ${personnel.firstName}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.department}</td>
+              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.departmentName}</td>
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
               <td class="text-end text-nowrap">
@@ -59,7 +59,7 @@ $(window).on("load", function () {
         $("#departmentTableBody").append(`
           <tr>
                 <td class="align-middle text-nowrap">
-                  ${department.department}
+                  ${department.departmentName}
                 </td>
                 <td class="align-middle text-nowrap d-none d-md-table-cell">
                   ${department.location}
@@ -194,7 +194,8 @@ $("#searchInp").on("keyup", function () {
               lastName: $("#addPersonnelLastName").val(),
               email: $("#addPersonnelEmailAddress").val(),
               jobTitle: $("#addPersonnelJobTitle").val(),
-              department: $("#addPersonnelDepartment").val(),
+              departmentName: $("#addPersonnelDepartment").val(),
+              departmentID: $("#addPersonnelDepartment").val(),
           },
           success: function (result) {
               console.log(result);
@@ -263,12 +264,13 @@ $("#searchInp").on("keyup", function () {
   
           // Set the department value to match the employee's department
           $("#editPersonnelDepartment").val(result.data.personnel[0].departmentID);
+          $("#editPersonnelDepartment").val(result.data.personnel[0].departmentName);
         } else {
-          $("#editPersonnelModal .modal-title").text("Error retrieving data");
+          showToast("Error retrieving data", 4000, true);
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        $("#editPersonnelModal .modal-title").text("Error retrieving data");
+        showToast("Error retrieving data", 4000, true);
       },
     });
   });
@@ -294,7 +296,7 @@ $("#searchInp").on("keyup", function () {
         lastName: $("#editPersonnelLastName").val(),
         jobTitle: $("#editPersonnelJobTitle").val(),
         email: $("#editPersonnelEmailAddress").val(),
-        departmentID: $("#editPersonnelDepartment").val()
+        departmentName: $("#editPersonnelDepartment").val()
       },
       success: function (result) {
 
@@ -325,20 +327,19 @@ function refreshPersonnelTable() {
     type: "GET",
     dataType: "json",
     success: function (result) {
-      console.log("Update all personnel data", result.data)
       // Clear the existing table rows (optional, depending on how your table is structured)
       //$("#personnelTable tbody").empty();
 
       // Loop through the data and append new rows
       result.data.forEach(function (person) {
         $("#personnelTable tbody").append(
-          "<tr>" +
-            "<td>" + person.firstName + "</td>" +
-            "<td>" + person.lastName + "</td>" +
-            "<td>" + person.jobTitle + "</td>" +
-            "<td>" + person.email + "</td>" +
-            "<td>" + person.departmentName + "</td>" +
-            "</tr>"
+          `<tr>
+            <td>${person.firstName}</td>
+            <td>${person.lastName}</td>
+            <td>${person.jobTitle}</td>
+            <td>${person.email}</td>
+            <td>${person.departmentName}</td>
+            </tr>`
         );
       });
     },
