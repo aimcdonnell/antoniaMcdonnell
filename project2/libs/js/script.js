@@ -23,10 +23,10 @@ $(window).on("load", function () {
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
               <td class="text-end text-nowrap">
-                  <button type="button" class="btn btn-primary btn-sm edit-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.personnelId}>
+                  <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.personnelId}>
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-btn" data-bs-toggle="modal" data-bs-target="#deletePersonnelModal" data-id=${personnel.personnelId}>
+                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-bs-toggle="modal" data-bs-target="#deletePersonnelConfirmationModal" data-id=${personnel.personnelId}>
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
@@ -36,7 +36,7 @@ $(window).on("load", function () {
       }
     },
     error: function (jqXHR, textStatus, errorThrown) {
-      showToast("Error fetching personnel data", 4000, false);
+      showErrorToast("Error fetching personnel data", 4000, false);
     }
   });
 
@@ -118,7 +118,7 @@ $("#searchInp").on("keyup", function () {
       // Refresh personnel table
       refreshPersonnelTable();
 
-      showToast("Personnel refreshed successfully", 4000, true);
+      showErrorToast("Personnel refreshed successfully", 4000, true);
       
     } else {
       
@@ -171,11 +171,11 @@ $("#searchInp").on("keyup", function () {
                         );
                     });
                 } else {
-                    showToast("Failed to fetch departments.", 4000, false);
+                    showErrorToast("Failed to fetch departments.", 4000, false);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                showToast("Failed to fetch departments for Add Personnel modal.", 4000, false);
+                showErrorToast("Failed to fetch departments for Add Personnel modal.", 4000, false);
             },
         });
 
@@ -185,7 +185,6 @@ $("#searchInp").on("keyup", function () {
           type: "GET",
           dataType: "json",
           success: function (result) {
-            console.log("location dropdown results", result.data);
             if (result.status.name === "ok") {
               // Clear existing options
               $("#addPersonnelLocation").html("");
@@ -200,7 +199,7 @@ $("#searchInp").on("keyup", function () {
                 );
               });
             } else {
-              showToast("Failed to fetch locations for Add Personnel modal.", 4000, false);
+              showErrorToast("Failed to fetch locations for Add Personnel modal.", 4000, false);
             }
           }
         })
@@ -301,11 +300,11 @@ $("#searchInp").on("keyup", function () {
           // Set the department value to match the employee's department
           $("#editPersonnelDepartment").val(result.data.personnel[0].departmentID);
         } else {
-          showToast("Error retrieving data", 4000, false);
+          showErrorToast("Error retrieving data", 4000, false);
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        showToast("Error retrieving data", 4000, false);
+        showErrorToast("Error retrieving data", 4000, false);
       },
     });
   });
@@ -343,12 +342,12 @@ $("#searchInp").on("keyup", function () {
           
         } else {
           // Show a toast message
-          showToast("Error updating personnel", 4000, false);
+          showErrorToast("Error updating personnel", 4000, false);
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
         // Show a toast message
-        showToast("An error occurred in the edit personnel form", 4000, false);
+        showErrorToast("An error occurred in the edit personnel form", 4000, false);
       }
     
   });
@@ -356,12 +355,31 @@ $("#searchInp").on("keyup", function () {
 })
 
 /*DELETE PERSONNEL MODAL */
-$("#deletePersonnelModal").on("show.bs.modal", function (e) {
-  // Use `e.relatedTarget` to access the button that triggered the modal
-  // Retrieve the `data-id` of the clicked edit button
-  const deletePersonnelId = $(e.relatedTarget).attr("data-id");
 
   // Perform the AJAX request using the retrieved personnel ID
+  /* DELETE PERSONNEL BUTTON CLICK */
+$(document).on("click", ".delete-personnel-btn", function() {
+  // Get the personnel ID from the button's data-id attribute
+  const deletePersonnelId = $(this).data("id");
+
+  if (!deletePersonnelId) {
+    showErrorToast("Invalid personnel ID", 4000, false);
+    return;
+}
+
+  // Set the personnel ID in the confirmation modal (store it as data-id on the modal)
+  $("#deletePersonnelConfirmationModal").data("id", deletePersonnelId);
+
+  // Show the confirmation modal
+  $("#deletePersonnelConfirmationModal").modal("show");
+});
+
+/* DELETE PERSONNEL CONFIRMATION (OK BUTTON) */
+$("#deletePersonnelConfirmationModal .btn-delete-confirmation").on("click", function() {
+  // Retrieve the personnel ID from the confirmation modal's data-id attribute
+  const deletePersonnelId = $("#deletePersonnelConfirmationModal").data("id");
+  console.log(deletePersonnelId);
+  // Perform the AJAX request to delete the personnel
   $.ajax({
     url: "libs/php/deletePersonnelByID.php",
     type: "POST",
@@ -369,15 +387,22 @@ $("#deletePersonnelModal").on("show.bs.modal", function (e) {
     data: {
       id: deletePersonnelId, // Pass the correct ID to the server
     },
-    success: function (result) {
-      console.log(result.data)
-    }, 
-    error: function (jqXHR, textStatus, errorThrown) {
-      showToast("Error deleting employee", 4000, false);
+    success: function(result) {
+      if (result.status.name === "ok") {
+        // Close the confirmation modal
+        $("#deletePersonnelConfirmationModal").modal("hide");
+        // Show a toast message
+        $("#deletePersonnelSuccessModal").modal("show");
+      } else {
+        showErrorToast("Error deleting employee", 4000, false);
+      }
+},
+    error: function(jqXHR, textStatus, errorThrown) {
+      showErrorToast("Error deleting employee", 4000, false);
     }
-})
+  });
+});
 
-})
 
 /*FUNCTION TO REFRESH PERSONNEL TABLE USING #ADDBTN*/
 function refreshPersonnelTable() {
@@ -404,13 +429,13 @@ function refreshPersonnelTable() {
     },
     error: function (jqXHR, textStatus, errorThrown) {
       // Show an error message if fetching personnel data fails
-      showToast("Error refreshing personnel table", 4000, false);
+      showErrorToast("Error refreshing personnel table", 4000, false);
     }
   });
 }
 
 /*TOAST MESSAGE FUNCTION */
-function showToast(message, duration, close) {
+function showErrorToast(message, duration, close) {
   
   Toastify({
     text: message,
@@ -428,5 +453,24 @@ function showToast(message, duration, close) {
     onClick: function () {} // Callback after click
   }).showToast();
   
+}
+
+function showSuccessToast(message, duration, close) {
+
+  Toastify({
+    text: message,
+    duration: duration,
+    newWindow: true,
+    close: close,
+    gravity: "top", // `top` or `bottom`
+    position: "right", // `left`, `center` or `right`
+    stopOnFocus: true, // Prevents dismissing of toast on hover
+    style: {
+      background: "#008000",
+      color: "#ffffff"
+    },
+    className: "toastify-center",
+    onClick: function () {} // Callback after click
+  }).showToast();
 }
 });
