@@ -154,7 +154,6 @@ $("#searchInp").on("keyup", function () {
             type: "GET",
             dataType: "json",
             success: function (result) {
-              console.log(result.data);
                 if (result.status.name === "ok") {
                     // Clear existing options
                     $("#addPersonnelDepartment").html("");
@@ -163,21 +162,49 @@ $("#searchInp").on("keyup", function () {
                     result.data.forEach((department) => {
                         $("#addPersonnelDepartment").append(
                             $("<option>", {
-                                value: department.id,
-                                text: department.name,
+                                value: department.departmentID,
+                                text: department.departmentName,
                             })
                         );
                     });
                 } else {
-                    console.error("Failed to fetch departments.");
+                    showToast("Failed to fetch departments.", 4000, true);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                console.error("Error fetching departments: " + textStatus);
+                showToast("Failed to fetch departments for Add Personnel modal.", 4000, true);
             },
         });
+
+        // Populate the location dropdown
+        $.ajax({
+          url: "libs/php/getAllLocations.php",
+          type: "GET",
+          dataType: "json",
+          success: function (result) {
+            console.log("location dropdown results", result.data);
+            if (result.status.name === "ok") {
+              // Clear existing options
+              $("#addPersonnelLocation").html("");
+
+              // Populate the dropdown with fetched data
+              result.data.forEach((location) => {
+                $("#addPersonnelLocation").append(
+                  $("<option>", {
+                    value: location.locationID,
+                    text: location.locationName
+                  })
+                );
+              });
+            } else {
+              showToast("Failed to fetch locations for Add Personnel modal.", 4000, true);
+            }
+          }
+        })
       }
   });
+
+
   
   //Work out why code is coming up as null, null
   // Submit the form when the user confirms the addition

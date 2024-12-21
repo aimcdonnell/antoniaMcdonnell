@@ -42,7 +42,7 @@
 	}	
 
 	// SQL does not accept parameters and so is not prepared
-	$query = 'SELECT id, name, locationID FROM department';
+	$query = 'SELECT id as departmentID, name as departmentName, locationID FROM department ORDER BY name';
 
 	// query database for all departments
 	$result = $conn->query($query);
