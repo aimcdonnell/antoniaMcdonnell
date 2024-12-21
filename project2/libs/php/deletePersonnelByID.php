@@ -5,6 +5,7 @@
     ini_set('display_errors', 'On');
     error_reporting(E_ALL);
 
+    //track execution time
     $executionStartTime = microtime(true);
 
     //where the login details are stored
