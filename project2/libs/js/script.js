@@ -250,10 +250,11 @@ $("#searchInp").on("keyup", function () {
 // Function to refresh the personnel table
 function refreshPersonnelTable() {
   $.ajax({
-    url: "libs/php/updatePersonnelByID.php",  // Modify this with the correct URL for fetching personnel
+    url: "libs/php/updateAllPersonnel.php",  // Modify this with the correct URL for fetching personnel
     type: "GET",
     dataType: "json",
     success: function (result) {
+      console.log("Update all personnel data", result.data)
       // Clear the existing table rows (optional, depending on how your table is structured)
       //$("#personnelTable tbody").empty();
 
