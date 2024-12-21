@@ -264,7 +264,6 @@ $("#searchInp").on("keyup", function () {
   
           // Set the department value to match the employee's department
           $("#editPersonnelDepartment").val(result.data.personnel[0].departmentID);
-          $("#editPersonnelDepartment").val(result.data.personnel[0].departmentName);
         } else {
           showToast("Error retrieving data", 4000, true);
         }
