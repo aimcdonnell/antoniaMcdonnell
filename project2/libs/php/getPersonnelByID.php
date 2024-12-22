@@ -121,6 +121,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     array_push($department, $row);
 }
 
+
 //the success structure as shown in the network tab of the browser
 $output['status']['code'] = "200";
 $output['status']['name'] = "ok";
