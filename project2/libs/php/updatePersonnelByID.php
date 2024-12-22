@@ -37,47 +37,52 @@ if (mysqli_connect_errno()) {
     exit;
 }
 
+// First query - SQL statement accepts parameters and so is prepared to avoid SQL injection.
+$query = $conn->prepare('UPDATE personnel SET firstName = ?, lastName = ?, jobTitle = ?, email = ?, departmentID = ? WHERE id = ?');
 
-    //first query - SQL statement accepts parameters and so is prepared to avoid SQL injection.
-    // $_REQUEST used for development / debugging. Remember to change to $_POST for production
+// Bind parameters for markers
+$query->bind_param("ssssii", $_REQUEST['firstName'], $_REQUEST['lastName'], $_REQUEST['jobTitle'], $_REQUEST['email'], $_REQUEST['departmentID'], $_REQUEST['id']);
 
-    $query = $conn->prepare('UPDATE personnel SET firstName = ?, lastName = ?, jobTitle = ?, email = ?, departmentID = ? WHERE id = ?');
+// Execute the query
+$query->execute();
 
-    //bind parameters for markers, where (i = integer)
-    $query->bind_param("ssssii", $_REQUEST['firstName'], $_REQUEST['lastName'], $_REQUEST['jobTitle'], $_REQUEST['email'], $_REQUEST['departmentID'], $_REQUEST['id']);
-
-    //execute the query
-    $query->execute();
-
-    //if there's an error with the query
-    if (false === $query) {
-
-        //the error structure as shown in the network tab of the browser
-        $output['status']['code'] = "400";
-        $output['status']['name'] = "executed";
-        $output['status']['description'] = "query failed";
-        $output['data'] = [];
-
-        //close the connection
-        mysqli_close($conn);
-
-        //display the error
-        echo json_encode($output);
-
-        //exit the script and avoid executing the rest of the code
-        exit;
-
-    }
-
-    //the success structure as shown in the network tab of the browser
-    $output['status']['code'] = "200";
-    $output['status']['name'] = "ok";
-    $output['status']['description'] = "success";
-    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+// If there's an error with the query
+if (false === $query) {
+    // The error structure as shown in the network tab of the browser
+    $output['status']['code'] = "400";
+    $output['status']['name'] = "executed";
+    $output['status']['description'] = "query failed";
     $output['data'] = [];
-    //close the connection
+
+    // Close the connection
     mysqli_close($conn);
 
-    //display the data
+    // Display the error
     echo json_encode($output);
+
+    // Exit the script and avoid executing the rest of the code
+    exit;
+}
+
+// Retrieve the updated personnel data
+$updatedPersonnelQuery = $conn->prepare('SELECT id, firstName, lastName, jobTitle, email, departmentID FROM personnel WHERE id = ?');
+$updatedPersonnelQuery->bind_param("i", $_REQUEST['id']);
+$updatedPersonnelQuery->execute();
+$updatedPersonnelResult = $updatedPersonnelQuery->get_result();
+
+// Fetch the updated personnel data
+$updatedPersonnel = $updatedPersonnelResult->fetch_assoc();
+
+// Prepare the response with updated data
+$output['status']['code'] = "200";
+$output['status']['name'] = "ok";
+$output['status']['description'] = "success";
+$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+$output['data'] = [$updatedPersonnel];
+
+// Close the connection
+mysqli_close($conn);
+
+// Display the data
+echo json_encode($output);
 ?>

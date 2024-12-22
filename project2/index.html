@@ -184,7 +184,7 @@
       
     </div>
 
-    <!--Add Personnel Modal -->
+    <!--Add Personnel Success Modal -->
     <div id="addPersonnelSuccessModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
@@ -205,9 +205,6 @@
 
     <!--Edit Personnel Modal -->
     <div id="editPersonnelModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      
-      <!--   the last two classes centre the modal and, if the content is too long, ensures  -->
-      <!--   that the header and footer are always on display by making the body scroll -->
       
       <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
           
@@ -235,20 +232,26 @@
               </div>
     
               <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="editPersonnelJobTitle" placeholder="Job title" required>
+                <input type="text" class="form-control" id="editPersonnelJobTitle" placeholder="Job title">
                 <label for="editPersonnelJobTitle">Job Title</label>
               </div>          
     
               <div class="form-floating mb-3">
                 <input type="email" class="form-control" id="editPersonnelEmailAddress" placeholder="Email address" required>
                 <label for="editPersonnelEmailAddress">Email Address</label>
-              </div>    
+              </div>
     
               <div class="form-floating">
                 <select class="form-select" id="editPersonnelDepartment" placeholder="Department">
                 </select>
                 <label for="editPersonnelDepartment">Department</label>
-              </div>  
+              </div>
+
+              <!-- <div class="form-floating">
+                <select class="form-select" id="editPersonnelLocation" placeholder="Location">
+                </select>
+                <label for="editPersonnelLocation">Location</label>
+              </div> -->
     
             </form>
     
@@ -264,6 +267,25 @@
       </div>
       
     </div>
+
+    <!--Edit Personnel Success Modal -->
+    <div id="editPersonnelSuccessModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title" id="exampleModalLabel">Update Success</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Personnel successfully updated.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary btn-sm btn-edit-success" data-bs-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <!-- Delete Personnel Confirmation Modal -->
 <div id="deletePersonnelConfirmationModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
