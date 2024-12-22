@@ -231,7 +231,7 @@ $("#searchInp").on("keyup", function () {
               }
           },
           error: function (jqXHR, textStatus, errorThrown) {
-              console.error("Error: " + textStatus + " - " + errorThrown);
+              showErrorToast("Failed to add personnel.", 4000, false);
           }
       });
   });
@@ -268,9 +268,7 @@ $("#editPersonnelModal").on("show.bs.modal", function (e) {
   const editPersonnelId = $(e.relatedTarget).attr("data-id");
 
   // Store the ID in the modal's data attribute to retain it when modal is reopened
-  $(this).data('editPersonnelId', editPersonnelId); 
-
-  console.log("editPersonnelId", editPersonnelId);
+  $(this).data('editPersonnelId', editPersonnelId);
   
   // Perform the AJAX request using the retrieved personnel ID
   $.ajax({
@@ -281,7 +279,6 @@ $("#editPersonnelModal").on("show.bs.modal", function (e) {
       id: editPersonnelId, // Pass the correct ID to the server
     },
     success: function (result) {
-      console.log("get personnel data", result);
       if (result.status.name === "ok" && result.data.personnel.length > 0) {
         // Update the modal fields with the employee's data
         let personnel = result.data.personnel[0];
