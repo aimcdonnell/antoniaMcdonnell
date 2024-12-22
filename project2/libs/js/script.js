@@ -227,7 +227,7 @@ $("#searchInp").on("keyup", function () {
               if (result.status.name == "ok") {
                   // Optionally close the modal or refresh the table
                   $("#addPersonnelModal").modal('hide');
-                  alert("Personnel added successfully!");
+                  $("#addPersonnelSuccessModal").modal('show');
               }
           },
           error: function (jqXHR, textStatus, errorThrown) {
@@ -241,6 +241,7 @@ $("#searchInp").on("keyup", function () {
   $("#personnelBtn").on("click", function () {
 
     // Call function to refresh personnel table
+    refreshPersonnelTable();
 
   });
 
@@ -338,6 +339,7 @@ $("#searchInp").on("keyup", function () {
 
           // Show a confirmation modal message
           $("#editPersonnelConfirmationModal").modal("show");
+          refreshPersonnelTable();
           
         } else {
           // Show a toast message
@@ -403,15 +405,16 @@ $("#deletePersonnelConfirmationModal .btn-delete-confirmation").on("click", func
 });
 
 
-/*FUNCTION TO REFRESH PERSONNEL TABLE USING #ADDBTN*/
+/*FUNCTION TO REFRESH PERSONNEL TABLE USING #REFRESHBTN*/
 function refreshPersonnelTable() {
   $.ajax({
     url: "libs/php/updateAllPersonnel.php",  // Modify this with the correct URL for fetching personnel
     type: "GET",
     dataType: "json",
     success: function (result) {
+      console.log(result.data);
       // Clear the existing table rows (optional, depending on how your table is structured)
-      //$("#personnelTable tbody").empty();
+      $("#personnelTable tbody").empty();
 
       // Loop through the data and append new rows
       result.data.forEach(function (person) {
@@ -422,6 +425,7 @@ function refreshPersonnelTable() {
             <td>${person.jobTitle}</td>
             <td>${person.email}</td>
             <td>${person.departmentName}</td>
+            <td>${person.location}</td>
             </tr>`
         );
       });
