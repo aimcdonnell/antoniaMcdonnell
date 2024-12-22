@@ -1,84 +1,73 @@
 <?php 
-//add personnel
 
-// remove next two lines for production
+// Add personnel
+
+// Remove next two lines for production
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
-//track execution time
+// Track execution time
 $executionStartTime = microtime(true);
 
-//where the login details are stored
+// Where the login details are stored
 include("config.php");
 
-//tell the script that the output is in JSON format and should be treated as JSON data
+// Tell the script that the output is in JSON format and should be treated as JSON data
 header('Content-Type: application/json; charset=UTF-8');
 
-//connect to the database
+// Connect to the database
 $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_socket);
 
-//if there's an error with the connection
-
+// If there's an error with the connection
 if (mysqli_connect_errno()) {
-    //the error structure as shown in the network tab of the browser
     $output['status']['code'] = "300";
     $output['status']['name'] = "failure";
     $output['status']['description'] = "database unavailable";
     $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-    $outputput['data'] = [];
-
-    //close the connection
+    $output['data'] = [];
     mysqli_close($conn);
-
-    //display the error
     echo json_encode($output);
-
-    //exit the script and avoid executing the rest of the code
     exit;
 }
 
-//first query - SQL statement accepts parameters and so is prepared to avoid SQL injection.
-// $_REQUEST used for development / debugging. Remember to change to $_POST for production
+// Prepare the SQL statement to insert new personnel data
 $query = $conn->prepare('INSERT INTO personnel (firstName, lastName, jobTitle, email, departmentID) VALUES(?, ?, ?, ?, ?)');
-
-//bind the parameters to the query and execute the query
 $query->bind_param("ssssi", $_REQUEST['firstName'], $_REQUEST['lastName'], $_REQUEST['jobTitle'], $_REQUEST['email'], $_REQUEST['departmentID']);
 
-//execute the query
+// Execute the query
 $query->execute();
 
-//if there's an error with the query
-if (false === $query) {
+// Check if the query was successful
+if ($query->affected_rows > 0) {
+    // Successfully added the new personnel
+    // Fetch the updated personnel list to reflect the changes
+    $selectQuery = $conn->prepare('SELECT * FROM personnel');
+    $selectQuery->execute();
+    $result = $selectQuery->get_result();
 
-    //provides the error message structure
+    $personnel = [];
+    while ($row = $result->fetch_assoc()) {
+        $personnel[] = $row;
+    }
+
+    // Prepare the response with updated personnel data
+    $output['status']['code'] = "200";
+    $output['status']['name'] = "ok";
+    $output['status']['description'] = "success";
+    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+    $output['data'] = ['message' => 'Personnel added successfully', 'personnel' => $personnel];
+} else {
+    // No rows affected: no personnel added
     $output['status']['code'] = "400";
-    $output['status']['name'] = "executed";
+    $output['status']['name'] = "failure";
     $output['status']['description'] = "query failed";
     $output['data'] = [];
-
-    //close connection
-    mysqli_close($conn);
-
-    //output the error
-    echo json_encode($output);
-
-    //exit the script and avoid executing the rest of the code
-    exit;
 }
 
-//if the query was successful
-
-$output['status']['code'] = "200";
-$output['status']['name'] = "ok";
-$output['status']['description'] = "success";
-$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-$output['data'] = [];
-
-//close connection
-mysqli_close($conn);
-
-//output the data
+// Display the data
 echo json_encode($output);
 
+// Close the connection
+mysqli_close($conn);
 
 ?>

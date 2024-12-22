@@ -14,8 +14,9 @@ $(window).on("load", function () {
     type: "GET",
     dataType: "json",
     success: function (result) {
+      console.log("All Personnel Data:", result);
       if (result.status.name == "ok") {
-        result.data.forEach((personnel, i) => {
+        result.data.forEach((personnel) => {
           $("#personnelTableBody").append(`
             <tr>
               <td class="align-middle text-nowrap">${personnel.lastName}, ${personnel.firstName}</td>
@@ -23,10 +24,10 @@ $(window).on("load", function () {
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
               <td class="text-end text-nowrap">
-                  <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.personnelId}>
+                  <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-bs-toggle="modal" data-bs-target="#deletePersonnelConfirmationModal" data-id=${personnel.personnelId}>
+                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-bs-toggle="modal" data-bs-target="#deletePersonnelConfirmationModal" data-id=${personnel.id}>
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
@@ -116,9 +117,7 @@ $("#searchInp").on("keyup", function () {
     
     if ($("#personnelBtn").hasClass("active")) {      
       // Refresh personnel table
-      //refreshPersonnelTable();
-
-      showErrorToast("Personnel refreshed successfully", 4000, true);
+      refreshPersonnelTable();
       
     } else {
       
@@ -143,105 +142,136 @@ $("#searchInp").on("keyup", function () {
     
   });
   
-/*ADD PERSONNEL USING #ADDBTN*/
-  //add locations and departments buttons
-    $("#addBtn").on("click", function () {
-      // Check if personnel button is active
-      if ($("#personnelBtn").hasClass("active")) {
-          // Trigger the modal to show
-          $("#addPersonnelModal").modal('show');
+/* ADD PERSONNEL USING #ADDBTN */
+$("#addBtn").on("click", function () {
+  //clear personnel form
+  $("#addPersonnelForm")[0].reset();
+  // Check if personnel button is active
+  if ($("#personnelBtn").hasClass("active")) {
+      // Trigger the modal to show
+      $("#addPersonnelModal").modal('show');
 
-          // Populate the department dropdown
-          $.ajax({
-            url: "libs/php/getAllDepartments.php", // Adjust endpoint as needed
-            type: "GET",
-            dataType: "json",
-            success: function (result) {
-                if (result.status.name === "ok") {
-                    // Clear existing options
-                    $("#addPersonnelDepartment").html("");
+      // Populate the department dropdown
+      $.ajax({
+          url: "libs/php/getAllDepartments.php", // Adjust endpoint as needed
+          type: "GET",
+          dataType: "json",
+          success: function (result) {
+              if (result.status.name === "ok") {
+                  // Clear existing options
+                  $("#addPersonnelDepartment").html("");
 
-                    // Populate the dropdown with fetched data
-                    result.data.forEach((department) => {
-                        $("#addPersonnelDepartment").append(
-                            $("<option>", {
-                                value: department.departmentID,
-                                text: department.departmentName,
-                            })
-                        );
-                    });
-                } else {
-                    showErrorToast("Failed to fetch departments.", 4000, false);
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                showErrorToast("Failed to fetch departments for Add Personnel modal.", 4000, false);
-            },
-        });
+                  // Populate the dropdown with fetched data
+                  result.data.forEach((department) => {
+                      $("#addPersonnelDepartment").append(
+                          $("<option>", {
+                              value: department.departmentID,
+                              text: department.departmentName,
+                          })
+                      );
+                  });
+              } else {
+                  showErrorToast("Failed to fetch departments.", 4000, false);
+              }
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+              showErrorToast("Failed to fetch departments for Add Personnel modal.", 4000, false);
+          },
+      });
 
-        // Populate the location dropdown
-        $.ajax({
+      // Populate the location dropdown
+      $.ajax({
           url: "libs/php/getAllLocations.php",
           type: "GET",
           dataType: "json",
           success: function (result) {
-            if (result.status.name === "ok") {
-              // Clear existing options
-              $("#addPersonnelLocation").html("");
+              if (result.status.name === "ok") {
+                  // Clear existing options
+                  $("#addPersonnelLocation").html("");
 
-              // Populate the dropdown with fetched data
-              result.data.forEach((location) => {
-                $("#addPersonnelLocation").append(
-                  $("<option>", {
-                    value: location.locationID,
-                    text: location.locationName
-                  })
-                );
-              });
-            } else {
-              showErrorToast("Failed to fetch locations for Add Personnel modal.", 4000, false);
-            }
-          }
-        })
-      }
-  });
-
-  /*ADD PERSONNEL FORM SUBMIT */
-  $("#addPersonnelModal").on("submit", "#addPersonnelForm", function (e) {
-      e.preventDefault(); // Prevent the default form submission
-  
-      // Send the form data via AJAX
-      $.ajax({
-          url: "libs/php/addPersonnel.php",
-          type: "POST",
-          dataType: "json",
-          data: {
-              firstName: $("#addPersonnelFirstName").val(),
-              lastName: $("#addPersonnelLastName").val(),
-              email: $("#addPersonnelEmailAddress").val(),
-              jobTitle: $("#addPersonnelJobTitle").val(),
-              departmentName: $("#addPersonnelDepartment").val(),
-              departmentID: $("#addPersonnelDepartment").val(),
-          },
-          success: function (result) {
-              if (result.status.name == "ok") {
-                  // Optionally close the modal or refresh the table
-                  $("#addPersonnelModal").modal('hide');
-                  $("#addPersonnelSuccessModal").modal('show');
+                  // Populate the dropdown with fetched data
+                  result.data.forEach((location) => {
+                      $("#addPersonnelLocation").append(
+                          $("<option>", {
+                              value: location.locationID,
+                              text: location.locationName
+                          })
+                      );
+                  });
+              } else {
+                  showErrorToast("Failed to fetch locations for Add Personnel modal.", 4000, false);
               }
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-              showErrorToast("Failed to add personnel.", 4000, false);
           }
       });
+  }
+});
+
+/* ADD PERSONNEL FORM SUBMIT */
+$("#addPersonnelModal").on("submit", "#addPersonnelForm", function (e) {
+  e.preventDefault(); // Prevent the default form submission
+
+  // Check if personnel already exists (duplicate check)
+  var firstName = $("#addPersonnelFirstName").val();
+  var lastName = $("#addPersonnelLastName").val();
+  var email = $("#addPersonnelEmailAddress").val();
+
+  // AJAX call to check for duplicate personnel
+  $.ajax({
+      url: "libs/php/checkForDuplicatePersonnel.php", // Backend endpoint to check for duplicates
+      type: "POST",
+      dataType: "json",
+      data: {
+          firstName: firstName,
+          lastName: lastName,
+          email: email
+      },
+      success: function (result) {
+          if (result.status.name === "ok" && result.data.exists) {
+              // Show an error message if duplicate found
+              $("#addPersonnelModal").modal("hide");
+              $("#addPersonnelErrorModal").modal("show");
+          } else {
+              // No duplicate found, proceed with adding personnel
+              $.ajax({
+                  url: "libs/php/addPersonnel.php",
+                  type: "POST",
+                  dataType: "json",
+                  data: {
+                      firstName: firstName,
+                      lastName: lastName,
+                      email: email,
+                      jobTitle: $("#addPersonnelJobTitle").val(),
+                      departmentName: $("#addPersonnelDepartment").val(),
+                      departmentID: $("#addPersonnelDepartment").val(),
+                  },
+                  success: function (result) {
+                      if (result.status.name == "ok") {
+                          // Optionally close the modal or refresh the table
+                          $("#addPersonnelModal").modal('hide');
+                          $("#addPersonnelSuccessModal").modal('show');
+                          refreshPersonnelTable();
+                      }
+                  },
+                  error: function (jqXHR, textStatus, errorThrown) {
+                      showErrorToast("Failed to add personnel.", 4000, false);
+                  }
+              });
+          }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+          showErrorToast("Failed to check for duplicates.", 4000, false);
+      }
   });
+});
+
+
 
   /*REFRESH PERSONNEL TABLE*/
   
   $("#personnelBtn").on("click", function () {
 
     // Call function to refresh personnel table
-    //refreshPersonnelTable();
+    refreshPersonnelTable();
 
   });
 
@@ -263,6 +293,13 @@ $("#searchInp").on("keyup", function () {
   
 /*EDIT PERSONNEL MODAL */
 $("#editPersonnelModal").on("show.bs.modal", function (e) {
+  /// Clear any previous data from the modal
+  $("#editPersonnelFirstName").val("");
+  $("#editPersonnelLastName").val("");
+  $("#editPersonnelEmailAddress").val("");
+  $("#editPersonnelJobTitle").val("");
+  $("#editPersonnelDepartment").html("");
+
   // Use `e.relatedTarget` to access the button that triggered the modal
   // Retrieve the `data-id` of the clicked edit button
   const editPersonnelId = $(e.relatedTarget).attr("data-id");
@@ -391,8 +428,12 @@ $("#deletePersonnelConfirmationModal .btn-delete-confirmation").on("click", func
       if (result.status.name === "ok") {
         // Close the confirmation modal
         $("#deletePersonnelConfirmationModal").modal("hide");
+
+        refreshPersonnelTable();
         // Show a toast message
         $("#deletePersonnelSuccessModal").modal("show");
+        // Refresh the personnel table
+
       } else {
         showErrorToast("Error deleting employee", 4000, false);
       }
@@ -404,56 +445,52 @@ $("#deletePersonnelConfirmationModal .btn-delete-confirmation").on("click", func
 });
 
 
-/*FUNCTION TO REFRESH PERSONNEL TABLE USING #REFRESHBTN*/
-// Function to refresh personnel table using #refreshBtn
-/*function refreshPersonnelTable() {
-  const $refreshBtn = $("#refreshBtn");
-  const originalContent = $refreshBtn.html(); // Store the original button content
+/* FUNCTION TO REFRESH PERSONNEL TABLE */
+function refreshPersonnelTable() {
+  // Clear the existing table rows
+  $("#personnelTableBody").empty();
 
   $.ajax({
     url: "libs/php/updateAllPersonnel.php", // Replace with the correct backend URL
     type: "GET",
     dataType: "json",
-    beforeSend: function () {
-      // Disable the button and show a loading spinner
-      $refreshBtn.prop("disabled", true).html('<i class="fas fa-spinner fa-spin"></i>'); // Example spinner
-    },
     success: function (result) {
-      if (result.status.name === "ok") {
-        console.log(result.data);
-
-        // Clear the existing table rows
-        $("#personnelTable tbody").empty();
-
-        // Append new rows from the data
-        result.data.forEach(function (person) {
-          $("#personnelTable tbody").append(
-            `<tr>
-              <td>${person.firstName}</td>
-              <td>${person.lastName}</td>
-              <td>${person.jobTitle}</td>
-              <td>${person.email}</td>
-              <td>${person.departmentName}</td>
-              <td>${person.location}</td>
-            </tr>`
+      console.log("Update all personnel data:", result);
+      if (result.status.name === "ok" && Array.isArray(result.data)) {
+        if (result.data.length === 0) {
+          // Display message for no personnel data
+          $("#personnelTableBody").append(
+            `<tr><td colspan="6">No personnel data available</td></tr>`
           );
-        });
-
-        // Optional: Show success toast or feedback
-        showSuccessToast("Personnel table refreshed!", 3000);
-        $refreshBtn.prop("disabled", false).html(originalContent);
+        } else {
+          // Append rows for each personnel
+          result.data.forEach(function (personnel) {
+            $("#personnelTableBody").append(`
+            <tr>
+              <td class="align-middle text-nowrap">${personnel.lastName}, ${personnel.firstName}</td>
+              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.departmentName}</td>
+              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
+              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
+              <td class="text-end text-nowrap">
+                  <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
+                    <i class="fa-solid fa-pencil fa-fw"></i>
+                  </button>
+                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-bs-toggle="modal" data-bs-target="#deletePersonnelConfirmationModal" data-id=${personnel.id}>
+                    <i class="fa-solid fa-trash fa-fw"></i>
+                  </button>
+                </td>
+            </tr>
+            `);
+          });
+        }
+        showSuccessToast("Personnel table refreshed!", 3000); // Optional success feedback
       } else {
-        // Handle errors in the API response
-        showErrorToast(result.status.message, 4000, false);
+        showErrorToast("No personnel data available", 4000, false);
       }
     },
     error: function (jqXHR, textStatus, errorThrown) {
       showErrorToast("Error refreshing personnel table", 4000, false);
       console.error("AJAX Error: ", textStatus, errorThrown);
-    },
-    complete: function () {
-      // Reset the button state with the original content
-      $refreshBtn.prop("disabled", false).html(originalContent);
     }
   });
 }
@@ -462,13 +499,6 @@ $("#deletePersonnelConfirmationModal .btn-delete-confirmation").on("click", func
 $(document).on("ready", function () {
   $("#refreshBtn").on("click", refreshPersonnelTable);
 });
-
-
-// Bind the function to the button click
-$(document).on("ready", function () {
-  $("#refreshBtn").on("click", refreshPersonnelTable);
-});*/
-
 
 /*TOAST MESSAGE FUNCTION */
 function showErrorToast(message, duration, close) {
