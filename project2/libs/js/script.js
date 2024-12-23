@@ -14,7 +14,6 @@ $(window).on("load", function () {
     type: "GET",
     dataType: "json",
     success: function (result) {
-      console.log("Get all personnel resultS:", result.data);
       if (result.status.name == "ok") {
         result.data.forEach((personnel) => {
           $("#personnelTableBody").append(`
@@ -335,8 +334,10 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
 
   // Check if department already exists (duplicate check)
   var departmentName = $("#addDepartmentName").val();
-  var departmentLocation = $("#addDepartmentLocation").val();
+  var departmentLocation = $("#addDepartmentLocation option:selected").text();
 
+  console.log("Department Name:", departmentName);
+  console.log("Department Location:", departmentLocation);
   // AJAX call to check for duplicate department including location
   $.ajax({
     url: "libs/php/checkForDuplicateDepartments.php",
