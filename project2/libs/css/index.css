@@ -69,3 +69,25 @@ tr {
 .myBtn {
   width: 70px;
 }
+
+/*VIEW PERSONNEL MODAL*/
+input[readonly] {
+  color: #6c757d; /* Dark grey text */
+  cursor: not-allowed; /* Indicate non-editable field */
+}
+
+input[readonly]:focus {
+  outline: none; /* Remove focus outline */
+  box-shadow: none; /* Remove any shadow effect */
+  background-color: inherit; /* Keep the background color unchanged */
+}
+
+a.view-personnel-name {
+  color:#000000;
+  text-decoration: none;
+}
+
+a.view-personnel-name:hover {
+  color: #000000;
+  text-decoration: underline;
+}

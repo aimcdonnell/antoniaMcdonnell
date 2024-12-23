@@ -19,7 +19,10 @@ $(window).on("load", function () {
         result.data.forEach((personnel) => {
           $("#personnelTableBody").append(`
             <tr>
-              <td class="align-middle text-nowrap">${personnel.lastName}, ${personnel.firstName}</td>
+              <td class="align-middle text-nowrap">
+                <a href="#" class="view-personnel-name" data-id=${personnel.id}>${personnel.lastName}, ${personnel.firstName}
+                </a>
+              </td>
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.departmentName}</td>
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
@@ -133,6 +136,30 @@ $("#searchInp").on("keyup", function () {
     }
     //CONTINUE WORKING ON THIS
     $(this).removeClass("active");
+  });
+
+  /*REFRESH PERSONNEL TABLE*/
+  
+  $("#personnelBtn").on("click", function () {
+
+    // Call function to refresh personnel table
+    refreshPersonnelTable();
+
+  });
+
+  /*REFRESH DEPARTMENT TABLE*/
+
+  $("#departmentsBtn").on("click", function () {
+    
+    // Call function to refresh department table
+    
+  });
+  
+  /*REFRESH LOCATION TABLE*/
+  $("#locationsBtn").on("click", function () {
+    
+    // Call function to refresh location table
+    
   });
   
   /*FILTER PERSONNEL BY DEPARTMENT OR LOCATION*/
@@ -264,32 +291,42 @@ $("#addPersonnelModal").on("submit", "#addPersonnelForm", function (e) {
   });
 });
 
+/*VIEW PERSONNEL MODAL */
+$("#personnelTableBody").on("click", ".view-personnel-name", function(e) {
+  //prevent default link behavior
+  e.preventDefault();
 
+  // Retrieve the data-id attribute from the clicked link
+  const personnelId = $(this).data("id");
 
-  /*REFRESH PERSONNEL TABLE*/
-  
-  $("#personnelBtn").on("click", function () {
+  //Fetch the personnel details using the personnel ID
+  $.ajax({
+    url: "libs/php/getPersonnelById.php",
+    type: "GET",
+    dataType: "json",
+    data: {
+      id: personnelId
+    },
+    success: function (result) {
+      if (result.status.name === "ok") {
+        // Populate the modal with the retrieved data
+        const personnel = result.data.personnel[0];
+        $("#viewPersonnelFirstName").val(personnel.firstName);
+        $("#viewPersonnelLastName").val(personnel.lastName);
+        $("#viewPersonnelJobTitle").val(personnel.jobTitle || "Not specified");
+        $("#viewPersonnelEmailAddress").val(personnel.email);
+        $("#viewPersonnelLocation").val(personnel.location);
+        $("#viewPersonnelDepartment").val(personnel.departmentName);
 
-    // Call function to refresh personnel table
-    refreshPersonnelTable();
-
-  });
-
-  /*REFRESH DEPARTMENT TABLE*/
-
-  $("#departmentsBtn").on("click", function () {
-    
-    // Call function to refresh department table
-    
-  });
-  
-  /*REFRESH LOCATION TABLE*/
-  $("#locationsBtn").on("click", function () {
-    
-    // Call function to refresh location table
-    
-  });
-
+        // Show the modal
+        $("#viewPersonnelModal").modal("show");
+      }
+    }, 
+    error: function (jqXHR, textStatus, errorThrown) {
+      showErrorToast("Failed to fetch view personnel details.", 4000, false);
+    }
+  })
+})
   
 /*EDIT PERSONNEL MODAL */
 $("#editPersonnelModal").on("show.bs.modal", function (e) {
@@ -455,7 +492,6 @@ function refreshPersonnelTable() {
     type: "GET",
     dataType: "json",
     success: function (result) {
-      console.log("Update all personnel data:", result);
       if (result.status.name === "ok" && Array.isArray(result.data)) {
         if (result.data.length === 0) {
           // Display message for no personnel data
