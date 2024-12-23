@@ -14,7 +14,7 @@ $(window).on("load", function () {
     type: "GET",
     dataType: "json",
     success: function (result) {
-      console.log("All Personnel Data:", result);
+      console.log("Get all personnel resultS:", result.data);
       if (result.status.name == "ok") {
         result.data.forEach((personnel) => {
           $("#personnelTableBody").append(`
@@ -169,11 +169,13 @@ $("#searchInp").on("keyup", function () {
     
   });
   
-/* ADD PERSONNEL USING #ADDBTN */
+/* ADD PERSONNEL, LOCATIONS AND DEPARTMENTS USING #ADDBTN */
 $("#addBtn").on("click", function () {
   //clear personnel form
   $("#addPersonnelForm")[0].reset();
   // Check if personnel button is active
+
+  /*ADD PERSONNEL */
   if ($("#personnelBtn").hasClass("active")) {
       // Trigger the modal to show
       $("#addPersonnelModal").modal('show');
@@ -184,7 +186,7 @@ $("#addBtn").on("click", function () {
           type: "GET",
           dataType: "json",
           success: function (result) {
-              if (result.status.name === "ok") {
+              if (result.status.name == "ok") {
                   // Clear existing options
                   $("#addPersonnelDepartment").html("");
 
@@ -212,7 +214,7 @@ $("#addBtn").on("click", function () {
           type: "GET",
           dataType: "json",
           success: function (result) {
-              if (result.status.name === "ok") {
+              if (result.status.name == "ok") {
                   // Clear existing options
                   $("#addPersonnelLocation").html("");
 
@@ -230,6 +232,42 @@ $("#addBtn").on("click", function () {
               }
           }
       });
+    /*ADD DEPARTMENT */
+  } else if ($("#departmentsBtn").hasClass("active")) {
+    // Trigger the modal to show
+    $("#addDepartmentModal").modal('show');
+
+    // Populate the location dropdown
+    $.ajax({
+      url: "libs/php/getAllLocations.php",
+      type: "GET",
+      dataType: "json",
+      success: function (result) {
+        console.log("Get all locations", result.data);
+        if (result.status.name == "ok") {
+          // Clear existing options
+          $("#addDepartmentLocation").empty();
+
+          // Populate the dropdown with fetched data
+          result.data.forEach(function(location) {
+            $("#addDepartmentLocation").append(
+              $("<option>", {
+                value: location.locationID,
+                text: location.locationName
+              })
+            );
+          });
+        } else {
+          showErrorToast("Failed to fetch locations for Add Department modal.", 4000, false);
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        showErrorToast("Failed to load locations.", 4000, false);
+      }
+    });
+  } else {
+    // Trigger the location modal to show
+      //$("#addLocationModal").modal('show');
   }
 });
 
@@ -253,7 +291,7 @@ $("#addPersonnelModal").on("submit", "#addPersonnelForm", function (e) {
           email: email
       },
       success: function (result) {
-          if (result.status.name === "ok" && result.data.exists) {
+          if (result.status.name == "ok" && result.data.exists) {
               // Show an error message if duplicate found
               $("#addPersonnelModal").modal("hide");
               $("#addPersonnelErrorModal").modal("show");
@@ -291,6 +329,57 @@ $("#addPersonnelModal").on("submit", "#addPersonnelForm", function (e) {
   });
 });
 
+/*ADD DEPARTMENT FORM SUBMIT */
+$("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
+  e.preventDefault(); // Prevent the default form submission
+
+  // Check if department already exists (duplicate check)
+  var departmentName = $("#addDepartmentName").val();
+  var departmentLocation = $("#addDepartmentLocation").val();
+
+  // AJAX call to check for duplicate department including location
+  $.ajax({
+    url: "libs/php/checkForDuplicateDepartments.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      departmentName: departmentName,
+      location: departmentLocation
+    },
+    success: function (result) {
+      console.log("Duplicate department form submit result:", result);
+      if (result.status.name == "ok" && result.data.exists) {
+        $("#addDepartmentModal").modal("hide");
+        $("#addDepartmentErrorModal").modal("show");
+      } else {
+        // No duplicate found, proceed with adding department
+        $.ajax({
+          url: "libs/php/addDepartment.php",
+          type: "POST",
+          dataType: "json",
+          data: {
+            departmentName: departmentName,
+            location: departmentLocation
+          },
+          success: function (result) {
+            if (result.status.name == "ok") {
+              // Optionally close the modal or refresh the table
+              $("#addDepartmentModal").modal('hide');
+              $("#addDepartmentSuccessModal").modal('show');
+            }
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            showErrorToast("Failed to add department.", 4000, false);
+          }
+        });
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      showErrorToast("Failed to check for duplicates.", 4000, false);
+    }
+  });
+});
+
 /*VIEW PERSONNEL MODAL */
 $("#personnelTableBody").on("click", ".view-personnel-name", function(e) {
   //prevent default link behavior
@@ -308,7 +397,7 @@ $("#personnelTableBody").on("click", ".view-personnel-name", function(e) {
       id: personnelId
     },
     success: function (result) {
-      if (result.status.name === "ok") {
+      if (result.status.name == "ok") {
         // Populate the modal with the retrieved data
         const personnel = result.data.personnel[0];
         $("#viewPersonnelFirstName").val(personnel.firstName);
@@ -353,7 +442,7 @@ $("#editPersonnelModal").on("show.bs.modal", function (e) {
       id: editPersonnelId, // Pass the correct ID to the server
     },
     success: function (result) {
-      if (result.status.name === "ok" && result.data.personnel.length > 0) {
+      if (result.status.name == "ok" && result.data.personnel.length > 0) {
         // Update the modal fields with the employee's data
         let personnel = result.data.personnel[0];
         $("#editPersonnelEmployeeID").val(personnel.id);
@@ -427,8 +516,6 @@ $("#editPersonnelForm").on("submit", function (e) {
   });
 });
 
-
-
 /*DELETE PERSONNEL MODAL */
 
   // Perform the AJAX request using the retrieved personnel ID
@@ -449,7 +536,7 @@ $(document).on("click", ".delete-personnel-btn", function() {
   $("#deletePersonnelConfirmationModal").modal("show");
 });
 
-/* DELETE PERSONNEL CONFIRMATION (OK BUTTON) */
+/* DELETE PERSONNEL CONFIRMATION MODAL*/
 $("#deletePersonnelConfirmationModal .btn-delete-confirmation").on("click", function() {
   // Retrieve the personnel ID from the confirmation modal's data-id attribute
   const deletePersonnelId = $("#deletePersonnelConfirmationModal").data("id");
@@ -462,7 +549,7 @@ $("#deletePersonnelConfirmationModal .btn-delete-confirmation").on("click", func
       id: deletePersonnelId, // Pass the correct ID to the server
     },
     success: function(result) {
-      if (result.status.name === "ok") {
+      if (result.status.name == "ok") {
         // Close the confirmation modal
         $("#deletePersonnelConfirmationModal").modal("hide");
 
@@ -492,7 +579,7 @@ function refreshPersonnelTable() {
     type: "GET",
     dataType: "json",
     success: function (result) {
-      if (result.status.name === "ok" && Array.isArray(result.data)) {
+      if (result.status.name == "ok" && Array.isArray(result.data)) {
         if (result.data.length === 0) {
           // Display message for no personnel data
           $("#personnelTableBody").append(
@@ -536,7 +623,7 @@ $(document).on("ready", function () {
   $("#refreshBtn").on("click", refreshPersonnelTable);
 });
 
-/*TOAST MESSAGE FUNCTION */
+/*TOAST MESSAGE FUNCTIONS */
 function showErrorToast(message, duration, close) {
   
   Toastify({
