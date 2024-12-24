@@ -30,10 +30,11 @@ if (mysqli_connect_errno()) {
     exit;
 }
 
-// Prepare the SQL statement to insert new department data
-$query = $conn->prepare('INSERT INTO department (name, locationID) VALUES(?, ?)');
+// Prepare the SQL statement to insert new department name and location name data
+$query = $conn->prepare('INSERT INTO department (name, locationID) VALUES (?, ?)');
 
-$query->bind_param("si", $_REQUEST['name'], $_REQUEST['locationID']);
+
+$query->bind_param("ss", $_REQUEST['departmentName'], $_REQUEST['locationID']);
 
 // Execute the query
 $query->execute();

@@ -239,7 +239,6 @@ $("#addBtn").on("click", function () {
       type: "GET",
       dataType: "json",
       success: function (result) {
-        console.log("Get all locations", result.data);
         if (result.status.name == "ok") {
           // Clear existing options
           $("#addDepartmentLocation").empty();
@@ -330,22 +329,20 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
   e.preventDefault(); // Prevent the default form submission
 
   // Check if department already exists (duplicate check)
-  var departmentName = $("#addDepartmentName").val();
-  var departmentLocation = $("#addDepartmentLocation option:selected").text();
 
-  console.log("Department Name:", departmentName);
-  console.log("Department Location:", departmentLocation);
   // AJAX call to check for duplicate department including location
   $.ajax({
     url: "libs/php/checkForDuplicateDepartments.php",
     type: "POST",
     dataType: "json",
     data: {
-      departmentName: departmentName,
-      location: departmentLocation
+      departmentName: $("#addDepartmentName").val(),
+      locationID: $("#addDepartmentLocation option:selected").val()
     },
     success: function (result) {
-      console.log("Duplicate department form submit result:", result);
+      console.log("New department name", $("#addDepartmentName").val())
+      console.log("New department location", $("#addDepartmentLocation option:selected").text());
+      console.log("Add department form submit result", result);
       if (result.status.name == "ok" && result.data.exists) {
         $("#addDepartmentModal").modal("hide");
         $("#addDepartmentErrorModal").modal("show");
@@ -356,14 +353,17 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
           type: "POST",
           dataType: "json",
           data: {
-            departmentName: departmentName,
-            location: departmentLocation
+            departmentName: $("#addDepartmentName").val(),
+            locationID: $("#addDepartmentLocation option:selected").val()
           },
           success: function (result) {
             if (result.status.name == "ok") {
+              //const newDepartmentId = result.data.departmentID;
+              //console.log("New Department ID:", newDepartmentId);
               // Optionally close the modal or refresh the table
               $("#addDepartmentModal").modal('hide');
               $("#addDepartmentSuccessModal").modal('show');
+              refreshDepartmentTable();
             }
           },
           error: function (jqXHR, textStatus, errorThrown) {
@@ -631,7 +631,7 @@ function refreshDepartmentTable() {
     type: "GET",
     dataType: "json",
     success: function (result) {
-      console.log(result.data);
+      console.log("Update all departments data", result.data);
       if (result.status.name == "ok" && Array.isArray(result.data)) {
         if (result.data.length === 0) {
           $("#departmentTableBody").append(`

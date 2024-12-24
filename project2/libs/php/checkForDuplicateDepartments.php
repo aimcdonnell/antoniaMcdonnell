@@ -24,15 +24,14 @@ if (mysqli_connect_errno()) {
 
 // Get POST data and trim whitespace
 $departmentName = trim($_POST['departmentName'] ?? '');
-$locationName = trim($_POST['location'] ?? '');
+$locationID = trim($_POST['locationID'] ?? '');
 
 // Validate input data
-if (empty($departmentName) || empty($locationName)) {
+if (empty($departmentName) || empty($locationID)) {
     $output['status']['code'] = "400";
     $output['status']['name'] = "failure";
     $output['status']['description'] = "Invalid input data: departmentName and location cannot be empty.";
     $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-    $output['data'] = [];
     echo json_encode($output);
     $conn->close();
     exit;
@@ -41,9 +40,8 @@ if (empty($departmentName) || empty($locationName)) {
 // Check for duplicate department with location
 $query = $conn->prepare('SELECT d.id 
     FROM department d
-    INNER JOIN location l ON d.locationID = l.id 
-    WHERE d.name = ? AND l.name = ?');
-$query->bind_param('ss', $departmentName, $locationName);
+    WHERE d.name = ? AND d.locationID = ?');
+$query->bind_param('si', $departmentName, $locationID);
 $query->execute();
 $result = $query->get_result();
 
@@ -54,47 +52,11 @@ if ($result->num_rows > 0) {
     $output['status']['description'] = "Duplicate department at this location found.";
     $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output['data'] = ['exists' => true];
-    echo json_encode($output);
-    $conn->close();
-    exit;
-}
-
-// Get location ID for the location name
-$locationQuery = $conn->prepare('SELECT id FROM location WHERE name = ?');
-$locationQuery->bind_param('s', $locationName);
-$locationQuery->execute();
-$locationResult = $locationQuery->get_result();
-
-if ($locationResult->num_rows === 0) {
-    // Location not found
-    $output['status']['code'] = "400";
-    $output['status']['name'] = "failure";
-    $output['status']['description'] = "Location not found.";
-    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-    $output['data'] = [];
-    echo json_encode($output);
-    $conn->close();
-    exit;
-}
-
-// Fetch the location ID
-$locationRow = $locationResult->fetch_assoc();
-$locationId = $locationRow['id'];
-
-// Insert new department
-$insertQuery = $conn->prepare('INSERT INTO department (name, locationID) VALUES (?, ?)');
-$insertQuery->bind_param('si', $departmentName, $locationId);
-
-if ($insertQuery->execute()) {
-    $output['status']['code'] = "200";
-    $output['status']['name'] = "ok";
-    $output['status']['description'] = "Duplicate department found";
-    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-    $output['data'] = ['exists' => true];
 } else {
+    // No duplicates found
     $output['status']['code'] = "200";
     $output['status']['name'] = "ok";
-    $output['status']['description'] = "No duplicate department found";
+    $output['status']['description'] = "No duplicate department found.";
     $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output['data'] = ['exists' => false];
 }
