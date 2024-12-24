@@ -47,6 +47,7 @@ if (false === $query) {
     SELECT d.id, d.name, l.name as location
     FROM department d
     LEFT JOIN location l ON d.locationID = l.id
+    ORDER BY d.name, l.name
     ');
 
     // Execute the query

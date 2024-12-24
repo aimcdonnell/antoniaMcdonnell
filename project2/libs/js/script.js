@@ -340,9 +340,7 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
       locationID: $("#addDepartmentLocation option:selected").val()
     },
     success: function (result) {
-      console.log("New department name", $("#addDepartmentName").val())
-      console.log("New department location", $("#addDepartmentLocation option:selected").text());
-      console.log("Add department form submit result", result);
+      console.log("Check for duplicate departmers result", result.data);
       if (result.status.name == "ok" && result.data.exists) {
         $("#addDepartmentModal").modal("hide");
         $("#addDepartmentErrorModal").modal("show");
@@ -357,6 +355,7 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
             locationID: $("#addDepartmentLocation option:selected").val()
           },
           success: function (result) {
+            console.log("Add department.php", result.data)
             if (result.status.name == "ok") {
               //const newDepartmentId = result.data.departmentID;
               //console.log("New Department ID:", newDepartmentId);

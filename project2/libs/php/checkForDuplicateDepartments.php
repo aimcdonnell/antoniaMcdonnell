@@ -38,13 +38,18 @@ if (empty($departmentName) || empty($locationID)) {
 }
 
 // Check for duplicate department with location
+//id is being accessed to make sure it's unique in case it needs to be accessed later for updating
+//Matching the parameters specified in the POST requests above to the database
 $query = $conn->prepare('SELECT d.id 
     FROM department d
     WHERE d.name = ? AND d.locationID = ?');
+
+//allows you to insert dynamic values into the query
 $query->bind_param('si', $departmentName, $locationID);
 $query->execute();
 $result = $query->get_result();
 
+//if result is not empty
 if ($result->num_rows > 0) {
     // Duplicate found
     $output['status']['code'] = "200";
