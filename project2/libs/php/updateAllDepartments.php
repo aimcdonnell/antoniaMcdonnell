@@ -1,10 +1,10 @@
 <?php
 
-//remove next two lines for production
+// Enable error reporting for development (remove for production)
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
-//track execution time
+// Track execution time
 $executionStartTime = microtime(true);
 
 //where the login details are stored
@@ -31,9 +31,9 @@ if (mysqli_connect_errno()) {
     exit;
 }
 
-// Update query for personnel
-$query = $conn->prepare('UPDATE personnel SET firstName = ?, lastName = ?, jobTitle = ?, email = ?, departmentID = ? WHERE id = ?');
-$query->bind_param("ssssii", $_REQUEST['firstName'], $_REQUEST['lastName'], $_REQUEST['jobTitle'], $_REQUEST['email'], $_REQUEST['departmentID'], $_REQUEST['id']);
+// Update query for departments
+$query = $conn->prepare('UPDATE department SET name = ?, locationID = ? WHERE id = ?');
+$query->bind_param("sii", $_REQUEST['name'], $_REQUEST['locationID'], $_REQUEST['id']);
 $query->execute();
 
 if (false === $query) {
@@ -42,33 +42,35 @@ if (false === $query) {
     $output['status']['description'] = "query failed";
     $output['data'] = [];
 } else {
-    // Fetch all personnel with their department names
+    //Fetch all departments with their location names
     $selectQuery = $conn->prepare('
-        SELECT p.id, p.lastName, p.firstName, p.jobTitle, p.email, d.id AS departmentId, d.name as departmentName, l.name as location
-        FROM personnel p
-        LEFT JOIN department d ON p.departmentID = d.id
-        LEFT JOIN location l ON d.locationID = l.id
-        ORDER BY p.lastName, p.firstName, d.name, l.name
+    SELECT d.id, d.name, l.name as location
+    FROM department d
+    LEFT JOIN location l ON d.locationID = l.id
     ');
+
     // Execute the query
     $selectQuery->execute();
-    /// Fetch all rows
+    // Get the result from the query
     $result = $selectQuery->get_result();
 
-    /// Fetch all personnel with their department names
-    $allPersonnel = [];
-    while ($row = $result->fetch_assoc()) {
-        $allPersonnel[] = $row;
+    // Fetch all departments with their location names
+    $allDepartments = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        array_push($allDepartments, $row);
     }
 
     $output['status']['code'] = "200";
     $output['status']['name'] = "ok";
     $output['status']['description'] = "success";
-    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms"; // Include execution time
-    $output['data'] = $allPersonnel;
+    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+    $output['data'] = $allDepartments;
 }
+
 //Final output statement
 echo json_encode($output);
 
 //close the connection
 $conn->close();
+
+?>

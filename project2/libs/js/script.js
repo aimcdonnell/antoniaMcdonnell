@@ -121,16 +121,13 @@ $("#searchInp").on("keyup", function () {
       // Refresh personnel table
       refreshPersonnelTable();
       
-    } else {
-      
-      if ($("#departmentsBtn").hasClass("active")) {
-        
-        // Refresh department table
-      } else {
-        
-        // Refresh location table
-        
-      }
+    } else if ($("#departmentsBtn").hasClass("active")) {
+      // Refresh department table
+      refreshDepartmentTable();
+
+    } else if ($("#locationsBtn").hasClass("active")) {
+      // Refresh location table
+  
       
     }
     //CONTINUE WORKING ON THIS
@@ -151,7 +148,7 @@ $("#searchInp").on("keyup", function () {
   $("#departmentsBtn").on("click", function () {
     
     // Call function to refresh department table
-    
+    refreshDepartmentTable();
   });
   
   /*REFRESH LOCATION TABLE*/
@@ -170,10 +167,10 @@ $("#searchInp").on("keyup", function () {
   
 /* ADD PERSONNEL, LOCATIONS AND DEPARTMENTS USING #ADDBTN */
 $("#addBtn").on("click", function () {
-  //clear personnel form
+  //clear personnel, departments and location forms
   $("#addPersonnelForm")[0].reset();
+  $("#addDepartmentForm")[0].reset();
   // Check if personnel button is active
-
   /*ADD PERSONNEL */
   if ($("#personnelBtn").hasClass("active")) {
       // Trigger the modal to show
@@ -576,16 +573,16 @@ function refreshPersonnelTable() {
   $("#personnelTableBody").empty();
 
   $.ajax({
-    url: "libs/php/updateAllPersonnel.php", // Replace with the correct backend URL
+    url: "libs/php/updateAllPersonnel.php",
     type: "GET",
     dataType: "json",
     success: function (result) {
       if (result.status.name == "ok" && Array.isArray(result.data)) {
         if (result.data.length === 0) {
           // Display message for no personnel data
-          $("#personnelTableBody").append(
-            `<tr><td colspan="6">No personnel data available</td></tr>`
-          );
+          $("#personnelTableBody").append(`
+            <tr><td colspan="6">No personnel data available</td></tr>
+            `);
         } else {
           // Append rows for each personnel
           result.data.forEach(function (personnel) {
@@ -607,22 +604,72 @@ function refreshPersonnelTable() {
             `);
           });
         }
-        showSuccessToast("Personnel table refreshed!", 3000); // Optional success feedback
+        showSuccessToast("Personnel table refreshed!", 3000);
       } else {
         showErrorToast("No personnel data available", 4000, false);
       }
     },
     error: function (jqXHR, textStatus, errorThrown) {
       showErrorToast("Error refreshing personnel table", 4000, false);
-      console.error("AJAX Error: ", textStatus, errorThrown);
     }
   });
 }
 
 // Bind the function to the button click
-$(document).on("ready", function () {
+/*$(document).on("ready", function () {
   $("#refreshBtn").on("click", refreshPersonnelTable);
-});
+});*/
+
+//function to refresh department table
+
+function refreshDepartmentTable() {
+  // Clear the existing table rows
+  $("#departmentTableBody").empty();
+
+  $.ajax({
+    url: "libs/php/updateAllDepartments.php",
+    type: "GET",
+    dataType: "json",
+    success: function (result) {
+      console.log(result.data);
+      if (result.status.name == "ok" && Array.isArray(result.data)) {
+        if (result.data.length === 0) {
+          $("#departmentTableBody").append(`
+            <t><td colspan="6">No department data available</td></tr>
+            `);
+          } else {
+            //Append rows for each department
+            result.data.forEach(function (department){
+              $("#departmentTableBody").append(`
+                <tr>
+                <td class="align-middle text-nowrap">
+                  ${department.name}
+                </td>
+                <td class="align-middle text-nowrap d-none d-md-table-cell">
+                  ${department.location}
+                </td>
+                <td class="align-middle text-end text-nowrap">
+                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${department.id}>
+                    <i class="fa-solid fa-pencil fa-fw"></i>
+                  </button>
+                  <button type="button" class="btn btn-primary btn-sm deleteDepartmentBtn" data-id=${department.id}>
+                    <i class="fa-solid fa-trash fa-fw"></i>
+                  </button>
+                </td>
+              </tr>     
+              `);
+            });
+          }
+          showSuccessToast("Department table refreshed!", 3000);
+      } else {
+        showErrorToast("No department data available", 4000, false);
+      }
+    }, 
+    error: function (jqXHR, textStatus, errorThrown) {
+      showErrorToast("Error refreshing department table", 4000, false);
+    }
+  })
+}
 
 /*TOAST MESSAGE FUNCTIONS */
 function showErrorToast(message, duration, close) {
