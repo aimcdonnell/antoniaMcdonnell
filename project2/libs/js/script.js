@@ -499,7 +499,7 @@ $("#editPersonnelForm").on("submit", function (e) {
 
         // Show a confirmation modal message
         $("#editPersonnelSuccessModal").modal("show");
-        // You might want to refresh the personnel table here (e.g., refreshPersonnelTable());
+        refreshPersonnelTable();
       } else {
         // Show a toast message
         showErrorToast("Error updating personnel", 4000, false);
@@ -563,44 +563,44 @@ $("#editPersonnelForm").on("submit", function (e) {
   });
   });
 
-// /* EDIT DEPARTMENT FORM SUBMIT*/
-// $("#editDepartmentForm").on("submit", function (e) {
-//   // Executes when the form button with type="submit" is clicked
-//   // stop the default browser behaviour
-//   e.preventDefault();
+/* EDIT DEPARTMENT FORM SUBMIT*/
+$("#editDepartmentForm").on("submit", function (e) {
+  // Executes when the form button with type="submit" is clicked
+  // stop the default browser behaviour
+  e.preventDefault();
 
-//   // Retrieve the personnel ID from the modal's data attribute
-//   const editDepartmentId = $("#editDepartmentModal").data('editDepartmentId');
+  // Retrieve the personnel ID from the modal's data attribute
+  const editDepartmentId = $("#editDepartmentModal").data('editDepartmentId');
 
-//   // AJAX call to save form data
-//   $.ajax({
-//     url: "libs/php/updateDepartmentByID.php",
-//     type: "POST",
-//     dataType: "json",
-//     data: {
-//       id: editDepartmentId,
-//       departmentName: $("#editDepartmentName").val(),
-//       locationID: $("#editDepartmentLocation option:selected").val(),
-//     },
-//     success: function (result) {
-//       if (result.status.name == "ok") {
-//         // Close the modal
-//         //$("#editDepartmentModal").modal("hide");
+  // AJAX call to save form data
+  $.ajax({
+    url: "libs/php/updateDepartmentByID.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      id: editDepartmentId,
+      departmentName: $("#editDepartmentName").val(),
+      locationID: $("#editDepartmentLocation option:selected").val(),
+    },
+    success: function (result) {
+      if (result.status.name == "ok") {
+        // Close the modal
+        $("#editDepartmentModal").modal("hide");
 
-//         // Show a confirmation modal message
-//         //$("#editDepartmentSuccessModal").modal("show");
-//         // You might want to refresh the personnel table here (e.g., refreshPersonnelTable());
-//       } else {
-//         // Show a toast message
-//         showErrorToast("Error updating personnel", 4000, false);
-//       }
-//     },
-//     error: function (jqXHR, textStatus, errorThrown) {
-//       // Show a toast message
-//       showErrorToast("An error occurred in the edit personnel form", 4000, false);
-//     },
-//   });
-// });
+        // Show a confirmation modal message
+        $("#editDepartmentSuccessModal").modal("show");
+        refreshDepartmentTable();
+      } else {
+        // Show a toast message
+        showErrorToast("Error updating personnel", 4000, false);
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      // Show a toast message
+      showErrorToast("An error occurred in the edit personnel form", 4000, false);
+    },
+  });
+});
 
 /*DELETE PERSONNEL MODAL */
   // Perform the AJAX request using the retrieved personnel ID
@@ -637,8 +637,8 @@ $("#deletePersonnelConfirmationModal .btn-delete-confirmation").on("click", func
       if (result.status.name == "ok") {
         // Close the confirmation modal
         $("#deletePersonnelConfirmationModal").modal("hide");
-
         refreshPersonnelTable();
+
         // Show a toast message
         $("#deletePersonnelSuccessModal").modal("show");
         // Refresh the personnel table
