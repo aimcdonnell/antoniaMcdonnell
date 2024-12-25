@@ -340,7 +340,6 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
       locationID: $("#addDepartmentLocation option:selected").val()
     },
     success: function (result) {
-      console.log("Check for duplicate departmers result", result.data);
       if (result.status.name == "ok" && result.data.exists) {
         $("#addDepartmentModal").modal("hide");
         $("#addDepartmentErrorModal").modal("show");
@@ -355,7 +354,6 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
             locationID: $("#addDepartmentLocation option:selected").val()
           },
           success: function (result) {
-            console.log("Add department.php", result.data)
             if (result.status.name == "ok") {
               //const newDepartmentId = result.data.departmentID;
               //console.log("New Department ID:", newDepartmentId);
@@ -442,6 +440,7 @@ $("#editPersonnelModal").on("show.bs.modal", function (e) {
       if (result.status.name == "ok" && result.data.personnel.length > 0) {
         // Update the modal fields with the employee's data
         let personnel = result.data.personnel[0];
+        let department = result.data.department;
         $("#editPersonnelEmployeeID").val(personnel.id);
         $("#editPersonnelFirstName").val(personnel.firstName);
         $("#editPersonnelLastName").val(personnel.lastName);
@@ -450,7 +449,7 @@ $("#editPersonnelModal").on("show.bs.modal", function (e) {
 
         // Populate the department dropdown
         $("#editPersonnelDepartment").html(""); // Clear existing options
-        $.each(result.data.department, function () {
+        $.each(department, function () {
           $("#editPersonnelDepartment").append(
             $("<option>", {
               value: this.id,
@@ -513,8 +512,97 @@ $("#editPersonnelForm").on("submit", function (e) {
   });
 });
 
-/*DELETE PERSONNEL MODAL */
+/*EDIT DEPARTMENT MODAL */
+  $("#editDepartmentModal").on("show.bs.modal", function (e) {
+  /// Clear any previous data from the modal
+  $("#editDepartmentName").val("");
 
+  // Use `e.relatedTarget` to access the button that triggered the modal
+  // Retrieve the `data-id` of the clicked edit button
+  const editDepartmentId = $(e.relatedTarget).attr("data-id");
+
+  // Store the ID in the modal's data attribute to retain it when modal is reopened
+  $(this).data('editDepartmentId', editDepartmentId);
+
+  // Perform the AJAX request using the retrieved personnel ID
+  $.ajax({
+    url: "libs/php/getDepartmentByID.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      departmentID: editDepartmentId, // Pass the correct ID to the server
+    },
+    success: function (result) {
+      console.log("edit department data", result);
+      if (result.status.name == "ok" && result.data.department.length > 0) {
+        // Update the modal fields with the employee's data
+        let department = result.data.department[0];
+        let location = result.data.locations;
+       $("#editDepartmentName").val(department.departmentName);
+
+        // Populate the location dropdown
+        $("#editDepartmentLocation").html(""); // Clear existing options
+        $.each(location, function () {
+          $("#editDepartmentLocation").append(
+            $("<option>", {
+              value: this.locationID,
+              text: this.locationName,
+            })
+          );
+        });
+
+        // Set the department value to match the employee's department
+        $("#editDepartmentLocation").val(department.locationID);
+      } else {
+        showErrorToast("No personnel data found", 4000, false);
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      showErrorToast("Error retrieving data", 4000, false);
+    },
+  });
+  });
+
+// /* EDIT DEPARTMENT FORM SUBMIT*/
+// $("#editDepartmentForm").on("submit", function (e) {
+//   // Executes when the form button with type="submit" is clicked
+//   // stop the default browser behaviour
+//   e.preventDefault();
+
+//   // Retrieve the personnel ID from the modal's data attribute
+//   const editDepartmentId = $("#editDepartmentModal").data('editDepartmentId');
+
+//   // AJAX call to save form data
+//   $.ajax({
+//     url: "libs/php/updateDepartmentByID.php",
+//     type: "POST",
+//     dataType: "json",
+//     data: {
+//       id: editDepartmentId,
+//       departmentName: $("#editDepartmentName").val(),
+//       locationID: $("#editDepartmentLocation option:selected").val(),
+//     },
+//     success: function (result) {
+//       if (result.status.name == "ok") {
+//         // Close the modal
+//         //$("#editDepartmentModal").modal("hide");
+
+//         // Show a confirmation modal message
+//         //$("#editDepartmentSuccessModal").modal("show");
+//         // You might want to refresh the personnel table here (e.g., refreshPersonnelTable());
+//       } else {
+//         // Show a toast message
+//         showErrorToast("Error updating personnel", 4000, false);
+//       }
+//     },
+//     error: function (jqXHR, textStatus, errorThrown) {
+//       // Show a toast message
+//       showErrorToast("An error occurred in the edit personnel form", 4000, false);
+//     },
+//   });
+// });
+
+/*DELETE PERSONNEL MODAL */
   // Perform the AJAX request using the retrieved personnel ID
   /* DELETE PERSONNEL BUTTON CLICK */
 $(document).on("click", ".delete-personnel-btn", function() {
@@ -630,7 +718,6 @@ function refreshDepartmentTable() {
     type: "GET",
     dataType: "json",
     success: function (result) {
-      console.log("Update all departments data", result.data);
       if (result.status.name == "ok" && Array.isArray(result.data)) {
         if (result.data.length === 0) {
           $("#departmentTableBody").append(`

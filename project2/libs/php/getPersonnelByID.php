@@ -114,11 +114,12 @@ if (!$result) {
 }
 
 //create an array for department data
-$department = [];
+$departments = [];
 
 //loop through the department data and add it to the array
 while ($row = mysqli_fetch_assoc($result)) {
-    array_push($department, $row);
+    //add the row to the department array
+    array_push($departments, $row);
 }
 
 
@@ -128,7 +129,7 @@ $output['status']['name'] = "ok";
 $output['status']['description'] = "success";
 $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
 $output['data']['personnel'] = $personnel;  // Personnel data
-$output['data']['department'] = $department;  // Department data
+$output['data']['department'] = $departments;  // Department data
 
 //close the connection
 mysqli_close($conn);
