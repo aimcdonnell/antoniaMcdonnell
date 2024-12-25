@@ -43,11 +43,34 @@
 		//exit the script and avoid executing the rest of the code
 		exit;
 
-	}	
+	}
+	
+	//check if any employees are assigned to the department before deleting
+	$departmentID = $_REQUEST['id'];
+	$query = $conn->prepare('
+	SELECT
+		(SELECT name FROM department WHERE id = ?) AS departmentName,
+		COUNT(*) as count 
+		FROM personnel 
+		WHERE departmentID = ?
+		');
+	$personnelDepartmentID = $departmentID;
+	$query->bind_param("ii", $departmentID, $personnelDepartmentID);
+	$query->execute();
+	$checkResult = $query->get_result()->fetch_assoc();
 
+	if ($checkResult['count'] > 0) {
+		$output['status']['code'] = "403";
+		$output['status']['name'] = "failure";
+		$output['status']['description'] = "Cannot delete department with assigned personnel";
+		$output['data']['count'] = $checkResult['count'];
+		$output['data']['departmentName'] = $checkResult['departmentName'];
+		//Return the output
+		echo json_encode($output);
+		exit;
+	}
 	// SQL statement accepts parameters and so is prepared to avoid SQL injection.
 	// $_REQUEST used for development / debugging. Remember to change to $_POST for production
-
 	//including the ? placeholder ensures that the query is safe from SQL injection
 	$query = $conn->prepare('DELETE FROM department WHERE id = ?');
 	

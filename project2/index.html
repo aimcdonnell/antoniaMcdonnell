@@ -372,7 +372,7 @@
         <p>Are you sure you want to delete this employee?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-primary btn-sm btn-delete-confirmation">DELETE</button>
+        <button type="button" class="btn btn-outline-primary btn-sm btn-delete-personnel-confirmation">DELETE</button>
         <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">CANCEL</button>
       </div>
     </div>
@@ -384,7 +384,7 @@
       <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
           <div class="modal-header bg-primary bg-gradient text-white">
-            <h5 class="modal-title" id="exampleModalLabel">Deletion Success</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Deletion success</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -496,7 +496,7 @@
     
               <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="editDepartmentName" placeholder="Department" required>
-                <label for="editDepartmentName">Department</label>
+                <label for="editDepartmentName">Department name</label>
               </div>
     
               <div class="form-floating">
@@ -520,24 +520,78 @@
       
     </div>
 
-        <!--Edit Personnel Success Modal -->
-        <div id="editDepartmentSuccessModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content shadow">
-              <div class="modal-header bg-primary bg-gradient text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Update success</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <p>Department successfully updated.</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-outline-primary btn-sm btn-edit-success" data-bs-dismiss="modal">OK</button>
-              </div>
-            </div>
+    <!--Edit Department Success Modal -->
+    <div id="editDepartmentSuccessModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title" id="exampleModalLabel">Update success</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Department successfully updated.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary btn-sm btn-edit-success" data-bs-dismiss="modal">OK</button>
           </div>
         </div>
-    
+      </div>
+    </div>
+
+    <!-- Delete Department Confirmation Modal -->
+    <div id="deleteDepartmentConfirmationModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title" id="exampleModalLabel">Confirm deletion</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to delete this department?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary btn-sm btn-delete-department-confirmation">DELETE</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">CANCEL</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Delete Department Success Modal -->
+    <div id="deleteDepartmentSuccessModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title" id="exampleModalLabel">Deletion Success</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Department successfully deleted.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary btn-sm btn-delete-success" data-bs-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Delete Department Error Modal-->
+    <div id="deleteDepartmentErrorModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title" id="exampleModalLabel">Deletion error</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary btn-sm btn-delete-success" data-bs-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -58,6 +58,7 @@ $(window).on("load", function () {
     type: "GET",
     dataType: "json",
     success: function (result) {
+      console.log("department data", result.data)
       result.data.forEach((department) => {
         $("#departmentTableBody").append(`
           <tr>
@@ -68,10 +69,10 @@ $(window).on("load", function () {
                   ${department.location}
                 </td>
                 <td class="align-middle text-end text-nowrap">
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${department.id}>
+                  <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${department.departmentId}>
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm deleteDepartmentBtn" data-id=${department.id}>
+                  <button type="button" class="btn btn-primary btn-sm delete-department-btn" data-id=${department.departmentId}>
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
@@ -102,7 +103,7 @@ $(window).on("load", function () {
               </button>
             </td>
           </tr>
-          `)
+        `)
       })
     }
   })
@@ -127,11 +128,8 @@ $("#searchInp").on("keyup", function () {
 
     } else if ($("#locationsBtn").hasClass("active")) {
       // Refresh location table
-  
-      
+    
     }
-    //CONTINUE WORKING ON THIS
-    $(this).removeClass("active");
   });
 
   /*REFRESH PERSONNEL TABLE*/
@@ -171,7 +169,8 @@ $("#addBtn").on("click", function () {
   $("#addPersonnelForm")[0].reset();
   $("#addDepartmentForm")[0].reset();
   // Check if personnel button is active
-  /*ADD PERSONNEL */
+
+  /* 1ST CONDITION: ADD PERSONNEL */
   if ($("#personnelBtn").hasClass("active")) {
       // Trigger the modal to show
       $("#addPersonnelModal").modal('show');
@@ -228,44 +227,46 @@ $("#addBtn").on("click", function () {
               }
           }
       });
-    /*ADD DEPARTMENT */
-  } else if ($("#departmentsBtn").hasClass("active")) {
-    // Trigger the modal to show
-    $("#addDepartmentModal").modal('show');
 
-    // Populate the location dropdown
-    $.ajax({
-      url: "libs/php/getAllLocations.php",
-      type: "GET",
-      dataType: "json",
-      success: function (result) {
-        if (result.status.name == "ok") {
-          // Clear existing options
-          $("#addDepartmentLocation").empty();
+       /* 2ND CONDITION: ADD DEPARTMENT */
+} else if ($("#departmentsBtn").hasClass("active")) {
+  // Trigger the modal to show
+  $("#addDepartmentModal").modal('show');
 
-          // Populate the dropdown with fetched data
-          result.data.forEach(function(location) {
-            $("#addDepartmentLocation").append(
-              $("<option>", {
-                value: location.locationID,
-                text: location.locationName
-              })
-            );
-          });
-        } else {
-          showErrorToast("Failed to fetch locations for Add Department modal.", 4000, false);
-        }
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        showErrorToast("Failed to load locations.", 4000, false);
+  // Populate the location dropdown
+  $.ajax({
+    url: "libs/php/getAllLocations.php",
+    type: "GET",
+    dataType: "json",
+    success: function (result) {
+      if (result.status.name == "ok") {
+        // Clear existing options
+        $("#addDepartmentLocation").empty();
+
+        // Populate the dropdown with fetched data
+        result.data.forEach(function(location) {
+          $("#addDepartmentLocation").append(
+            $("<option>", {
+              value: location.locationID,
+              text: location.locationName
+            })
+          );
+        });
+      } else {
+        showErrorToast("Failed to fetch locations for Add Department modal.", 4000, false);
       }
-    });
-  } else {
-    // Trigger the location modal to show
-      //$("#addLocationModal").modal('show');
-  }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      showErrorToast("Failed to load locations.", 4000, false);
+    }
+  });
+} else {
+  /*3RD CONDITION: ADD LOCATION */
+  // Trigger the location modal to show
+    //$("#addLocationModal").modal('show');
+}
 });
-
+   
 /* ADD PERSONNEL FORM SUBMIT */
 $("#addPersonnelModal").on("submit", "#addPersonnelForm", function (e) {
   e.preventDefault(); // Prevent the default form submission
@@ -321,57 +322,6 @@ $("#addPersonnelModal").on("submit", "#addPersonnelForm", function (e) {
       error: function (jqXHR, textStatus, errorThrown) {
           showErrorToast("Failed to check for duplicates.", 4000, false);
       }
-  });
-});
-
-/*ADD DEPARTMENT FORM SUBMIT */
-$("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
-  e.preventDefault(); // Prevent the default form submission
-
-  // Check if department already exists (duplicate check)
-
-  // AJAX call to check for duplicate department including location
-  $.ajax({
-    url: "libs/php/checkForDuplicateDepartments.php",
-    type: "POST",
-    dataType: "json",
-    data: {
-      departmentName: $("#addDepartmentName").val(),
-      locationID: $("#addDepartmentLocation option:selected").val()
-    },
-    success: function (result) {
-      if (result.status.name == "ok" && result.data.exists) {
-        $("#addDepartmentModal").modal("hide");
-        $("#addDepartmentErrorModal").modal("show");
-      } else {
-        // No duplicate found, proceed with adding department
-        $.ajax({
-          url: "libs/php/addDepartment.php",
-          type: "POST",
-          dataType: "json",
-          data: {
-            departmentName: $("#addDepartmentName").val(),
-            locationID: $("#addDepartmentLocation option:selected").val()
-          },
-          success: function (result) {
-            if (result.status.name == "ok") {
-              //const newDepartmentId = result.data.departmentID;
-              //console.log("New Department ID:", newDepartmentId);
-              // Optionally close the modal or refresh the table
-              $("#addDepartmentModal").modal('hide');
-              $("#addDepartmentSuccessModal").modal('show');
-              refreshDepartmentTable();
-            }
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-            showErrorToast("Failed to add department.", 4000, false);
-          }
-        });
-      }
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-      showErrorToast("Failed to check for duplicates.", 4000, false);
-    }
   });
 });
 
@@ -512,6 +462,108 @@ $("#editPersonnelForm").on("submit", function (e) {
   });
 });
 
+/*DELETE PERSONNEL MODAL */
+  // Perform the AJAX request using the retrieved personnel ID
+  //Delete personnel button click
+$(document).on("click", ".delete-personnel-btn", function() {
+  // Get the personnel ID from the button's data-id attribute
+  const deletePersonnelId = $(this).data("id");
+
+  if (!deletePersonnelId) {
+    showErrorToast("Invalid personnel ID", 4000, false);
+    return;
+}
+
+  // Set the personnel ID in the confirmation modal (store it as data-id on the modal)
+  $("#deletePersonnelConfirmationModal").data("id", deletePersonnelId);
+
+  // Show the confirmation modal
+  $("#deletePersonnelConfirmationModal").modal("show");
+});
+
+/* DELETE PERSONNEL CONFIRMATION MODAL*/
+$("#deletePersonnelConfirmationModal .btn-delete-personnel-confirmation").on("click", function() {
+  // Retrieve the personnel ID from the confirmation modal's data-id attribute
+  const deletePersonnelId = $("#deletePersonnelConfirmationModal").data("id");
+  // Perform the AJAX request to delete the personnel
+  $.ajax({
+    url: "libs/php/deletePersonnelByID.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      id: deletePersonnelId, // Pass the correct ID to the server
+    },
+    success: function(result) {
+      if (result.status.name == "ok") {
+        // Close the confirmation modal
+        $("#deletePersonnelConfirmationModal").modal("hide");
+        refreshPersonnelTable();
+
+        // Show a success modal
+        $("#deletePersonnelSuccessModal").modal("show");
+        // Refresh the personnel table
+
+      } else {
+      showErrorToast("Error deleting personnel", 4000, false);
+      }
+},
+    error: function(jqXHR, textStatus, errorThrown) {
+      showErrorToast("Error deleting personnel", 4000, false);
+    }
+  });
+});
+
+  /*ADD DEPARTMENT FORM SUBMIT */
+$("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
+  e.preventDefault(); // Prevent the default form submission
+
+  // Check if department already exists (duplicate check)
+
+  // AJAX call to check for duplicate department including location
+  $.ajax({
+    url: "libs/php/checkForDuplicateDepartments.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      departmentName: $("#addDepartmentName").val(),
+      locationID: $("#addDepartmentLocation option:selected").val()
+    },
+    success: function (result) {
+      if (result.status.name == "ok" && result.data.exists) {
+        $("#addDepartmentModal").modal("hide");
+        $("#addDepartmentErrorModal").modal("show");
+      } else {
+        // No duplicate found, proceed with adding department
+        $.ajax({
+          url: "libs/php/addDepartment.php",
+          type: "POST",
+          dataType: "json",
+          data: {
+            departmentName: $("#addDepartmentName").val(),
+            locationID: $("#addDepartmentLocation option:selected").val()
+          },
+          success: function (result) {
+            if (result.status.name == "ok") {
+              //const newDepartmentId = result.data.departmentID;
+              //console.log("New Department ID:", newDepartmentId);
+              // Optionally close the modal or refresh the table
+              $("#addDepartmentModal").modal('hide');
+              $("#addDepartmentSuccessModal").modal('show');
+              refreshDepartmentTable();
+            }
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            showErrorToast("Failed to add department.", 4000, false);
+          }
+        });
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      showErrorToast("Failed to check for duplicates.", 4000, false);
+    }
+  });
+});
+
 /*EDIT DEPARTMENT MODAL */
   $("#editDepartmentModal").on("show.bs.modal", function (e) {
   /// Clear any previous data from the modal
@@ -533,7 +585,6 @@ $("#editPersonnelForm").on("submit", function (e) {
       departmentID: editDepartmentId, // Pass the correct ID to the server
     },
     success: function (result) {
-      console.log("edit department data", result);
       if (result.status.name == "ok" && result.data.department.length > 0) {
         // Update the modal fields with the employee's data
         let department = result.data.department[0];
@@ -592,66 +643,90 @@ $("#editDepartmentForm").on("submit", function (e) {
         refreshDepartmentTable();
       } else {
         // Show a toast message
-        showErrorToast("Error updating personnel", 4000, false);
+        showErrorToast("Error updating the department", 4000, false);
       }
     },
     error: function (jqXHR, textStatus, errorThrown) {
       // Show a toast message
-      showErrorToast("An error occurred in the edit personnel form", 4000, false);
+      showErrorToast("An error occurred in the edit department form", 4000, false);
     },
   });
 });
 
-/*DELETE PERSONNEL MODAL */
+/*DELETE DEPARTMENT MODAL */
   // Perform the AJAX request using the retrieved personnel ID
-  /* DELETE PERSONNEL BUTTON CLICK */
-$(document).on("click", ".delete-personnel-btn", function() {
-  // Get the personnel ID from the button's data-id attribute
-  const deletePersonnelId = $(this).data("id");
+  // Delete department button click
+  $(document).on("click", ".delete-department-btn", function() {
+    // Get the personnel ID from the button's data-id attribute
+    const deleteDepartmentId = $(this).data("id");
+    if (!deleteDepartmentId) {
+      showErrorToast("Invalid department ID", 4000, false);
+      return;
+  }
 
-  if (!deletePersonnelId) {
-    showErrorToast("Invalid personnel ID", 4000, false);
-    return;
-}
-
-  // Set the personnel ID in the confirmation modal (store it as data-id on the modal)
-  $("#deletePersonnelConfirmationModal").data("id", deletePersonnelId);
-
-  // Show the confirmation modal
-  $("#deletePersonnelConfirmationModal").modal("show");
-});
-
-/* DELETE PERSONNEL CONFIRMATION MODAL*/
-$("#deletePersonnelConfirmationModal .btn-delete-confirmation").on("click", function() {
-  // Retrieve the personnel ID from the confirmation modal's data-id attribute
-  const deletePersonnelId = $("#deletePersonnelConfirmationModal").data("id");
-  // Perform the AJAX request to delete the personnel
+  // Send AJAX request to check if the department can be deleted
   $.ajax({
-    url: "libs/php/deletePersonnelByID.php",
+    url: "libs/php/deleteDepartmentByID.php",
     type: "POST",
     dataType: "json",
     data: {
-      id: deletePersonnelId, // Pass the correct ID to the server
+      id: deleteDepartmentId, // Pass the correct ID to the server
     },
     success: function(result) {
       if (result.status.name == "ok") {
-        // Close the confirmation modal
-        $("#deletePersonnelConfirmationModal").modal("hide");
-        refreshPersonnelTable();
-
-        // Show a toast message
-        $("#deletePersonnelSuccessModal").modal("show");
-        // Refresh the personnel table
+        // Show the confirmation modal
+        $('#deleteDepartmentConfirmationModal').data('id', deleteDepartmentId).modal('show');
 
       } else {
-        showErrorToast("Error deleting employee", 4000, false);
+        //Show error modal
+        const employeeCount = result.data.count;
+        const departmentName = result.data.departmentName;
+        // Adjust text for singular or plural
+        const errorMessage = `Sorry, you cannot delete ${departmentName} as there ${employeeCount === 1 ? 'is' : 'are'} ${employeeCount} employee${employeeCount === 1 ? '' : 's'} assigned to it.`;;
+
+        // Update the modal content with the number of employees and proper text
+        $("#deleteDepartmentErrorModal .modal-body").text(`${errorMessage}`);
+
+        $("#deleteDepartmentErrorModal").modal("show");
       }
 },
     error: function(jqXHR, textStatus, errorThrown) {
       showErrorToast("Error deleting employee", 4000, false);
     }
   });
-});
+})
+/* DELETE DEPARTMENT CONFIRMATION MODAL*/
+  $("#deleteDepartmentConfirmationModal .btn-delete-department-confirmation").on("click", function() {
+    // Retrieve the personnel ID from the confirmation modal's data-id attribute
+    const deleteDepartmentId = $("#deleteDepartmentConfirmationModal").data("id");
+    // Perform the AJAX request to delete the personnel
+    $.ajax({
+      url: "libs/php/deleteDepartmentByID.php",
+      type: "POST",
+      dataType: "json",
+      data: {
+        id: deleteDepartmentId, // Pass the correct ID to the server
+      },
+      success: function(result) {
+        if (result.status.name == "ok") {
+          // Close the confirmation modal
+          $("#deleteDepartmentConfirmationModal").modal("hide");
+          // Show a success modal
+          $("#deleteDepartmentSuccessModal").modal("show");
+          refreshDepartmentTable();
+          // Refresh the personnel table
+  
+        } else {
+          //Show error modal
+          $("#deleteDepartmentConfirmationModal").modal("hide");
+          $("#deleteDepartmentErrorModal").modal("show");
+        }
+  },
+      error: function(jqXHR, textStatus, errorThrown) {
+        showErrorToast("Error deleting employee", 4000, false);
+      }
+    });
+  });
 
 
 /* FUNCTION TO REFRESH PERSONNEL TABLE */
@@ -738,7 +813,7 @@ function refreshDepartmentTable() {
                   <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${department.id}>
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm deleteDepartmentBtn" data-id=${department.id}>
+                  <button type="button" class="btn btn-primary btn-sm delete-department-btn" data-id=${department.id}>
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
