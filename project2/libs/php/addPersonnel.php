@@ -38,24 +38,37 @@ $query->bind_param("ssssi", $_REQUEST['firstName'], $_REQUEST['lastName'], $_REQ
 $query->execute();
 
 // Check if the query was successful
+// Check if the query was successful
 if ($query->affected_rows > 0) {
     // Successfully added the new personnel
-    // Fetch the updated personnel list to reflect the changes
-    $selectQuery = $conn->prepare('SELECT * FROM personnel');
+    // Fetch the ID of the last inserted personnel
+    $lastInsertedID = $conn->insert_id;
+
+    // Query to get the firstName and lastName of the added personnel using the last inserted ID
+    $selectQuery = $conn->prepare('SELECT firstName, lastName FROM personnel WHERE id = ?');
+    $selectQuery->bind_param('i', $lastInsertedID);
     $selectQuery->execute();
     $result = $selectQuery->get_result();
 
-    $personnel = [];
-    while ($row = $result->fetch_assoc()) {
-        $personnel[] = $row;
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        // Prepare the response with the added personnel details
+        $output['status']['code'] = "200";
+        $output['status']['name'] = "ok";
+        $output['status']['description'] = "success";
+        $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+        $output['data'] = [
+            'message' => 'Personnel added successfully',
+            'firstName' => $row['firstName'], // Get firstName of added personnel
+            'lastName' => $row['lastName']   // Get lastName of added personnel
+        ];
+    } else {
+        // If the personnel details are not found
+        $output['status']['code'] = "400";
+        $output['status']['name'] = "failure";
+        $output['status']['description'] = "failed to retrieve personnel details";
+        $output['data'] = [];
     }
-
-    // Prepare the response with updated personnel data
-    $output['status']['code'] = "200";
-    $output['status']['name'] = "ok";
-    $output['status']['description'] = "success";
-    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-    $output['data'] = ['message' => 'Personnel added successfully', 'personnel' => $personnel];
 } else {
     // No rows affected: no personnel added
     $output['status']['code'] = "400";
@@ -63,6 +76,7 @@ if ($query->affected_rows > 0) {
     $output['status']['description'] = "query failed";
     $output['data'] = [];
 }
+
 
 // Display the data
 echo json_encode($output);

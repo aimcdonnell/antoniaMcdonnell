@@ -37,26 +37,37 @@ if (empty($departmentName) || empty($locationID)) {
     exit;
 }
 
-// Check for duplicate department with location
-//id is being accessed to make sure it's unique in case it needs to be accessed later for updating
-//Matching the parameters specified in the POST requests above to the database
-$query = $conn->prepare('SELECT d.id 
+// Check for duplicate departments with the same name and location
+$query = $conn->prepare('
+    SELECT d.name, d.locationID, l.name AS locationName 
     FROM department d
+    JOIN location l ON d.locationID = l.id
     WHERE d.name = ? AND d.locationID = ?');
 
-//allows you to insert dynamic values into the query
+// Bind the department name and location ID to the query
 $query->bind_param('si', $departmentName, $locationID);
 $query->execute();
 $result = $query->get_result();
 
-//if result is not empty
+// Check if duplicates are found
 if ($result->num_rows > 0) {
-    // Duplicate found
+    $duplicates = [];
+    
+    // Fetch all duplicate departments and their locations
+    while ($row = $result->fetch_assoc()) {
+        $duplicates[] = [
+            'departmentName' => $row['name'],
+            'locationID' => $row['locationID'],
+            'locationName' => $row['locationName']
+        ];
+    }
+
+    // Response with the duplicate departments
     $output['status']['code'] = "200";
     $output['status']['name'] = "ok";
-    $output['status']['description'] = "Duplicate department at this location found.";
+    $output['status']['description'] = "Duplicate departments at this location found.";
     $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-    $output['data'] = ['exists' => true];
+    $output['data'] = ['exists' => true, 'duplicates' => $duplicates];
 } else {
     // No duplicates found
     $output['status']['code'] = "200";
@@ -66,6 +77,7 @@ if ($result->num_rows > 0) {
     $output['data'] = ['exists' => false];
 }
 
+// Output the response as JSON
 echo json_encode($output);
 
 // Close the connection

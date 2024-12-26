@@ -1,71 +1,81 @@
 <?php
 
-// delete a personnel by id if a personnel is no longer at the company, a duplicate or incorrectly added
+// delete a personnel by id if a personnel is no longer at the company, a duplicate, or incorrectly added
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
-//track execution time
+// Track execution time
 $executionStartTime = microtime(true);
 
-//where the login details are stored
+// Where the login details are stored
 include("config.php");
 
-//telling the script that the output is in JSON format and should be treated as JSON data
+// Telling the script that the output is in JSON format and should be treated as JSON data
 header('Content-Type: application/json; charset=UTF-8');
 
-//credentials used to connect to the database (taken from config.php file)
+// Credentials used to connect to the database (taken from config.php file)
 $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_socket);
 
-//if unsuccessful, output error message
+// If unsuccessful, output error message
 if (mysqli_connect_errno()) {
-
     $output['status']['code'] = "300";
     $output['status']['name'] = "failure";
     $output['status']['description'] = "database unavailable";
     $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output['data'] = [];
 
-    //close the connection
+    // Close the connection
     mysqli_close($conn);
 
-    //display the error
+    // Display the error
     echo json_encode($output);
 
-    //exit the script and avoid executing the rest of the code
+    // Exit the script and avoid executing the rest of the code
     exit;
-
 }
 
-// SQL statement accepts parameters and so is prepared to avoid SQL injection.
-// $_REQUEST used for development / debugging. Remember to change to $_POST for production
+// Fetch the firstName and lastName of the personnel to be deleted
+$selectQuery = $conn->prepare('SELECT firstName, lastName FROM personnel WHERE id = ?');
+$selectQuery->bind_param('i', $_REQUEST['id']);
+$selectQuery->execute();
+$result = $selectQuery->get_result();
+
+$deletedPersonnel = null;
+if ($result->num_rows > 0) {
+    // Store the personnel details before deletion
+    $deletedPersonnel = $result->fetch_assoc();
+} else {
+    // If no personnel found with that ID
+    $output['status']['code'] = "404";
+    $output['status']['name'] = "failure";
+    $output['status']['description'] = "personnel not found";
+    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+    $output['data'] = [];
+    mysqli_close($conn);
+    echo json_encode($output);
+    exit;
+}
+
+// SQL statement to delete personnel by id
 $query = $conn->prepare('DELETE FROM personnel WHERE id = ?');
-
-//specifying the data type of the parameter (i = integer)
-//$_REQUEST['id'] retrieves the id of the personnel to be deleted
 $query->bind_param("i", $_REQUEST['id']);
-
-//runs the prepared statement with the bound parameter ("i")
-//execute() returns true on success or false on failure
 $query->execute();
 
-//if the query fails, output error
+// If the query fails, output error
 if (false === $query) {
-
-    //provides the error message structure
     $output['status']['code'] = "400";
     $output['status']['name'] = "failure";
     $output['status']['description'] = "query failed";
     $output['data'] = [];
-    
-    //close connection to database
+
+    // Close connection to database
     mysqli_close($conn);
 
-    //output error
-    echo json_encode($output); 
+    // Output error
+    echo json_encode($output);
 
-    //exit the script and avoid executing the rest of the code
+    // Exit the script
     exit;
-
 }
 
 // Fetch the updated personnel list
@@ -78,17 +88,20 @@ while ($row = $result->fetch_assoc()) {
     $personnel[] = $row;
 }
 
-// If query was successful, return the updated personnel list
+// If query was successful, return the deleted personnel details and the updated personnel list
 $output['status']['code'] = "200";
 $output['status']['name'] = "ok";
 $output['status']['description'] = "success";
 $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-$output['data'] = $personnel;
+$output['data'] = [
+    'deletedPersonnel' => $deletedPersonnel,  // Include deleted personnel's details
+    'updatedPersonnelList' => $personnel      // Include the updated personnel list
+];
 
-//close connection to database
+// Close connection to the database
 mysqli_close($conn);
 
-//output the data
-echo json_encode($output); 
+// Output the data
+echo json_encode($output);
 
 ?>
