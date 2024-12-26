@@ -34,7 +34,7 @@ if (mysqli_connect_errno()) {
 $departmentId = $_GET['id'];
 
 // Prepare the SQL statement to get the department details
-$query = $conn->prepare('SELECT d.id, d.name, d.locationID, l.name AS locationName, COUNT(p.departmentID) AS personnelCount FROM department d JOIN location l ON d.locationID = l.id LEFT JOIN personnel p ON d.id = p.departmentID WHERE d.id = ? GROUP BY d.id, l.name');
+$query = $conn->prepare('SELECT d.id, d.name AS departmentName, d.locationID, l.name AS locationName, COUNT(p.departmentID) AS personnelCount FROM department d JOIN location l ON d.locationID = l.id LEFT JOIN personnel p ON d.id = p.departmentID WHERE d.id = ? GROUP BY d.id, l.name');
 $query->bind_param("i", $departmentId);
 
 // Execute the query
