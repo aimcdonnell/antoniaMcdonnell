@@ -94,10 +94,10 @@ $(window).on("load", function () {
               ${location.location}
             </td>
             <td class="align-middle text-end text-nowrap">
-              <button type="button" class="btn btn-primary btn-sm">
+              <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${location.id}">
                 <i class="fa-solid fa-pencil fa-fw"></i>
               </button>
-              <button type="button" class="btn btn-primary btn-sm">
+              <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-bs-toggle="modal" data-bs-target="#deleteLocationConfirmationModal" data-id=${location.id}">
                 <i class="fa-solid fa-trash fa-fw"></i>
               </button>
             </td>
@@ -127,7 +127,7 @@ $("#searchInp").on("keyup", function () {
 
     } else if ($("#locationsBtn").hasClass("active")) {
       // Refresh location table
-    
+      refreshLocationTable();
     }
   });
 
@@ -152,7 +152,7 @@ $("#searchInp").on("keyup", function () {
   $("#locationsBtn").on("click", function () {
     
     // Call function to refresh location table
-    
+    refreshLocationTable();
   });
   
   /*FILTER PERSONNEL BY DEPARTMENT OR LOCATION*/
@@ -587,9 +587,8 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
             if (result.status.name == "ok") {
               let departmentName = result.data.department.departmentName;
               let locationName = result.data.department.locationName;
-              //const newDepartmentId = result.data.departmentID;
-              //console.log("New Department ID:", newDepartmentId);
-              // Optionally close the modal or refresh the table
+          
+              // Show success modal and refresh the table
               $("#addDepartmentModal").modal('hide');
               $("#addDepartmentSuccessModal .modal-body").text(`The ${departmentName} department in ${locationName} was successfully added.`);
               $("#addDepartmentSuccessModal").modal('show');
@@ -791,7 +790,7 @@ $("#deleteDepartmentConfirmationModal .btn-delete-department-confirmation").on("
 });
 
 
-/* FUNCTION TO REFRESH PERSONNEL TABLE */
+/*REFRESH PERSONNEL TABLE FUNCTION*/
 function refreshPersonnelTable() {
   // Clear the existing table rows
   $("#personnelTableBody").empty();
@@ -801,7 +800,7 @@ function refreshPersonnelTable() {
     type: "GET",
     dataType: "json",
     success: function (result) {
-      if (result.status.name == "ok") {
+      if (result.status.name == "ok" && Array.isArray(result.data)) {
         if (result.data.length === 0) {
           // Display message for no personnel data
           $("#personnelTableBody").append(`
@@ -828,7 +827,7 @@ function refreshPersonnelTable() {
             `);
           });
         }
-        showSuccessToast("Personnel table refreshed!", 3000);
+        showSuccessToast("Personnel table refreshed!", 3000, true);
       } else {
         showErrorToast("No personnel data available", 4000, false);
       }
@@ -839,13 +838,7 @@ function refreshPersonnelTable() {
   });
 }
 
-// Bind the function to the button click
-/*$(document).on("ready", function () {
-  $("#refreshBtn").on("click", refreshPersonnelTable);
-});*/
-
-//function to refresh department table
-
+/*REFRESH DEPARTMENT TABLE FUNCTION*/
 function refreshDepartmentTable() {
   // Clear the existing table rows
   $("#departmentTableBody").empty();
@@ -858,13 +851,13 @@ function refreshDepartmentTable() {
       if (result.status.name == "ok" && Array.isArray(result.data)) {
         if (result.data.length === 0) {
           $("#departmentTableBody").append(`
-            <t><td colspan="6">No department data available</td></tr>
+            <tr><td colspan="6">No department data available</td></tr>
             `);
           } else {
             //Append rows for each department
             result.data.forEach(function (department){
               $("#departmentTableBody").append(`
-                <tr>
+              <tr>
                 <td class="align-middle text-nowrap">
                   ${department.name}
                 </td>
@@ -883,13 +876,59 @@ function refreshDepartmentTable() {
               `);
             });
           }
-          showSuccessToast("Department table refreshed!", 3000);
+          showSuccessToast("Department table refreshed!", 3000, true);
       } else {
         showErrorToast("No department data available", 4000, false);
       }
     }, 
     error: function (jqXHR, textStatus, errorThrown) {
       showErrorToast("Error refreshing department table", 4000, false);
+    }
+  })
+}
+
+/*REFRESH LOCATION TABLE FUNCTION*/
+function refreshLocationTable() {
+  // Clear the existing table rows
+  $("#locationTableBody").empty();
+
+  $.ajax({
+    url: "libs/php/updateAllLocations.php",
+    type: "GET",
+    dataType: "json",
+    success: function (result) {
+      if (result.status.name == "ok" && Array.isArray(result.data)) {
+        if (result.data.length === 0) {
+          $("#locationTableBody").append(`
+            <tr><td colspan="6">No location data available</td></tr>
+            `);
+        } else {
+          //Append rows for each location
+          result.data.forEach(function (location) {
+            $("#locationTableBody").append(`
+              <tr>
+                <td class="align-middle text-nowrap">
+                  ${location.name}
+                </td>
+                <td class="align-middle text-end text-nowrap">
+                  <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${location.id}">
+                    <i class="fa-solid fa-pencil fa-fw"></i>
+                  </button>
+                  <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-bs-toggle="modal" data-bs-target="#deleteLocationConfirmationModal" data-id=${location.id}">
+                    <i class="fa-solid fa-trash fa-fw"></i>
+                  </button>
+                </td>
+              </tr>
+            `);
+          });
+        }
+        showSuccessToast("Location table refreshed!", 3000, true);
+      } else {
+        showErrorToast("No location data available", 4000, false);
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      showErrorToast("Error refreshing location table", 4000, false);
     }
   })
 }
