@@ -648,14 +648,14 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
         // Set the department value to match the employee's department
         $("#editDepartmentLocation").val(department.locationID);
       } else {
-        showErrorToast("No personnel data found", 4000, false);
+        showErrorToast("No department data found", 4000, false);
       }
     },
     error: function (jqXHR, textStatus, errorThrown) {
       showErrorToast("Error retrieving data", 4000, false);
     },
   });
-  });
+});
 
 /* EDIT DEPARTMENT FORM SUBMIT*/
 $("#editDepartmentForm").on("submit", function (e) {
@@ -694,7 +694,7 @@ $("#editDepartmentForm").on("submit", function (e) {
     },
     error: function (jqXHR, textStatus, errorThrown) {
       // Show a toast message
-      showErrorToast("An error occurred in the edit department form", 4000, false);
+      showErrorToast("An error occurred in the edit department submit form", 4000, false);
     },
   });
 });
@@ -789,6 +789,81 @@ $("#deleteDepartmentConfirmationModal .btn-delete-department-confirmation").on("
   });
 });
 
+/*EDIT LOCATION MODAL*/
+
+$("#editLocationModal").on("show.bs.modal", function (e) {
+
+  //Clear any previous data from the modal
+  $("#editLocationName").val("");
+
+  //Use e.relatedTarget to access the button that triggered the modal
+  //Get the data-id attribute of the clicked edit button
+
+  const editLocationId = $(e.relatedTarget).attr("data-id");
+
+  //Store the id in the modal's data attribute to retain it after the modal is closed
+  $("#editLocationModal").data('editLocationId', editLocationId);
+
+  //Perform the AJAX request using the retrieved personnel ID
+  $.ajax({
+    url: "libs/php/getLocationByID.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      locationId: editLocationId,
+    },
+    success: function (result) {
+      if (result.status.name == "ok" && result.data.length > 0) {
+        let locationName = result.data[0].locationName;
+        $("#editLocationName").val(locationName);
+      } else {
+        showErrorToast("Error retrieving location details", 4000, false);
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      showErrorToast("Error retrieving location details", 4000, false);
+    }
+  });
+});
+
+/*EDIT LOCATION FORM SUBMIT*/
+
+$("#editLocationForm").on("submit", function (e) {
+  //Executes when the form button with type="submit" is clicked
+  //Prevent the default form submission behavior
+  e.preventDefault();
+
+  //Retrieve the location ID from the modal's data attribute
+  const editLocationId = $("#editLocationModal").data("editLocationId");
+  //AJAX call to save form data
+  $.ajax({
+    url: "libs/php/updateLocationByID.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      locationId: editLocationId,
+      locationName: $("#editLocationName").val(),
+    },
+    success: function(result) {
+      if (result.status.name == "ok") {
+        let locationName = result.data[0].locationName;
+        // Close the modal
+        $("#editLocationModal").modal("hide");
+
+        // Show a success modal
+        $("#editLocationSuccessModal .modal-body").text(`The location name was successfully updated to ${locationName}.`);
+        $("#editLocationSuccessModal").modal("show");
+        refreshLocationTable();
+      } else {
+        // Show a toast message
+        showErrorToast("Error updating the location", 4000, false);
+      }
+    }, 
+    error: function(jqXHR, textStatus, errorThrown) {
+      showErrorToast("An error occurred in the edit department submit form", 4000, false);
+    }
+  })
+})
 
 /*REFRESH PERSONNEL TABLE FUNCTION*/
 function refreshPersonnelTable() {
