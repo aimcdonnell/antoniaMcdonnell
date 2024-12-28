@@ -1,15 +1,13 @@
 <?php
 
-// Add department to database
-
-// Remove next two lines for production
+// Enable error reporting for development (remove for production)
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
 // Track execution time
 $executionStartTime = microtime(true);
 
-// Where the login details are stored
+//Where the login details are stored
 include("config.php");
 
 // Tell the script that the output is in JSON format and should be treated as JSON data
@@ -30,60 +28,54 @@ if (mysqli_connect_errno()) {
     exit;
 }
 
-// Prepare the SQL statement to insert new department name and location name data
-$query = $conn->prepare('INSERT INTO department (name, locationID) VALUES (?, ?)');
+// Prepare the SQL statement to insert new location data
+$query = $conn->prepare('INSERT INTO location (name, id) VALUES (?, ?)');
 
-// Bind the department name and location ID
-$query->bind_param("ss", $_REQUEST['departmentName'], $_REQUEST['locationID']);
+// Bind the location name and ID
+$query->bind_param("si", $_REQUEST['locationName'], $_REQUEST['locationID']);
 
 // Execute the query
 $query->execute();
 
 // Check if the query was successful
 if ($query->affected_rows > 0) {
-    // Get the last inserted department's ID
+    // Get the last inserted location's ID
     $lastInsertId = $conn->insert_id;
 
-    // Fetch the department and location information using a JOIN query
-    $selectQuery = $conn->prepare('
-        SELECT d.id, d.name AS departmentName, l.name AS locationName 
-        FROM department d
-        JOIN location l ON d.locationID = l.id
-        WHERE d.id = ?
-    ');
-    $selectQuery->bind_param('i', $lastInsertId);
+    // Fetch the location information
+    $selectQuery = $conn->prepare('SELECT id, name FROM location WHERE id = ?');
+    $selectQuery->bind_param("i", $lastInsertId);
     $selectQuery->execute();
     $result = $selectQuery->get_result();
 
-    // Fetch the added department and location
+    // Fetch the result as an associative array
     if ($row = $result->fetch_assoc()) {
-        $department = $row;
+        $location = $row;
 
-        // Prepare the response with the added department and location data
+        // Prepare the output data
         $output['status']['code'] = "200";
         $output['status']['name'] = "ok";
         $output['status']['description'] = "success";
         $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-        $output['data'] = ['message' => 'Department added successfully', 'department' => $department];
+        $output['data'] =['message' => 'Location added successfully', 'location' => $location];
     } else {
-        // If the department and location were not found, return an error
+        // If no location found, set the output status to "not found"
         $output['status']['code'] = "500";
         $output['status']['name'] = "error";
-        $output['status']['description'] = "Department and location not found after insertion";
+        $output['status']['description'] = "Location not found";
         $output['data'] = [];
     }
 } else {
-    // No rows were affected, meaning the department was not added
+    // No rows were affected, so the location was not added
     $output['status']['code'] = "400";
     $output['status']['name'] = "error";
     $output['status']['description'] = "query failed";
     $output['data'] = [];
 }
 
-// Display the data
+// Output the JSON data
 echo json_encode($output);
 
-// Close the connection
+// Close the database connection
 mysqli_close($conn);
-
 ?>

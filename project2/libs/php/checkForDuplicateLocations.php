@@ -1,5 +1,4 @@
 <?php
-
 // Enable error reporting for development (remove for production)
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
@@ -21,66 +20,54 @@ if (mysqli_connect_errno()) {
     echo json_encode($output);
     exit;
 }
-
 // Get POST data and trim whitespace
-$departmentName = trim($_POST['departmentName'] ?? '');
-$locationID = trim($_POST['locationID'] ?? '');
+$locationName = trim($_POST['locationName'] ?? '');
 
 // Validate input data
-if (empty($departmentName) || empty($locationID)) {
+if (empty($locationName)) {
     $output['status']['code'] = "400";
     $output['status']['name'] = "failure";
-    $output['status']['description'] = "Invalid input data: departmentName and location cannot be empty.";
+    $output['status']['description'] = "Invalid input data: locationName cannot be empty.";
     $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     echo json_encode($output);
     $conn->close();
     exit;
 }
-
-// Check for duplicate departments with the same name and location
-$query = $conn->prepare('
-    SELECT d.name, d.locationID, l.name AS locationName 
-    FROM department d
-    JOIN location l ON d.locationID = l.id
-    WHERE d.name = ? AND d.locationID = ?');
-
-// Bind the department name and location ID to the query
-$query->bind_param('si', $departmentName, $locationID);
+// Check for duplicate locations with the same name
+$query = $conn->prepare('SELECT name FROM location WHERE name = ?');
+$query->bind_param('s', $locationName);
 $query->execute();
 $result = $query->get_result();
 
 // Check if duplicates are found
 if ($result->num_rows > 0) {
     $duplicates = [];
-    
-    // Fetch all duplicate departments and their locations
+
+    //Fetch duplicate locations
     while ($row = $result->fetch_assoc()) {
         $duplicates[] = [
-            'departmentName' => $row['name'],
-            'locationID' => $row['locationID'],
-            'locationName' => $row['locationName']
+            'locationName' => $row['name']
         ];
     }
 
-    // Response with the duplicate departments
     $output['status']['code'] = "200";
     $output['status']['name'] = "ok";
-    $output['status']['description'] = "Duplicate departments found at this location.";
+    $output['status']['description'] = "Duplicate locations found.";
     $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output['data'] = ['exists' => true, 'duplicates' => $duplicates];
 } else {
-    // No duplicates found
+    //No duplicates found
     $output['status']['code'] = "200";
     $output['status']['name'] = "ok";
-    $output['status']['description'] = "No duplicate departments found at this location.";
+    $output['status']['description'] = "No duplicate locations found.";
     $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output['data'] = ['exists' => false];
+
 }
 
-// Output the response as JSON
+// Output the JSON response
 echo json_encode($output);
 
-// Close the connection
+// Close the database connection
 $conn->close();
-
 ?>

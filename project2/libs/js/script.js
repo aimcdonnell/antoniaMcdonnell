@@ -167,6 +167,7 @@ $("#addBtn").on("click", function () {
   //clear personnel, departments and location forms
   $("#addPersonnelForm")[0].reset();
   $("#addDepartmentForm")[0].reset();
+  $("#addLocationForm")[0].reset();
   // Check if personnel button is active
 
   /* 1ST CONDITION: ADD PERSONNEL */
@@ -262,7 +263,7 @@ $("#addBtn").on("click", function () {
 } else {
   /*3RD CONDITION: ADD LOCATION */
   // Trigger the location modal to show
-    //$("#addLocationModal").modal('show');
+    $("#addLocationModal").modal('show');
 }
 });
    
@@ -325,7 +326,7 @@ $("#addPersonnelModal").on("submit", "#addPersonnelForm", function (e) {
           }
       },
       error: function (jqXHR, textStatus, errorThrown) {
-          showErrorToast("Failed to check for duplicates.", 4000, false);
+          showErrorToast("Failed to check for duplicate employees.", 4000, false);
       }
   });
 });
@@ -602,7 +603,7 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
       }
     },
     error: function (jqXHR, textStatus, errorThrown) {
-      showErrorToast("Failed to check for duplicates.", 4000, false);
+      showErrorToast("Failed to check for duplicate departments.", 4000, false);
     }
   });
 });
@@ -785,6 +786,61 @@ $("#deleteDepartmentConfirmationModal .btn-delete-department-confirmation").on("
 },
     error: function(jqXHR, textStatus, errorThrown) {
       showErrorToast("Error deleting department", 4000, false);
+    }
+  });
+});
+
+ /*ADD LOCATION FORM SUBMIT */
+ $("#addLocationModal").on("submit", "#addLocationForm", function (e) {
+  e.preventDefault(); // Prevent the default form submission
+
+  // Check if department already exists (duplicate check)
+
+  // AJAX call to check for duplicate department including location
+  $.ajax({
+    url: "libs/php/checkForDuplicateLocations.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      locationName: $("#addLocationName").val(),
+    },
+    success: function (result) {
+      if (result.status.name == "ok" && result.data.exists) {
+        
+        let locationName = result.data.duplicates[0].locationName;
+        $("#addLocationModal").modal("hide");
+
+        $("#addLocationErrorModal .modal-body").text(`The location ${locationName} cannot be added as it already exists in the directory.`);;
+        $("#addLocationErrorModal").modal("show");
+      } else {
+        // No duplicate found, proceed with adding department
+        $.ajax({
+          url: "libs/php/addLocation.php",
+          type: "POST",
+          dataType: "json",
+          data: {
+            locationName: $("#addLocationName").val(),
+            locationID: $("#addLocation option:selected").val()
+          },
+          success: function (result) {
+            if (result.status.name == "ok") {
+              let locationName = result.data.location.name;
+          
+              // Show success modal and refresh the table
+              $("#addLocationModal").modal('hide');
+              $("#addLocationSuccessModal .modal-body").text(`The location ${locationName} was successfully added.`);
+              $("#addLocationSuccessModal").modal('show');
+              refreshLocationTable();
+            }
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            showErrorToast("Failed to add location.", 4000, false);
+          }
+        });
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      showErrorToast("Failed to check for duplicate locations.", 4000, false);
     }
   });
 });

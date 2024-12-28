@@ -415,8 +415,8 @@
             <form id="addDepartmentForm">
     
               <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="addDepartmentName" placeholder="Department name" required>
-                <label for="addDepartmentName">Department name</label>
+                <input type="text" class="form-control" id="addDepartmentName" placeholder="Department" required>
+                <label for="addDepartmentName">Department</label>
               </div>
     
               <div class="form-floating mb-3">
@@ -494,7 +494,7 @@
     
               <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="editDepartmentName" placeholder="Department" required>
-                <label for="editDepartmentName">Department name</label>
+                <label for="editDepartmentName">Department</label>
               </div>
     
               <div class="form-floating">
@@ -591,6 +591,81 @@
       </div>
     </div>
 
+    <!--Add Location Modal -->
+    <div id="addLocationModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      
+      <!--   the last two classes centre the modal and, if the content is too long, ensures  -->
+      <!--   that the header and footer are always on display by making the body scroll -->
+      
+      <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+          
+        <div class="modal-content shadow"> 
+          
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title">Add location</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+    
+          <div class="modal-body">
+              
+            <form id="addLocationForm">
+    
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="addLocationName" placeholder="Location" required>
+                <label for="addLocationName">Location</label>
+              </div>
+    
+            </form>
+    
+          </div>
+    
+          <div class="modal-footer">
+            <button type="submit" form="addLocationForm" class="btn btn-outline-primary btn-sm myBtn">SAVE</button>
+            <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CANCEL</button>
+          </div>
+    
+        </div>
+        
+      </div>
+      
+    </div>
+
+    <!--Add Location Success Modal-->
+    <div id="addLocationSuccessModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title" id="exampleModalLabel">Addition success</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary btn-sm btn-add-success" data-bs-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <!--Add Location Error Modal -->
+        <div id="addLocationErrorModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content shadow">
+              <div class="modal-header bg-primary bg-gradient text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Addition error</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary btn-sm btn-add-success" data-bs-dismiss="modal">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
     <!--Edit Location Modal-->
     <div id="editLocationModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
       
@@ -608,8 +683,8 @@
             <form id="editLocationForm">
     
               <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="editLocationName" placeholder="Department" required>
-                <label for="editLocationName">Location name</label>
+                <input type="text" class="form-control" id="editLocationName" placeholder="Location" required>
+                <label for="editLocationName">Location</label>
               </div>
     
             </form>
