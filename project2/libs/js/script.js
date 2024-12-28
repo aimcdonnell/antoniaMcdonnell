@@ -29,7 +29,7 @@ $(window).on("load", function () {
                   <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-bs-toggle="modal" data-id=${personnel.id}>
+                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${personnel.id}>
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
@@ -88,7 +88,7 @@ $(window).on("load", function () {
               <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${location.id}>
                 <i class="fa-solid fa-pencil fa-fw"></i>
               </button>
-              <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-bs-toggle="modal" data-id=${location.id}>
+              <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-id=${location.id}>
                 <i class="fa-solid fa-trash fa-fw"></i>
               </button>
             </td>
@@ -98,13 +98,120 @@ $(window).on("load", function () {
     }
   })
 
+  $("#searchInp").on("keyup", function () {
+    let searchTerm = $(this).val().trim();  // Get the search input value
+    console.log("Search Input:", searchTerm);
 
-$("#searchInp").on("keyup", function () {
-  
-    // your code
-    
-  });
-  
+    $.ajax({
+        url: "libs/php/searchAll.php",
+        type: "POST",
+        data: {
+            txt: searchTerm  // Pass the current search input
+        },
+        dataType: "json",
+        success: function (result) {
+            console.log("Response Data:", result);
+
+            if (result.status.name == "ok") {
+                // Clear all tables first
+                $("#personnelTableBody").empty();
+                $("#departmentTableBody").empty();
+                $("#locationTableBody").empty();
+
+                // Personnel Data Append
+                if (result.data.personnel && result.data.personnel.length > 0) {
+                    result.data.personnel.forEach((item) => {
+                        $("#personnelTableBody").append(`
+                            <tr>
+                                <td class="align-middle text-nowrap">
+                                    <a href="#" class="view-personnel-name" data-id=${item.id}>${item.lastName}, ${item.firstName}</a>
+                                </td>
+                                <td class="align-middle text-nowrap d-none d-md-table-cell">${item.departmentName}</td>
+                                <td class="align-middle text-nowrap d-none d-md-table-cell">${item.locationName}</td>
+                                <td class="align-middle text-nowrap d-none d-md-table-cell">${item.email}</td>
+                                <td class="text-end text-nowrap">
+                                    <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${item.personnelID}>
+                                        <i class="fa-solid fa-pencil fa-fw"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${item.id}>
+                                        <i class="fa-solid fa-trash fa-fw"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    $("#personnelTableBody").append(`
+                        <tr>
+                            <td colspan="5" class="text-center">No personnel results found</td>
+                        </tr>
+                    `);
+                }
+
+
+                // Location Data Append
+                if (result.data.locations && result.data.locations.length > 0) {
+                    result.data.locations.forEach((item) => {
+                        $("#locationTableBody").append(`
+                            <tr>
+                                <td class="align-middle text-nowrap">${item.locationName}</td>
+                                <td class="align-middle text-end text-nowrap">
+                                    <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${item.id}>
+                                        <i class="fa-solid fa-pencil fa-fw"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-id=${item.id}>
+                                        <i class="fa-solid fa-trash fa-fw"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    $("#locationTableBody").append(`
+                        <tr>
+                            <td colspan="2" class="text-center">No location results found</td>
+                        </tr>
+                    `);
+                }
+                // Department Data Append
+                if (result.data.departments && result.data.departments.length > 0) {
+                    result.data.departments.forEach((item) => {
+                        $("#departmentTableBody").append(`
+                            <tr>
+                                <td class="align-middle text-nowrap">${item.departmentName}</td>
+                                <td class="align-middle text-nowrap d-none d-md-table-cell">${item.locationName}</td>
+                                <td class="align-middle text-end text-nowrap">
+                                    <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${item.id}>
+                                        <i class="fa-solid fa-pencil fa-fw"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm delete-department-btn" data-id=${item.id}>
+                                        <i class="fa-solid fa-trash fa-fw"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    $("#departmentTableBody").append(`
+                        <tr>
+                            <td colspan="3" class="text-center">No department results found</td>
+                        </tr>
+                    `);
+                }
+            } else {
+                console.error("API Response Error:", result.status);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", status, error);
+        }
+    });
+});
+
+
+
+
+
   /*REFRESH PERSONNEL, DEPARTMENT AND LOCATION TABLES*/
   $("#refreshBtn").on("click", function () {
     
@@ -1040,7 +1147,7 @@ function refreshPersonnelTable() {
                   <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-bs-toggle="modal" data-id=${personnel.id}>
+                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${personnel.id}>
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
@@ -1135,7 +1242,7 @@ function refreshLocationTable() {
                   <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${location.id}>
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-bs-toggle="modal" data-id=${location.id}>
+                  <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-id=${location.id}>
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
