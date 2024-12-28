@@ -29,7 +29,7 @@ $(window).on("load", function () {
                   <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-bs-toggle="modal" data-bs-target="#deletePersonnelConfirmationModal" data-id=${personnel.id}>
+                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-bs-toggle="modal" data-id=${personnel.id}>
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
@@ -42,15 +42,6 @@ $(window).on("load", function () {
       showErrorToast("Error fetching personnel data", 4000, false);
     }
   });
-
-
-
-  //get a particular personnel by ID for editing
-  /*$(document).on("click", ".edit-btn", function () {
-    //continue here
-    //how to get the id of the personnel that was clicked
-
-  })*/
 
   /*GET ALL DEPARTMENTS DYNAMICALLY */
   $.ajax({
@@ -94,10 +85,10 @@ $(window).on("load", function () {
               ${location.location}
             </td>
             <td class="align-middle text-end text-nowrap">
-              <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${location.id}">
+              <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${location.id}>
                 <i class="fa-solid fa-pencil fa-fw"></i>
               </button>
-              <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-bs-toggle="modal" data-bs-target="#deleteLocationConfirmationModal" data-id=${location.id}">
+              <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-bs-toggle="modal" data-id=${location.id}>
                 <i class="fa-solid fa-trash fa-fw"></i>
               </button>
             </td>
@@ -620,7 +611,7 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
   // Store the ID in the modal's data attribute to retain it when modal is reopened
   $(this).data('editDepartmentId', editDepartmentId);
 
-  // Perform the AJAX request using the retrieved personnel ID
+  // Perform the AJAX request using the retrieved department ID
   $.ajax({
     url: "libs/php/getDepartmentByID.php",
     type: "POST",
@@ -664,7 +655,7 @@ $("#editDepartmentForm").on("submit", function (e) {
   // stop the default browser behaviour
   e.preventDefault();
 
-  // Retrieve the personnel ID from the modal's data attribute
+  // Retrieve the department ID from the modal's data attribute
   const editDepartmentId = $("#editDepartmentModal").data('editDepartmentId');
 
   // AJAX call to save form data
@@ -701,7 +692,7 @@ $("#editDepartmentForm").on("submit", function (e) {
 });
 
 /*DELETE DEPARTMENT MODAL */
-  // Perform the AJAX request using the retrieved personnel ID
+  // Perform the AJAX request using the retrieved department ID
   // Delete department button click
   $(document).on("click", ".delete-department-btn", function () {
     // Get the department ID
@@ -736,6 +727,9 @@ $("#editDepartmentForm").on("submit", function (e) {
             } ${personnelCount} employee${personnelCount === 1 ? "" : "s"} assigned to it.`;
             $("#deleteDepartmentErrorModal .modal-body").text(errorMessage);
             $("#deleteDepartmentErrorModal").modal("show");
+
+            //Return to prevent further execution
+            return;
           } else {
             // Success: No employees attached, show confirmation modal
             $("#deleteDepartmentConfirmationModal .modal-body").text(
@@ -755,9 +749,9 @@ $("#editDepartmentForm").on("submit", function (e) {
 
 /* DELETE DEPARTMENT CONFIRMATION MODAL*/
 $("#deleteDepartmentConfirmationModal .btn-delete-department-confirmation").on("click", function() {
-  // Retrieve the personnel ID from the confirmation modal's data-id attribute
+  // Retrieve the department ID from the confirmation modal's data-id attribute
   const deleteDepartmentId = $("#deleteDepartmentConfirmationModal").data("id");
-  // Perform the AJAX request to delete the personnel
+  // Perform the AJAX request to delete the department
   $.ajax({
     url: "libs/php/deleteDepartmentByID.php",
     type: "POST",
@@ -771,16 +765,16 @@ $("#deleteDepartmentConfirmationModal .btn-delete-department-confirmation").on("
         let locationName = result.data.departmentLocation;
         // Close the confirmation modal
         $("#deleteDepartmentConfirmationModal").modal("hide");
-        // Show a success modal
 
+        // Refresh the department table
         refreshDepartmentTable();
-        // Refresh the personnel table
+        // Show a success modal
         $("#deleteDepartmentSuccessModal .modal-body").text(`The ${departmentName} department in ${locationName} was successfully deleted.`);
         $("#deleteDepartmentSuccessModal").modal("show");
 
       } else {
         //Show error modal
-        //$("#deleteDepartmentConfirmationModal").modal("hide");
+        $("#deleteDepartmentConfirmationModal").modal("hide");
         showErrorToast("Error deleting department", 4000, false);
       }
 },
@@ -794,9 +788,9 @@ $("#deleteDepartmentConfirmationModal .btn-delete-department-confirmation").on("
  $("#addLocationModal").on("submit", "#addLocationForm", function (e) {
   e.preventDefault(); // Prevent the default form submission
 
-  // Check if department already exists (duplicate check)
+  // Check if location already exists (duplicate check)
 
-  // AJAX call to check for duplicate department including location
+  // AJAX call to check for duplicate location
   $.ajax({
     url: "libs/php/checkForDuplicateLocations.php",
     type: "POST",
@@ -813,7 +807,7 @@ $("#deleteDepartmentConfirmationModal .btn-delete-department-confirmation").on("
         $("#addLocationErrorModal .modal-body").text(`The location ${locationName} cannot be added as it already exists in the directory.`);;
         $("#addLocationErrorModal").modal("show");
       } else {
-        // No duplicate found, proceed with adding department
+        // No duplicate found, proceed with adding location
         $.ajax({
           url: "libs/php/addLocation.php",
           type: "POST",
@@ -860,7 +854,7 @@ $("#editLocationModal").on("show.bs.modal", function (e) {
   //Store the id in the modal's data attribute to retain it after the modal is closed
   $("#editLocationModal").data('editLocationId', editLocationId);
 
-  //Perform the AJAX request using the retrieved personnel ID
+  //Perform the AJAX request using the retrieved location ID
   $.ajax({
     url: "libs/php/getLocationByID.php",
     type: "POST",
@@ -883,7 +877,6 @@ $("#editLocationModal").on("show.bs.modal", function (e) {
 });
 
 /*EDIT LOCATION FORM SUBMIT*/
-
 $("#editLocationForm").on("submit", function (e) {
   //Executes when the form button with type="submit" is clicked
   //Prevent the default form submission behavior
@@ -916,10 +909,107 @@ $("#editLocationForm").on("submit", function (e) {
       }
     }, 
     error: function(jqXHR, textStatus, errorThrown) {
-      showErrorToast("An error occurred in the edit department submit form", 4000, false);
+      showErrorToast("An error occurred in the edit location submit form", 4000, false);
     }
   })
 })
+
+/*DELETE LOCATION MODAL */
+  // Perform the AJAX request using the retrieved location ID
+  // Delete location button click
+  $(document).on("click", ".delete-location-btn", function () {
+    // Get the location ID
+    const deleteLocationId = $(this).data("id");
+
+    if (!deleteLocationId) {
+      showErrorToast("Invalid location ID", 4000, false);
+      return;
+    }
+  
+    // Set the location ID in the confirmation modal
+    $("#deleteLocationConfirmationModal").data("id", deleteLocationId);
+  
+    // Send AJAX request to check if the location can be deleted
+    $.ajax({
+      url: "libs/php/getLocationDetails.php",
+      type: "GET",
+      dataType: "json",
+      data: {
+        id: deleteLocationId,
+      },
+      success: function (result) {
+        if (result.status.name === "ok" && result.data) {
+          const departmentCount = result.data.departmentCount;
+          const locationName = result.data.locationName;
+
+          if (departmentCount > 0) {
+            // Error: Employees attached to department
+            const errorMessage = `Sorry, you cannot delete ${locationName} as there ${
+              departmentCount === 1 ? "is" : "are"
+            } ${departmentCount} department${departmentCount === 1 ? "" : "s"} assigned to it.`;
+            
+            $("#deleteLocationConfirmationModal").modal("hide");
+            $("#deleteLocationErrorModal").modal("hide");
+            
+            $("#deleteLocationErrorModal .modal-body").text(errorMessage);
+            $("#deleteLocationErrorModal").modal("show");
+
+            // Return early to prevent further execution
+            return;
+          } else {
+            // Success: No employees attached, show confirmation modal
+            $("#deleteLocationConfirmationModal .modal-body").text(
+              `Are you sure you want to delete the location ${locationName}?`
+            );
+            $("#deleteLocationConfirmationModal").modal("show");
+          }
+        } else {
+          showErrorToast("Error retrieving location details", 4000, false);
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        showErrorToast("Error retrieving location details", 4000, false);
+      },
+    });
+  });  
+
+/* DELETE LOCATION CONFIRMATION MODAL*/
+$("#deleteLocationConfirmationModal .btn-delete-location-confirmation").on("click", function() {
+  // Retrieve the location ID from the confirmation modal's data-id attribute
+  const deleteLocationId = $("#deleteLocationConfirmationModal").data("id");
+  // Perform the AJAX request to delete the location
+  $.ajax({
+    url: "libs/php/deleteLocationByID.php",
+    type: "POST",
+    dataType: "json",
+    data: {
+      id: deleteLocationId, // Pass the correct ID to the server
+    },
+    success: function(result) {
+      console.log("Delete request response:", result);
+      if (result.status.name == "ok") {
+        let locationName = result.data.locationName;
+        // Close the confirmation modal
+        $("#deleteLocationConfirmationModal").modal("hide");
+        
+        // Refresh the location table
+        refreshLocationTable();
+        // Show a success modal
+        $("#deleteLocationSuccessModal .modal-body").text(`The location ${locationName} was successfully deleted.`);
+        $("#deleteLocationSuccessModal").modal("show");
+
+      } else {
+        // Hide confirmation modal and show error modal
+        $("#deleteLocationConfirmationModal").modal("hide");
+        showErrorToast("Error deleting location", 4000, false);
+      }
+},
+    error: function(jqXHR, textStatus, errorThrown) {
+      showErrorToast("Error deleting location", 4000, false);
+    }
+  });
+});
+
 
 /*REFRESH PERSONNEL TABLE FUNCTION*/
 function refreshPersonnelTable() {
@@ -950,7 +1040,7 @@ function refreshPersonnelTable() {
                   <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-bs-toggle="modal" data-bs-target="#deletePersonnelConfirmationModal" data-id=${personnel.id}>
+                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-bs-toggle="modal" data-id=${personnel.id}>
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>
@@ -1042,10 +1132,10 @@ function refreshLocationTable() {
                   ${location.name}
                 </td>
                 <td class="align-middle text-end text-nowrap">
-                  <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${location.id}">
+                  <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${location.id}>
                     <i class="fa-solid fa-pencil fa-fw"></i>
                   </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-bs-toggle="modal" data-bs-target="#deleteLocationConfirmationModal" data-id=${location.id}">
+                  <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-bs-toggle="modal" data-id=${location.id}>
                     <i class="fa-solid fa-trash fa-fw"></i>
                   </button>
                 </td>

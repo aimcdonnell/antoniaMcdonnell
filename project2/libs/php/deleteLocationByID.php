@@ -1,4 +1,5 @@
 <?php
+//delete location by id
 
 // Enable error reporting for development (remove for production)
 ini_set('display_errors', 'On');
@@ -29,43 +30,40 @@ if (mysqli_connect_errno()) {
     exit;
 }
 
-// Get the department ID from the request
-$departmentID = $_REQUEST['id'];
+// Get the location id from the request
+$locationId = $_REQUEST['id'];
 
-// Query to fetch department name and location name
-$query = $conn->prepare('
-    SELECT d.name AS departmentName, l.name AS locationName, COUNT(p.departmentID) as personnelCount 
-    FROM department d
-    JOIN location l ON d.locationID = l.id
-    LEFT JOIN personnel p ON d.id = p.departmentID
-    WHERE d.id = ?
-    GROUP BY d.id, l.name
-');
-$query->bind_param("i", $departmentID);
+// Query to fetch location name
+$query = $conn->prepare('SELECT l.name as locationName, COUNT(d.locationID) as departmentCount 
+    FROM location l
+    LEFT JOIN department d ON d.locationID = l.id
+    WHERE l.id = ?');
+
+$query->bind_param("i", $locationId);
 $query->execute();
 
-// Fetch the result
+//Fetch the result
 $checkResult = $query->get_result()->fetch_assoc();
 
-// If the department is assigned personnel, return an error
-if ($checkResult['personnelCount'] > 0) {
+//If the location is assigned to a department, return an error
+if ($checkResult['departmentCount'] > 0) {
     $output['status']['code'] = "403";
     $output['status']['name'] = "failure";
-    $output['status']['description'] = "Cannot delete department with assigned personnel";
-    $output['data']['count'] = $checkResult['personnelCount'];
-    $output['data']['departmentName'] = $checkResult['departmentName'];
+    $output['status']['description'] = "Cannot delete location assigned to a department";
+    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+    $output['data']['count'] = $checkResult['departmentCount'];
     $output['data']['locationName'] = $checkResult['locationName'];
 
     echo json_encode($output);
     exit;
 }
 
-// SQL query to delete the department if no personnel are assigned
-$query = $conn->prepare('DELETE FROM department WHERE id = ?');
-$query->bind_param("i", $departmentID);
+//SQL query to delete the location
+$query = $conn->prepare('DELETE FROM location WHERE id = ?');
+$query->bind_param("i", $locationId);
 $query->execute();
 
-// If the delete query fails, return an error
+//If the delete query fails, return an error
 if (false === $query) {
     $output['status']['code'] = "400";
     $output['status']['name'] = "executed";
@@ -77,14 +75,14 @@ if (false === $query) {
     exit;
 }
 
-// If query was successful, return success
+//If query was successful, return success
 $output['status']['code'] = "200";
 $output['status']['name'] = "ok";
 $output['status']['description'] = "success";
 $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
 $output['data'] = [
-	'departmentName' => $checkResult['departmentName'],
-	'departmentLocation' => $checkResult['locationName']
+    'locationName' => $checkResult['locationName'],
+    'departmentCount' => $checkResult['departmentCount']
 ];
 
 mysqli_close($conn);

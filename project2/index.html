@@ -214,7 +214,7 @@
           
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-primary btn-sm btn-add-success" data-bs-dismiss="modal">OK</button>
+            <button type="button" class="btn btn-outline-primary btn-sm btn-add-error" data-bs-dismiss="modal">OK</button>
           </div>
         </div>
       </div>
@@ -470,7 +470,7 @@
                 
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-outline-primary btn-sm btn-add-success" data-bs-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-outline-primary btn-sm btn-add-error" data-bs-dismiss="modal">OK</button>
               </div>
             </div>
           </div>
@@ -585,7 +585,7 @@
             
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-primary btn-sm btn-delete-success" data-bs-dismiss="modal">OK</button>
+            <button type="button" class="btn btn-outline-primary btn-sm btn-delete-error" data-bs-dismiss="modal">OK</button>
           </div>
         </div>
       </div>
@@ -660,7 +660,7 @@
                 
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-outline-primary btn-sm btn-add-success" data-bs-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-outline-primary btn-sm btn-add-error" data-bs-dismiss="modal">OK</button>
               </div>
             </div>
           </div>
@@ -711,6 +711,61 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-primary btn-sm btn-edit-success" data-bs-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Location Confirmation Modal -->
+      <div id="deleteLocationConfirmationModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content shadow">
+            <div class="modal-header bg-primary bg-gradient text-white">
+              <h5 class="modal-title" id="exampleModalLabel">Confirm deletion</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Confirm location deletion
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-primary btn-sm btn-delete-location-confirmation">DELETE</button>
+              <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">CANCEL</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!--Delete Location Success Modal -->
+    <div id="deleteLocationSuccessModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title" id="exampleModalLabel">Deletion Success</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary btn-sm btn-delete-success" data-bs-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Delete Location Error Modal-->
+    <div id="deleteLocationErrorModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow">
+          <div class="modal-header bg-primary bg-gradient text-white">
+            <h5 class="modal-title" id="exampleModalLabel">Deletion error</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-primary btn-sm btn-delete-error" data-bs-dismiss="modal">OK</button>
           </div>
         </div>
       </div>
