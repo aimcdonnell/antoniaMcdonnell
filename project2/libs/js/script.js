@@ -100,7 +100,6 @@ $(window).on("load", function () {
 
   $("#searchInp").on("keyup", function () {
     let searchTerm = $(this).val().trim();  // Get the search input value
-    console.log("Search Input:", searchTerm);
 
     $.ajax({
         url: "libs/php/searchAll.php",
@@ -110,7 +109,6 @@ $(window).on("load", function () {
         },
         dataType: "json",
         success: function (result) {
-            console.log("Response Data:", result);
 
             if (result.status.name == "ok") {
                 // Clear all tables first
@@ -199,11 +197,11 @@ $(window).on("load", function () {
                     `);
                 }
             } else {
-                console.error("API Response Error:", result.status);
+                showErrorToast("API Response Error.", 4000, false);
             }
         },
         error: function (xhr, status, error) {
-            console.error("AJAX Error:", status, error);
+            showErrorToast("AJAX Error.", 4000, false);
         }
     });
 });
@@ -1093,7 +1091,6 @@ $("#deleteLocationConfirmationModal .btn-delete-location-confirmation").on("clic
       id: deleteLocationId, // Pass the correct ID to the server
     },
     success: function(result) {
-      console.log("Delete request response:", result);
       if (result.status.name == "ok") {
         let locationName = result.data.locationName;
         // Close the confirmation modal
