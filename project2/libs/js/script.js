@@ -141,7 +141,7 @@ $(window).on("load", function () {
                 } else {
                     $("#personnelTableBody").append(`
                         <tr>
-                            <td colspan="5" class="text-center">No personnel results found</td>
+                            <td colspan="5" class="text-center">No personnel found</td>
                         </tr>
                     `);
                 }
@@ -167,7 +167,7 @@ $(window).on("load", function () {
                 } else {
                     $("#locationTableBody").append(`
                         <tr>
-                            <td colspan="2" class="text-center">No location results found</td>
+                            <td colspan="2" class="text-center">No locations found</td>
                         </tr>
                     `);
                 }
@@ -192,7 +192,7 @@ $(window).on("load", function () {
                 } else {
                     $("#departmentTableBody").append(`
                         <tr>
-                            <td colspan="3" class="text-center">No department results found</td>
+                            <td colspan="3" class="text-center">No departments found</td>
                         </tr>
                     `);
                 }
@@ -205,10 +205,6 @@ $(window).on("load", function () {
         }
     });
 });
-
-
-
-
 
   /*REFRESH PERSONNEL, DEPARTMENT AND LOCATION TABLES*/
   $("#refreshBtn").on("click", function () {
@@ -251,12 +247,174 @@ $(window).on("load", function () {
     refreshLocationTable();
   });
   
-  /*FILTER PERSONNEL BY DEPARTMENT OR LOCATION*/
+  if ($("#personnelBtn").hasClass("active")) {
+
+      /*FILTER PERSONNEL BY DEPARTMENT OR LOCATION*/
   $("#filterBtn").on("click", function () {
+
+    $("#filterPersonnelModal").modal("show");
+  
+      // Fetch departments for radio buttons
+      $.ajax({
+        url: 'libs/php/getAllDepartments.php',
+        type: 'GET',
+        success: function (result) {
+          if (result.status.name === "ok") {
+            const departmentFilter = $('#departmentFilter');
+            departmentFilter.empty();
+            result.data.forEach(department => {
+              departmentFilter.append(`
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="department" value="${department.departmentName}" id="dept_${department.departmentID}">
+                  <label class="form-check-label" for="dept_${department.departmentID}">
+                    ${department.departmentName}
+                  </label>
+                </div>
+              `);
+            });
+          } else {
+            showErrorToast("Get all departments API response error.", 4000, false);
+          }
+        },
+        error: function () {
+          console.error('Failed to fetch departments.');
+        }
+      });
+  
+      // Fetch locations for radio buttons
+      $.ajax({
+        url: 'libs/php/getAllLocations.php',
+        type: 'GET',
+        success: function (result) {
+          if (result.status.name === "ok") {
+            const locationFilter = $('#locationFilter');
+            locationFilter.empty();
+            result.data.forEach(location => {
+              locationFilter.append(`
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="location" value="${location.locationName}" id="loc_${location.locationID}">
+                  <label class="form-check-label" for="loc_${location.locationID}">
+                    ${location.locationName}
+                  </label>
+                </div>
+              `);
+            });
+          } else {
+            showErrorToast("Get all locations API response error.", 4000, false);
+          }
+        },
+        error: function () {
+          console.error('Failed to fetch locations.');
+        }
+      });
+    });
+
+  }
+
+    /*FILTER PERSONNEL APPLY BUTTON */
+    $("#applyFilters").on("click", function () {
+      // Get the selected department and location
+      var selectedDepartment = $("#departmentFilter input:radio:checked").val() || "";
+      var selectedLocation = $("#locationFilter input:radio:checked").val() || "";
     
-    // Open a modal of your own design that allows the user to apply a filter to the personnel table on either department or location
+      // Make an AJAX request to fetch personnel based on the selected filters
+      $.ajax({
+        url: "libs/php/filterPersonnel.php",
+        type: "POST",
+        data: { department: selectedDepartment, location: selectedLocation },
+        dataType: "json",
+        success: function (result) {
+          console.log("filterPersonnel.php", result.data);
+          if (result.status.name == "ok") {
+            // Clear the existing table rows
+            $("#personnelTableBody").empty();
+            if (result.data.personnel.length > 0) {
+            // Loop through the filtered personnel data and append rows to the table
+            result.data.personnel.forEach(personnel => {
+              $("#personnelTableBody").append(`
+                <tr>
+                  <td class="align-middle text-nowrap">
+                    <a href="#" class="view-personnel-name" data-id=${personnel.id}>${personnel.lastName}, ${personnel.firstName}</a>
+                  </td>
+                  <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.departmentName}</td>
+                  <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
+                  <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
+                  <td class="text-end text-nowrap">
+                      <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
+                        <i class="fa-solid fa-pencil fa-fw"></i>
+                      </button>
+                      <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${personnel.id}>
+                        <i class="fa-solid fa-trash fa-fw"></i>
+                      </button>
+                    </td>
+                </tr>
+              `);
+            });
+            } else {
+              // If no personnel found, display a message
+              $("#filterPersonnelModal").modal("hide");
+              $("#personnelTableBody").append(`
+              <tr>
+                <td colspan="5" class="text-center">No personnel found.</td>
+              </tr>              
+            `);
+            }
+          } else {
+            showErrorToast("Error fetching personnel.", 4000, false);
+          }
+        },
+        error: function () {
+          console.error('Failed to fetch filtered personnel.');
+        }
+      });
+    });
     
+    /*FILTER PERSONNEL CLEAR FILTERS BUTTON */
+$("#clearFilters").on("click", function () {
+  // Reset radio buttons
+  $("#filterForm input:radio").prop("checked", false);
+  $("#personnelTableBody").empty();
+  $.ajax({
+    url: "libs/php/updateAllPersonnel.php",
+    type: "GET",
+    dataType: "json",
+    success: function (result) {
+      if (result.status.name == "ok" && Array.isArray(result.data)) {
+        if (result.data.length === 0) {
+          // Display message for no personnel data
+          $("#personnelTableBody").append(`
+            <tr><td colspan="6">No personnel data available</td></tr>
+            `);
+        } else {
+          // Append rows for each personnel
+          result.data.forEach(function (personnel) {
+            $("#personnelTableBody").append(`
+            <tr>
+              <td class="align-middle text-nowrap">${personnel.lastName}, ${personnel.firstName}</td>
+              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.departmentName}</td>
+              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
+              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
+              <td class="text-end text-nowrap">
+                  <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
+                    <i class="fa-solid fa-pencil fa-fw"></i>
+                  </button>
+                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${personnel.id}>
+                    <i class="fa-solid fa-trash fa-fw"></i>
+                  </button>
+                </td>
+            </tr>
+            `);
+          });
+        }
+      } else {
+        showErrorToast("No personnel data available", 4000, false);
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      showErrorToast("Error refreshing personnel table", 4000, false);
+    }
   });
+});
   
 /* ADD PERSONNEL, LOCATIONS AND DEPARTMENTS USING #ADDBTN */
 $("#addBtn").on("click", function () {
@@ -273,7 +431,7 @@ $("#addBtn").on("click", function () {
 
       // Populate the department dropdown
       $.ajax({
-          url: "libs/php/getAllDepartments.php", // Adjust endpoint as needed
+          url: "libs/php/getAllDepartments.php",
           type: "GET",
           dataType: "json",
           success: function (result) {
@@ -324,7 +482,7 @@ $("#addBtn").on("click", function () {
           }
       });
 
-       /* 2ND CONDITION: ADD DEPARTMENT */
+/* 2ND CONDITION: ADD DEPARTMENT */
 } else if ($("#departmentsBtn").hasClass("active")) {
   // Trigger the modal to show
   $("#addDepartmentModal").modal('show');
@@ -356,8 +514,8 @@ $("#addBtn").on("click", function () {
       showErrorToast("Failed to load locations.", 4000, false);
     }
   });
+/*3RD CONDITION: ADD LOCATION */
 } else {
-  /*3RD CONDITION: ADD LOCATION */
   // Trigger the location modal to show
     $("#addLocationModal").modal('show');
 }

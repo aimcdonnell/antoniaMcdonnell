@@ -116,6 +116,41 @@
       </footer>
     
     </section>
+
+    <!--Filter Personnel Modal-->
+  <div id="filterPersonnelModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="filterPersonnelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content shadow">
+        <div class="modal-header bg-primary bg-gradient text-white">
+          <h5 class="modal-title" id="filterPersonnelModalLabel">Filter personnel</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="filterForm">
+            <div class="mb-3">
+              <label class="form-label fw-bold">Departments</label>
+              <div id="departmentFilter">
+                <!-- Checkboxes will be dynamically populated here -->
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Locations</label>
+              <div id="locationFilter">
+                <!-- Checkboxes will be dynamically populated here -->
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-primary btn-sm myBtn" id="clearFilters">CLEAR</button>
+          <button type="button" class="btn btn-outline-primary btn-sm myBtn" id="applyFilters">APPLY</button>
+          <button type="button" class="btn btn-outline-primary btn-sm myBtn" data-bs-dismiss="modal">CANCEL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
     <!--Add Personnel Modal -->
     <div id="addPersonnelModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
       
@@ -127,7 +162,7 @@
         <div class="modal-content shadow"> 
           
           <div class="modal-header bg-primary bg-gradient text-white">
-            <h5 class="modal-title">Add personnel</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Add personnel</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
     
@@ -484,7 +519,7 @@
         <div class="modal-content shadow"> 
           
           <div class="modal-header bg-primary bg-gradient text-white">
-            <h5 class="modal-title">Edit department</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Edit department</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
     
@@ -497,7 +532,7 @@
                 <label for="editDepartmentName">Department</label>
               </div>
     
-              <div class="form-floating">
+              <div class="form-floating mb-3">
                 <select class="form-select" id="editDepartmentLocation" placeholder="Location">
                 </select>
                 <label for="editDepartmentLocation">Location</label>
@@ -560,7 +595,7 @@
       <div class="modal-dialog modal-sm modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content shadow">
           <div class="modal-header bg-primary bg-gradient text-white">
-            <h5 class="modal-title" id="exampleModalLabel">Deletion Success</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Deletion success</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -602,7 +637,7 @@
         <div class="modal-content shadow"> 
           
           <div class="modal-header bg-primary bg-gradient text-white">
-            <h5 class="modal-title">Add location</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Add location</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
     
@@ -674,7 +709,7 @@
         <div class="modal-content shadow"> 
           
           <div class="modal-header bg-primary bg-gradient text-white">
-            <h5 class="modal-title">Edit location</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Edit location</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
     
