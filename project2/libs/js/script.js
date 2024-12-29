@@ -247,69 +247,72 @@ $(window).on("load", function () {
     refreshLocationTable();
   });
   
+ // Check if the Personnel tab is active
+$("#filterBtn").on("click", function () {
   if ($("#personnelBtn").hasClass("active")) {
-
-      /*FILTER PERSONNEL BY DEPARTMENT OR LOCATION*/
-  $("#filterBtn").on("click", function () {
-
+    // Show the filter personnel modal
     $("#filterPersonnelModal").modal("show");
-  
-      // Fetch departments for radio buttons
-      $.ajax({
-        url: 'libs/php/getAllDepartments.php',
-        type: 'GET',
-        success: function (result) {
-          if (result.status.name === "ok") {
-            const departmentFilter = $('#departmentFilter');
-            departmentFilter.empty();
-            result.data.forEach(department => {
-              departmentFilter.append(`
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="department" value="${department.departmentName}" id="dept_${department.departmentID}">
-                  <label class="form-check-label" for="dept_${department.departmentID}">
-                    ${department.departmentName}
-                  </label>
-                </div>
-              `);
-            });
-          } else {
-            showErrorToast("Get all departments API response error.", 4000, false);
-          }
-        },
-        error: function () {
-          console.error('Failed to fetch departments.');
+
+    // Fetch departments for radio buttons
+    $.ajax({
+      url: 'libs/php/getAllDepartments.php',
+      type: 'GET',
+      success: function (result) {
+        if (result.status.name === "ok") {
+          const departmentFilter = $('#departmentFilter');
+          departmentFilter.empty();
+          result.data.forEach(department => {
+            departmentFilter.append(`
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="department" value="${department.departmentName}" id="dept_${department.departmentID}">
+                <label class="form-check-label" for="dept_${department.departmentID}">
+                  ${department.departmentName}
+                </label>
+              </div>
+            `);
+          });
+        } else {
+          showErrorToast("Get all departments API response error.", 4000, false);
         }
-      });
-  
-      // Fetch locations for radio buttons
-      $.ajax({
-        url: 'libs/php/getAllLocations.php',
-        type: 'GET',
-        success: function (result) {
-          if (result.status.name === "ok") {
-            const locationFilter = $('#locationFilter');
-            locationFilter.empty();
-            result.data.forEach(location => {
-              locationFilter.append(`
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="location" value="${location.locationName}" id="loc_${location.locationID}">
-                  <label class="form-check-label" for="loc_${location.locationID}">
-                    ${location.locationName}
-                  </label>
-                </div>
-              `);
-            });
-          } else {
-            showErrorToast("Get all locations API response error.", 4000, false);
-          }
-        },
-        error: function () {
-          console.error('Failed to fetch locations.');
-        }
-      });
+      },
+      error: function () {
+        console.error('Failed to fetch departments.');
+      }
     });
 
+    // Fetch locations for radio buttons
+    $.ajax({
+      url: 'libs/php/getAllLocations.php',
+      type: 'GET',
+      success: function (result) {
+        if (result.status.name === "ok") {
+          const locationFilter = $('#locationFilter');
+          locationFilter.empty();
+          result.data.forEach(location => {
+            locationFilter.append(`
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="location" value="${location.locationName}" id="loc_${location.locationID}">
+                <label class="form-check-label" for="loc_${location.locationID}">
+                  ${location.locationName}
+                </label>
+              </div>
+            `);
+          });
+        } else {
+          showErrorToast("Get all locations API response error.", 4000, false);
+        }
+      },
+      error: function () {
+        console.error('Failed to fetch locations.');
+      }
+    });
+
+  } else {
+    // Show a modal that explains filtering is only for personnel
+    $("#filterErrorModal .modal-body").text("Filtering is only available for personnel.");
+    $("#filterErrorModal").modal("show");
   }
+});
 
     /*FILTER PERSONNEL APPLY BUTTON */
     $("#applyFilters").on("click", function () {
