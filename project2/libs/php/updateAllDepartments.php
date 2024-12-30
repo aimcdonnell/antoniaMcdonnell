@@ -22,6 +22,7 @@ if (mysqli_connect_errno()) {
     $output['status']['code'] = "300";
     $output['status']['name'] = "failure";
     $output['status']['description'] = "database unavailable";
+    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output['data'] = [];
 
     //close the connection
@@ -57,10 +58,12 @@ if (false === $query) {
 
     // Fetch all departments with their location names
     $allDepartments = [];
+    // Loop through the result and add each row to the $allDepartments array
     while ($row = mysqli_fetch_assoc($result)) {
         array_push($allDepartments, $row);
     }
 
+    // Output the data if successful
     $output['status']['code'] = "200";
     $output['status']['name'] = "ok";
     $output['status']['description'] = "success";
