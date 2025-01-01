@@ -95,6 +95,7 @@ if ($updatedDepartmentResult->num_rows > 0) {
     $output["status"]["code"] = "404";
     $output["status"]["name"] = "failure";
     $output["status"]["description"] = "department not found";
+    $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output["data"] = [];
 }
 

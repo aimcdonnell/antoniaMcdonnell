@@ -18,6 +18,7 @@ if (mysqli_connect_errno()){
     $output["status"]["code"] = "300";
     $output["status"]["name"] = "failure";
     $output["status"]["description"] = "database unavailable";
+    $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output["data"] = [];
 
     // Close the connection
@@ -45,6 +46,7 @@ if (false === $query) {
     $output["status"]["code"] = "400";
     $output["status"]["name"] = "failure";
     $output["status"]["description"] = "query failed";
+    $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output["data"] = [];
 
     //Close the connection

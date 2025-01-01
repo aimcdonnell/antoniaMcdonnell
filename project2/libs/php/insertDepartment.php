@@ -49,7 +49,8 @@
 		//the error structure as shown in the network tab of the browser
 		$output["status"]["code"] = "400";
 		$output["status"]["name"] = "executed";
-		$output["status"]["description"] = "query failed";	
+		$output["status"]["description"] = "query failed";
+		$output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
 		$output["data"] = [];
 
 		// close the connection

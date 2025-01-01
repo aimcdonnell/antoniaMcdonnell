@@ -305,10 +305,8 @@ $("#filterBtn").on("click", function () {
         dataType: "json",
         success: function (result) {
           if (result.status.name == "ok") {
-            // Clear the existing table rows
             $("#personnelTableBody").empty();
             if (result.data.personnel.length > 0) {
-            // Loop through the filtered personnel data and append rows to the table
             result.data.personnel.forEach(personnel => {
               $("#personnelTableBody").append(`
                 <tr>
@@ -673,7 +671,6 @@ $(document).on("click", ".delete-personnel-btn", function () {
     type: "GET",
     data: { id: deletePersonnelId },
     success: function (response) {
-  // Parse the response if it's a string
   const result = typeof response === "string" ? JSON.parse(response) : response;
 
   if (result.status.name == "ok") {
@@ -719,10 +716,8 @@ $("#deletePersonnelConfirmationModal .btn-delete-personnel-confirmation").on("cl
         $("#deletePersonnelConfirmationModal").modal("hide");
         refreshPersonnelTable();
 
-        // Show a success modal
         $("#deletePersonnelSuccessModal .modal-body").text(`${firstName} ${lastName} was successfully deleted.`);
         $("#deletePersonnelSuccessModal").modal("show");
-        // Refresh the personnel table
 
       } else {
       showErrorToast("Error deleting personnel", 4000, false);
@@ -861,7 +856,6 @@ $("#editDepartmentForm").on("submit", function (e) {
       }
     },
     error: function (jqXHR, textStatus, errorThrown) {
-      // Show a toast message
       showErrorToast("An error occurred in the edit department submit form", 4000, false);
     },
   });
@@ -1121,7 +1115,7 @@ $("#deleteLocationConfirmationModal .btn-delete-location-confirmation").on("clic
     type: "POST",
     dataType: "json",
     data: {
-      id: deleteLocationId, // Pass the correct ID to the server
+      id: deleteLocationId,
     },
     success: function(result) {
       if (result.status.name == "ok") {
@@ -1238,7 +1232,6 @@ function refreshDepartmentTable() {
 
 /*REFRESH LOCATION TABLE FUNCTION*/
 function refreshLocationTable() {
-  // Clear the existing table rows
   $("#locationTableBody").empty();
 
   $.ajax({

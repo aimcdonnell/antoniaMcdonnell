@@ -64,6 +64,7 @@ if ($query->affected_rows > 0) {
         $output["status"]["code"] = "500";
         $output["status"]["name"] = "error";
         $output["status"]["description"] = "Department and location not found after insertion";
+        $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
         $output["data"] = [];
     }
 } else {
@@ -71,6 +72,7 @@ if ($query->affected_rows > 0) {
     $output["status"]["code"] = "400";
     $output["status"]["name"] = "error";
     $output["status"]["description"] = "query failed";
+    $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output["data"] = [];
 }
 

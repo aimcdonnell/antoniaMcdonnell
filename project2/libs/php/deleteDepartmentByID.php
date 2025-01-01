@@ -48,6 +48,7 @@ if ($checkResult["personnelCount"] > 0) {
     $output["status"]["code"] = "403";
     $output["status"]["name"] = "failure";
     $output["status"]["description"] = "Cannot delete department with assigned personnel";
+    $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output["data"]["count"] = $checkResult["personnelCount"];
     $output["data"]["departmentName"] = $checkResult["departmentName"];
     $output["data"]["locationName"] = $checkResult["locationName"];
@@ -66,6 +67,7 @@ if (false === $query) {
     $output["status"]["code"] = "400";
     $output["status"]["name"] = "executed";
     $output["status"]["description"] = "query failed";
+    $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output["data"] = [];
 
     mysqli_close($conn);

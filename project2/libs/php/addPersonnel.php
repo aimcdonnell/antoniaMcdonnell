@@ -61,6 +61,7 @@ if ($query->affected_rows > 0) {
         $output["status"]["code"] = "400";
         $output["status"]["name"] = "failure";
         $output["status"]["description"] = "failed to retrieve personnel details";
+        $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
         $output["data"] = [];
     }
 } else {
@@ -68,6 +69,7 @@ if ($query->affected_rows > 0) {
     $output["status"]["code"] = "400";
     $output["status"]["name"] = "failure";
     $output["status"]["description"] = "query failed";
+    $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output["data"] = [];
 }
 

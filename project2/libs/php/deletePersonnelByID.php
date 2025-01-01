@@ -62,6 +62,7 @@ if (false === $query) {
     $output["status"]["code"] = "400";
     $output["status"]["name"] = "failure";
     $output["status"]["description"] = "query failed";
+    $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output["data"] = [];
 
     // Close connection to database
