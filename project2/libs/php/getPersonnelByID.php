@@ -1,12 +1,5 @@
 <?php
 
-// example use from browser
-// http://localhost/companydirectory/libs/php/getPersonnelByID.php?id=<id>
-
-// remove next two lines for production
-ini_set('display_errors', 'On');
-error_reporting(E_ALL);
-
 //track execution time
 $executionStartTime = microtime(true);
 
@@ -14,7 +7,7 @@ $executionStartTime = microtime(true);
 include("config.php");
 
 // tell the script to start sending the content as JSON
-header('Content-Type: application/json; charset=UTF-8');
+header("Content-Type: application/json; charset=UTF-8");
 
 // connect to database
 $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_socket);
@@ -23,11 +16,11 @@ $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_s
 if (mysqli_connect_errno()) {
     
     //the error structure as shown in the network tab of the browser
-    $output['status']['code'] = "300";
-    $output['status']['name'] = "failure";
-    $output['status']['description'] = "database unavailable";
-    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-    $output['data'] = [];
+    $output["status"]["code"] = "300";
+    $output["status"]["name"] = "failure";
+    $output["status"]["description"] = "database unavailable";
+    $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+    $output["data"] = [];
 
     //close the connection
     mysqli_close($conn);
@@ -41,17 +34,16 @@ if (mysqli_connect_errno()) {
 }    
 
 // first query - SQL statement accepts parameters and so is prepared to avoid SQL injection.
-// $_REQUEST used for development / debugging. Remember to change to $_POST for production
 //get personnel by id
-$query = $conn->prepare('SELECT p.id, p.firstName, p.lastName, p.email, p.jobTitle, d.id as departmentID, d.name as departmentName, l.name as location 
+$query = $conn->prepare("SELECT p.id, p.firstName, p.lastName, p.email, p.jobTitle, d.id as departmentID, d.name as departmentName, l.name as location 
                          FROM personnel p 
                          LEFT JOIN department d ON d.id = p.departmentID 
                          LEFT JOIN location l ON l.id = d.locationID 
                          WHERE p.id = ? 
-                         ORDER BY p.lastName, p.firstName, d.name, l.name');    
+                         ORDER BY p.lastName, p.firstName, d.name, l.name");    
 
 // bind parameters for markers, where (i = integer)
-$query->bind_param("i", $_REQUEST['id']);
+$query->bind_param("i", $_POST["id"]);
 
 // execute query
 $query->execute();
@@ -60,10 +52,10 @@ $query->execute();
 if (false === $query) {
 
     //the error structure as shown in the network tab of the browser
-    $output['status']['code'] = "400";
-    $output['status']['name'] = "executed";
-    $output['status']['description'] = "query failed";    
-    $output['data'] = [];
+    $output["status"]["code"] = "400";
+    $output["status"]["name"] = "executed";
+    $output["status"]["description"] = "query failed";    
+    $output["data"] = [];
 
     //close the connection
     mysqli_close($conn);
@@ -88,7 +80,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 
 // second query - get all departments (no parameters needed)
-$query = 'SELECT id, name FROM department ORDER BY name';
+$query = "SELECT id, name FROM department ORDER BY name";
 
 //get the result from the query
 $result = $conn->query($query);
@@ -97,10 +89,10 @@ $result = $conn->query($query);
 if (!$result) {
 
     //the error structure as shown in the network tab of the browser
-    $output['status']['code'] = "400";
-    $output['status']['name'] = "executed";
-    $output['status']['description'] = "query failed";    
-    $output['data'] = [];
+    $output["status"]["code"] = "400";
+    $output["status"]["name"] = "executed";
+    $output["status"]["description"] = "query failed";    
+    $output["data"] = [];
 
     //close the connection
     mysqli_close($conn);
@@ -124,12 +116,12 @@ while ($row = mysqli_fetch_assoc($result)) {
 
 
 //the success structure as shown in the network tab of the browser
-$output['status']['code'] = "200";
-$output['status']['name'] = "ok";
-$output['status']['description'] = "success";
-$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-$output['data']['personnel'] = $personnel;  // Personnel data
-$output['data']['department'] = $departments;  // Department data
+$output["status"]["code"] = "200";
+$output["status"]["name"] = "ok";
+$output["status"]["description"] = "success";
+$output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+$output["data"]["personnel"] = $personnel;  // Personnel data
+$output["data"]["department"] = $departments;  // Department data
 
 //close the connection
 mysqli_close($conn);

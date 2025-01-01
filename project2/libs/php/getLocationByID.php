@@ -1,16 +1,12 @@
 <?php
 
-// Enable error reporting for development (remove for production)
-ini_set('display_errors', 'On');
-error_reporting(E_ALL);
-
 // Track execution time
 $executionStartTime = microtime(true);
 
 // Where the login details are stored
 include("config.php");
 // Tell the script to start sending the content as JSON
-header('Content-Type: application/json; charset=UTF-8');
+header("Content-Type: application/json; charset=UTF-8");
 
 // Connect to the database
 $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_socket);
@@ -18,11 +14,11 @@ $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_s
 // If there's an error with the connection
 if (mysqli_connect_errno()) {
     // The error structure as shown in the network tab of the browser
-    $output['status']['code'] = "300";
-    $output['status']['name'] = "failure";
-    $output['status']['description'] = "database unavailable";
-    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) * 1000 . " ms";
-    $output['data'] = [];
+    $output["status"]["code"] = "300";
+    $output["status"]["name"] = "failure";
+    $output["status"]["description"] = "database unavailable";
+    $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) * 1000 . " ms";
+    $output["data"] = [];
 
     // Close the connection
     mysqli_close($conn);
@@ -35,10 +31,10 @@ if (mysqli_connect_errno()) {
 }
 
 //first query
-$query = $conn->prepare('SELECT id AS locationID, name AS locationName FROM location WHERE id = ?');
+$query = $conn->prepare("SELECT id AS locationID, name AS locationName FROM location WHERE id = ?");
 
 //execute the query
-$query->bind_param("i", $_REQUEST['locationId']);
+$query->bind_param("i", $_POST["locationId"]);
 
 //execute the query
 $query->execute();
@@ -46,9 +42,9 @@ $query->execute();
 // If there's an error with the query
 if (false === $query) {
     // The error structure as shown in the network tab of the browser
-    $output['status']['code'] = "400";
-    $output['status']['name'] = "executed";
-    $output['data'] = [];
+    $output["status"]["code"] = "400";
+    $output["status"]["name"] = "executed";
+    $output["data"] = [];
 
     //display the error
     echo json_encode($output);
@@ -72,11 +68,11 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 
 // Output the data if successful
-$output['status']['code'] = "200";
-$output['status']['name'] = "ok";
-$output['status']['description'] = "success";
-$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) * 1000 . " ms";
-$output['data'] = $locations;
+$output["status"]["code"] = "200";
+$output["status"]["name"] = "ok";
+$output["status"]["description"] = "success";
+$output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) * 1000 . " ms";
+$output["data"] = $locations;
 
 // Display the output
 echo json_encode($output);

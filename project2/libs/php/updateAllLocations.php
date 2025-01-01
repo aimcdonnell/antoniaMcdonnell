@@ -1,12 +1,5 @@
 <?php
 
-//example use from browser
-//http://localhost/companydirectory/libs/php/updateAllLocations.php?id=1&name=London
-
-//remove next two lines for production
-ini_set('display_errors', 'On');
-error_reporting(E_ALL);
-
 //track execution time
 $executionStartTime = microtime(true);
 
@@ -14,7 +7,7 @@ $executionStartTime = microtime(true);
 include("config.php");
 
 //telling the script that the output is in JSON format and should be treated as JSON data
-header('Content-Type: application/json; charset=UTF-8');
+header("Content-Type: application/json; charset=UTF-8");
 
 //credentials used to connect to the database (taken from config.php file)
 $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_socket);
@@ -22,11 +15,11 @@ $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_s
 //if unsuccessful, output error message
 if (mysqli_connect_errno()) {
     // the error structure as shown in the network tab of the browser
-    $output['status']['code'] = "300";
-    $output['status']['name'] = "failure";
-    $output['status']['description'] = "database unavailable";
-    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-    $output['data'] = [];
+    $output["status"]["code"] = "300";
+    $output["status"]["name"] = "failure";
+    $output["status"]["description"] = "database unavailable";
+    $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+    $output["data"] = [];
 
     //close the connection  
     mysqli_close($conn);
@@ -36,18 +29,18 @@ if (mysqli_connect_errno()) {
 }
 
 // Update query for locations
-$query = $conn->prepare('UPDATE location SET name = ? WHERE id = ?');
-$query->bind_param("si", $_REQUEST['name'], $_REQUEST['id']);
+$query = $conn->prepare("UPDATE location SET name = ? WHERE id = ?");
+$query->bind_param("si", $_POST["name"], $_POST["id"]);
 $query->execute();
 
 if (false === $query) {
-    $output['status']['code'] = "400";
-    $output['status']['name'] = "failure";
-    $output['status']['description'] = "query failed";
-    $output['data'] = [];
+    $output["status"]["code"] = "400";
+    $output["status"]["name"] = "failure";
+    $output["status"]["description"] = "query failed";
+    $output["data"] = [];
 } else {
     //Fetch all locations 
-    $selectQuery = $conn->prepare('SELECT id, name from location ORDER BY name');
+    $selectQuery = $conn->prepare("SELECT id, name from location ORDER BY name");
     
     //execute the query
     $selectQuery->execute();
@@ -63,11 +56,11 @@ if (false === $query) {
     }
 
     //Output the data if successful
-    $output['status']['code'] = "200";
-    $output['status']['name'] = "ok";
-    $output['status']['description'] = "success";
-    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-    $output['data'] = $allLocations;
+    $output["status"]["code"] = "200";
+    $output["status"]["name"] = "ok";
+    $output["status"]["description"] = "success";
+    $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+    $output["data"] = $allLocations;
 
 }
 

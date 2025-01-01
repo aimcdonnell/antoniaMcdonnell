@@ -1,7 +1,4 @@
 <?php
-// Enable error reporting for development (remove for production)
-ini_set('display_errors', 'On');
-error_reporting(E_ALL);
 
 // Track execution time
 $executionStartTime = microtime(true);
@@ -10,18 +7,18 @@ $executionStartTime = microtime(true);
 include("config.php");
 
 // Tell the script to start sending the content as JSON
-header('Content-Type: application/json; charset=UTF-8');
+header("Content-Type: application/json; charset=UTF-8");
 
 // Connect to the database
 $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_socket);
 
-// If there's an error with the connection
+// If there"s an error with the connection
 if (mysqli_connect_errno()) {
     // The error structure as shown in the network tab of the browser
-    $output['status']['code'] = "300";
-    $output['status']['name'] = "failure";
-    $output['status']['description'] = "database unavailable";
-    $output['data'] = [];
+    $output["status"]["code"] = "300";
+    $output["status"]["name"] = "failure";
+    $output["status"]["description"] = "database unavailable";
+    $output["data"] = [];
 
     // Close the connection
     mysqli_close($conn);
@@ -34,10 +31,10 @@ if (mysqli_connect_errno()) {
 }
 
 // First query - SQL statement accepts parameters and so is prepared to avoid SQL injection
-$query = $conn->prepare('UPDATE department SET name = ?, locationID = ? WHERE id = ?');
+$query = $conn->prepare("UPDATE department SET name = ?, locationID = ? WHERE id = ?");
 
 // Bind parameters for markers
-$query->bind_param("sii", $_REQUEST['departmentName'], $_REQUEST['locationID'], $_REQUEST['id']);
+$query->bind_param("sii", $_POST["departmentName"], $_POST["locationID"], $_POST["id"]);
 
 // Execute the query
 $query->execute();
@@ -45,10 +42,10 @@ $query->execute();
 // If there's an error with the query
 if (false === $query) {
     // The error structure as shown in the network tab of the browser
-    $output['status']['code'] = "400";
-    $output['status']['name'] = "failure";
-    $output['status']['description'] = "query failed";
-    $output['data'] = [];
+    $output["status"]["code"] = "400";
+    $output["status"]["name"] = "failure";
+    $output["status"]["description"] = "query failed";
+    $output["data"] = [];
 
     // Close the connection
     mysqli_close($conn);
@@ -61,13 +58,13 @@ if (false === $query) {
 }
 
 // Retrieve the updated department data
-$updatedDepartmentQuery = $conn->prepare('SELECT d.name AS departmentName, l.name AS locationName 
+$updatedDepartmentQuery = $conn->prepare("SELECT d.name AS departmentName, l.name AS locationName 
     FROM department d
     JOIN location l ON d.locationID = l.id
-    WHERE d.id = ?');
+    WHERE d.id = ?");
 
 // Bind the department id parameter (it is an integer)
-$updatedDepartmentQuery->bind_param("i", $_REQUEST['id']);
+$updatedDepartmentQuery->bind_param("i", $_POST["id"]);
 
 // Execute the query
 $updatedDepartmentQuery->execute();
@@ -82,23 +79,23 @@ if ($updatedDepartmentResult->num_rows > 0) {
     // Fetch the updated department and its location
     while ($row = $updatedDepartmentResult->fetch_assoc()) {
         $department[] = [
-            'departmentName' => $row['departmentName'],
-            'locationName' => $row['locationName']
+            "departmentName" => $row["departmentName"],
+            "locationName" => $row["locationName"]
         ];
     }
 
     // Prepare the response with updated data
-    $output['status']['code'] = "200";
-    $output['status']['name'] = "ok";
-    $output['status']['description'] = "success";
-    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-    $output['data'] = $department;
+    $output["status"]["code"] = "200";
+    $output["status"]["name"] = "ok";
+    $output["status"]["description"] = "success";
+    $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+    $output["data"] = $department;
 } else {
     // If no rows were returned, handle the error
-    $output['status']['code'] = "404";
-    $output['status']['name'] = "failure";
-    $output['status']['description'] = "department not found";
-    $output['data'] = [];
+    $output["status"]["code"] = "404";
+    $output["status"]["name"] = "failure";
+    $output["status"]["description"] = "department not found";
+    $output["data"] = [];
 }
 
 // Close the connection

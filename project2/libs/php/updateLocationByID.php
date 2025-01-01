@@ -1,7 +1,4 @@
 <?php
-// Enable error reporting for development (remove for production)
-ini_set('display_errors', 'On');
-error_reporting(E_ALL);
 
 // Track execution time
 $executionStartTime = microtime(true);
@@ -10,7 +7,7 @@ $executionStartTime = microtime(true);
 include("config.php");
 
 // Tell the script to start sending the content as JSON
-header('Content-Type: application/json; charset=UTF-8');
+header("Content-Type: application/json; charset=UTF-8");
 
 // Connect to the database
 $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_socket);
@@ -18,10 +15,10 @@ $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_s
 // If there's an error with the connection
 if (mysqli_connect_errno()){
     //The error structure as shown in the network tab of the browser
-    $output['status']['code'] = "300";
-    $output['status']['name'] = "failure";
-    $output['status']['description'] = "database unavailable";
-    $output['data'] = [];
+    $output["status"]["code"] = "300";
+    $output["status"]["name"] = "failure";
+    $output["status"]["description"] = "database unavailable";
+    $output["data"] = [];
 
     // Close the connection
     mysqli_close($conn);
@@ -34,21 +31,21 @@ if (mysqli_connect_errno()){
 }
 
 //First query - SQL statement accepts parameters and so is prepared to avoid SQL injection
-$query = $conn->prepare('UPDATE location SET name = ? WHERE id = ?');
+$query = $conn->prepare("UPDATE location SET name = ? WHERE id = ?");
 
 // Bind parameters for markers
-$query->bind_param("si", $_REQUEST['locationName'], $_REQUEST['locationId']);
+$query->bind_param("si", $_POST["locationName"], $_POST["locationId"]);
 
 // Execute the query
 $query->execute();
 
-// If there's an error with the query
+// If there"s an error with the query
 if (false === $query) {
     // The error structure as shown in the network tab of the browser
-    $output['status']['code'] = "400";
-    $output['status']['name'] = "failure";
-    $output['status']['description'] = "query failed";
-    $output['data'] = [];
+    $output["status"]["code"] = "400";
+    $output["status"]["name"] = "failure";
+    $output["status"]["description"] = "query failed";
+    $output["data"] = [];
 
     //Close the connection
     mysqli_close($conn);
@@ -61,9 +58,9 @@ if (false === $query) {
 } else {
 
     // Retrieve the updated location data
-$updatedLocationQuery = $conn->prepare('SELECT id, name FROM location WHERE id = ?');
+$updatedLocationQuery = $conn->prepare("SELECT id, name FROM location WHERE id = ?");
 // Bind the location id parameter
-$updatedLocationQuery->bind_param("i", $_REQUEST['locationId']);
+$updatedLocationQuery->bind_param("i", $_POST["locationId"]);
 
 //Execute the query
 $updatedLocationQuery->execute();
@@ -77,16 +74,16 @@ $location = [];
 //Fetch the updated location data
 while ($row = $updatedLocationResult->fetch_assoc()) {
     $location[] = [
-        'locationName' => $row['name'],
-        'locationID' => $row['id']
+        "locationName" => $row["name"],
+        "locationID" => $row["id"]
     ];
 }
     //Prepare the response with updated location data
-    $output['status']['code'] = "200";
-    $output['status']['name'] = "ok";
-    $output['status']['description'] = "success";
-    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-    $output['data'] = $location;
+    $output["status"]["code"] = "200";
+    $output["status"]["name"] = "ok";
+    $output["status"]["description"] = "success";
+    $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+    $output["data"] = $location;
 
 }
 
