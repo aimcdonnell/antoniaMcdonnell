@@ -239,7 +239,8 @@ $("#filterBtn").on("click", function () {
     $.ajax({
       url: "libs/php/getAllDepartments.php",
       type: "GET",
-      success: function (result) {
+      success: function (response) {
+        const result = typeof response === "string" ? JSON.parse(response) : response;
         if (result.status.name == "ok") {
           const departmentFilter = $("#departmentFilter");
           departmentFilter.empty();
@@ -265,7 +266,8 @@ $("#filterBtn").on("click", function () {
     $.ajax({
       url: "libs/php/getAllLocations.php",
       type: "GET",
-      success: function (result) {
+      success: function (response) {
+        const result = typeof response === "string" ? JSON.parse(response) : response;
         if (result.status.name == "ok") {
           const locationFilter = $("#locationFilter");
           locationFilter.empty();
