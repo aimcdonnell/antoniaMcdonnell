@@ -583,12 +583,13 @@ $("#editPersonnelModal").on("show.bs.modal", function (e) {
   
   $.ajax({
     url: "libs/php/getPersonnelByID.php",
-    type: "POST",
+    type: "GET",
     dataType: "json",
     data: {
       id: editPersonnelId,
     },
     success: function (result) {
+      console.log("Get personnel by id", result);
       if (result.status.name == "ok" && result.data.personnel.length > 0) {
 
         let personnel = result.data.personnel[0];
