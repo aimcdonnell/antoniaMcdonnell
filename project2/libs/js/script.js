@@ -1158,7 +1158,8 @@ function refreshPersonnelTable() {
           result.data.forEach(function (personnel) {
             $("#personnelTableBody").append(`
             <tr>
-              <td class="align-middle text-nowrap">${personnel.lastName}, ${personnel.firstName}</td>
+              <td class="align-middle text-nowrap"><a href="#" class="view-personnel-name" data-id=${personnel.id}>${personnel.lastName}, ${personnel.firstName}
+                </a></td>
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.departmentName}</td>
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>

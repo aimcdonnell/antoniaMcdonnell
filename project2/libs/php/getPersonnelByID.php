@@ -43,7 +43,7 @@ $query = $conn->prepare("SELECT p.id, p.firstName, p.lastName, p.email, p.jobTit
                          ORDER BY p.lastName, p.firstName, d.name, l.name");    
 
 // bind parameters for markers, where (i = integer)
-$query->bind_param("i", $_POST["id"]);
+$query->bind_param("i", $_GET["id"]);
 
 // execute query
 $query->execute();
