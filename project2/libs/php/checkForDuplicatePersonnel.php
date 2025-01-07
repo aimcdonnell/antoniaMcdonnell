@@ -35,7 +35,7 @@ if (empty($firstName) || empty($lastName) || empty($email)) {
 }
 
 // Check for duplicate personnel
-$query = $conn->prepare("SELECT * FROM personnel WHERE firstName = ? AND lastName = ? AND email = ?");
+$query = $conn->prepare("SELECT id, firstName, lastName, jobTitle, email, departmentID FROM personnel WHERE firstName = ? AND lastName = ? AND email = ?");
 $query->bind_param("sss", $firstName, $lastName, $email);
 $query->execute();
 $result = $query->get_result();

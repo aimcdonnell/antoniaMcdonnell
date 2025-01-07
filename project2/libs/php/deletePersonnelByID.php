@@ -76,7 +76,7 @@ if (false === $query) {
 }
 
 // Fetch the updated personnel list
-$selectQuery = $conn->prepare("SELECT * FROM personnel");
+$selectQuery = $conn->prepare("SELECT id, firstName, lastName, jobTitle, email, departmentID FROM personnel");
 $selectQuery->execute();
 $result = $selectQuery->get_result();
 
