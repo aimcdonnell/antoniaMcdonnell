@@ -99,6 +99,10 @@ $(window).on("load", function () {
     }
   })
 
+  $(document).on("ready", function () {
+    $("#searchInp").val(""); // Clear the search input field
+});
+
   $("#searchInp").on("keyup", function () {
     let searchTerm = $(this).val().trim();
 
@@ -208,7 +212,7 @@ $(window).on("load", function () {
     
     if ($("#personnelBtn").hasClass("active")) {      
       refreshPersonnelTable();
-      
+
     } else if ($("#departmentsBtn").hasClass("active")) {
       refreshDepartmentTable();
 
@@ -1193,6 +1197,7 @@ $("#deleteLocationConfirmationModal .btn-delete-location-confirmation").on("clic
 
 /*REFRESH PERSONNEL TABLE FUNCTION*/
 function refreshPersonnelTable() {
+  $("#searchInp").val("");
   $("#personnelTableBody").empty();
 
   $.ajax({
@@ -1240,6 +1245,7 @@ function refreshPersonnelTable() {
 
 /*REFRESH DEPARTMENT TABLE FUNCTION*/
 function refreshDepartmentTable() {
+  $("#searchInp").val("");
   $("#departmentTableBody").empty();
 
   $.ajax({
@@ -1290,6 +1296,7 @@ function refreshDepartmentTable() {
 /*REFRESH LOCATION TABLE FUNCTION*/
 function refreshLocationTable() {
   $("#locationTableBody").empty();
+  $("#searchInp").val("");
 
   $.ajax({
     url: "libs/php/updateAllLocations.php",
