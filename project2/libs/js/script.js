@@ -542,7 +542,7 @@ $("#addPersonnelModal").on("submit", "#addPersonnelForm", function (e) {
                        let firstName = result.data.firstName;
                        let lastName = result.data.lastName;
                           $("#addPersonnelModal").modal("hide");
-                          $("#addPersonnelSuccessModal .modal-body").text(`${firstName} ${lastName} was added successfully.`);
+                          $("#addPersonnelSuccessModal .modal-body").html(`The entry for <b>${firstName}</b> <b>${lastName}</b> was successfully added.`);
                           $("#addPersonnelSuccessModal").modal("show");
                           refreshPersonnelTable();
                       }
@@ -758,7 +758,7 @@ $("#deletePersonnelConfirmationModal .btn-delete-personnel-confirmation").on("cl
         $("#deletePersonnelConfirmationModal").modal("hide");
         refreshPersonnelTable();
 
-        $("#deletePersonnelSuccessModal .modal-body").text(`${firstName} ${lastName} was successfully deleted.`);
+        $("#deletePersonnelSuccessModal .modal-body").html(`The entry for <b>${firstName}</b> <b>${lastName}</b> was successfully removed.`);
         $("#deletePersonnelSuccessModal").modal("show");
       } else {
       $("#popupErrorModal .modal-body").text("Error deleting personnel.");
@@ -1177,7 +1177,7 @@ $("#deleteLocationConfirmationModal .btn-delete-location-confirmation").on("clic
         $("#deleteLocationConfirmationModal").modal("hide");
         
         refreshLocationTable();
-        $("#deleteLocationSuccessModal .modal-body").html(`The entry for <b>${locationName}</b> was successfully deleted.`);
+        $("#deleteLocationSuccessModal .modal-body").html(`The entry for <b>${locationName}</b> was successfully removed.`);
         $("#deleteLocationSuccessModal").modal("show");
 
       } else {
