@@ -542,8 +542,6 @@ $("#addPersonnelModal").on("submit", "#addPersonnelForm", function (e) {
                        let firstName = result.data.firstName;
                        let lastName = result.data.lastName;
                           $("#addPersonnelModal").modal("hide");
-                          $("#addPersonnelSuccessModal .modal-body").html(`The entry for <b>${firstName}</b> <b>${lastName}</b> was successfully added.`);
-                          $("#addPersonnelSuccessModal").modal("show");
                           refreshPersonnelTable();
                       }
                   },
@@ -678,8 +676,6 @@ $("#editPersonnelForm").on("submit", function (e) {
         let lastName = result.data[0].lastName;
         $("#editPersonnelModal").modal("hide");
 
-        $("#editPersonnelSuccessModal .modal-body").html(`The entry was successfully updated to <b>${firstName} ${lastName}</b>.`);
-        $("#editPersonnelSuccessModal").modal("show");
         refreshPersonnelTable();
       } else {
         $("#popupErrorModal .modal-body").text("Error updating personnel.");
@@ -757,12 +753,8 @@ $("#deletePersonnelForm").on("submit", function(e) {
       let firstName = result.data.deletedPersonnel.firstName;
       let lastName = result.data.deletedPersonnel.lastName;
       if (result.status.name == "ok") {
-
         $("#deletePersonnelConfirmationModal").modal("hide");
         refreshPersonnelTable();
-
-        $("#deletePersonnelSuccessModal .modal-body").html(`The entry for <b>${firstName}</b> <b>${lastName}</b> was successfully removed.`);
-        $("#deletePersonnelSuccessModal").modal("show");
       } else {
       $("#popupErrorModal .modal-body").text("Error deleting personnel.");
       $("#popupErrorModal").modal("show");
@@ -799,13 +791,8 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
                 locationID: $("#addDepartmentLocation option:selected").val()
               },
               success: function (result) {
-                if (result.status.name == "ok") {
-                  let departmentName = result.data.department.departmentName;
-                  let locationName = result.data.department.locationName;
-              
+                if (result.status.name == "ok") {              
                   $("#addDepartmentModal").modal("hide");
-                  $("#addDepartmentSuccessModal .modal-body").html(`The entry for <b>${departmentName}</b> was successfully added.`);
-                  $("#addDepartmentSuccessModal").modal("show");
                   refreshDepartmentTable();
                 }
               },
@@ -894,9 +881,6 @@ $.ajax({
     let locationName = result.data[0].locationName;
     if (result.status.name == "ok") {
       $("#editDepartmentModal").modal("hide");
-
-      $("#editDepartmentSuccessModal .modal-body").html(`The entry was successfully updated to <b>${departmentName}</b>.`);
-      $("#editDepartmentSuccessModal").modal("show");
       refreshDepartmentTable();
     } else {
       $("#popupErrorModal .modal-body").text("Error updating the department.");
@@ -976,8 +960,6 @@ $("#deleteDepartmentForm").on("submit", function (e) {
 
         $("#deleteDepartmentConfirmationModal").modal("hide");
         refreshDepartmentTable();
-        $("#deleteDepartmentSuccessModal .modal-body").html(`The entry for <b>${departmentName}</b> was successfully removed.`);
-        $("#deleteDepartmentSuccessModal").modal("show");
       } else {
         $("#deleteDepartmentConfirmationModal").modal("hide");
         $("#popupErrorModal .modal-body").text("Error deleting department.");
@@ -1014,11 +996,7 @@ $("#addLocationModal").on("submit", "#addLocationForm", function (e) {
               },
               success: function (result) {
                 if (result.status.name == "ok") {
-                  let locationName = result.data.location.name;
-              
                   $("#addLocationModal").modal("hide");
-                  $("#addLocationSuccessModal .modal-body").html(`The entry for <b>${locationName}</b> was successfully added.`);
-                  $("#addLocationSuccessModal").modal("show");
                   refreshLocationTable();
                 }
               },
@@ -1090,11 +1068,7 @@ $("#editLocationForm").on("submit", function (e) {
     },
     success: function(result) {
       if (result.status.name == "ok") {
-        let locationName = result.data[0].locationName;
         $("#editLocationModal").modal("hide");
-
-        $("#editLocationSuccessModal .modal-body").html(`The entry was successfully updated to <b>${locationName}</b>.`);
-        $("#editLocationSuccessModal").modal("show");
         refreshLocationTable();
       } else {
         $("#popupErrorModal .modal-body").text("Error updating the location.");
@@ -1178,8 +1152,6 @@ $("#deleteLocationForm").on("submit", function(e) {
         $("#deleteLocationConfirmationModal").modal("hide");
         
         refreshLocationTable();
-        $("#deleteLocationSuccessModal .modal-body").html(`The entry for <b>${locationName}</b> was successfully removed.`);
-        $("#deleteLocationSuccessModal").modal("show");
 
       } else {
         $("#deleteLocationConfirmationModal").modal("hide");
