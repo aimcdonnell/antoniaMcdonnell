@@ -30,12 +30,11 @@ $departmentID = $_POST["id"];
 
 // Query to fetch department name and location name
 $query = $conn->prepare("
-    SELECT d.name AS departmentName, l.name AS locationName, COUNT(p.departmentID) as personnelCount 
+    SELECT d.name AS departmentName, 
+        COUNT(p.id) as personnelCount 
     FROM department d
-    JOIN location l ON d.locationID = l.id
-    LEFT JOIN personnel p ON d.id = p.departmentID
+    LEFT JOIN personnel p ON (p.departmentID = d.id)
     WHERE d.id = ?
-    GROUP BY d.id, l.name
 ");
 $query->bind_param("i", $departmentID);
 $query->execute();
@@ -51,7 +50,6 @@ if ($checkResult["personnelCount"] > 0) {
     $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output["data"]["count"] = $checkResult["personnelCount"];
     $output["data"]["departmentName"] = $checkResult["departmentName"];
-    $output["data"]["locationName"] = $checkResult["locationName"];
 
     echo json_encode($output);
     exit;
@@ -81,8 +79,7 @@ $output["status"]["name"] = "ok";
 $output["status"]["description"] = "success";
 $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
 $output["data"] = [
-	"departmentName" => $checkResult["departmentName"],
-	"departmentLocation" => $checkResult["locationName"]
+	"departmentName" => $checkResult["departmentName"]
 ];
 
 mysqli_close($conn);

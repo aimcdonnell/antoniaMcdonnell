@@ -29,10 +29,13 @@ if (mysqli_connect_errno()) {
 $locationId = $_POST["id"];
 
 // Query to fetch location name
-$query = $conn->prepare("SELECT l.name as locationName, COUNT(d.locationID) as departmentCount 
+$query = $conn->prepare("
+    SELECT l.name as locationName, 
+        COUNT(d.id) as departmentCount 
     FROM location l
-    LEFT JOIN department d ON d.locationID = l.id
-    WHERE l.id = ?");
+    LEFT JOIN department d ON (d.locationID = l.id)
+    WHERE l.id = ?
+");
 
 $query->bind_param("i", $locationId);
 $query->execute();

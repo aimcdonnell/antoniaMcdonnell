@@ -972,7 +972,6 @@ $("#deleteDepartmentConfirmationModal .btn-delete-department-confirmation").on("
     success: function(result) {
       if (result.status.name == "ok") {
         let departmentName = result.data.departmentName;
-        let locationName = result.data.departmentLocation;
 
         $("#deleteDepartmentConfirmationModal").modal("hide");
 
