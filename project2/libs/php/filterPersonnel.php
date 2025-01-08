@@ -1,99 +1,112 @@
 <?php
 
-//track execution time
+// Track execution time
 $executionStartTime = microtime(true);
 
-//where the login details are stored
+// Include configuration
 include("config.php");
 
-//tell the script to start sending the content as JSON
+// Set JSON header
 header("Content-Type: application/json; charset=UTF-8");
 
-// connect to database
+// Connect to the database
 $conn = new mysqli($cd_host, $cd_user, $cd_password, $cd_dbname, $cd_port, $cd_socket);
 
-//if there's an error with the connection
-
+// Check for connection errors
 if (mysqli_connect_errno()) {
-
-    //the error structure as shown in the network tab of the browser
     $output["status"]["code"] = "300";
     $output["status"]["name"] = "failure";
     $output["status"]["description"] = "database unavailable";
     $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output["data"] = [];
-
-    //close the connection
     mysqli_close($conn);
-
-    //display the error
     echo json_encode($output);
-
-    //exit the script and avoid executing the rest of the code
     exit;
 }
 
-// Prepare the SQL query
-$query = $conn->prepare("SELECT p.id, p.firstName, p.lastName, p.email, p.jobTitle, 
-                         d.id AS departmentID, d.name AS departmentName, l.name AS location
-                         FROM personnel p
-                         LEFT JOIN department d ON d.id = p.departmentID
-                         LEFT JOIN location l ON l.id = d.locationID
-                         WHERE (d.name LIKE ? OR ? = '') AND (l.name LIKE ? OR ? = '')
-                         ORDER BY p.lastName, p.firstName");
+// Validate and sanitize inputs
+$department = isset($_POST["department"]) && is_numeric($_POST["department"]) ? (int) $_POST["department"] : 0;
+$location = isset($_POST["location"]) && is_numeric($_POST["location"]) ? (int) $_POST["location"] : 0;
 
-// Get department and location from the request
-$department = isset($_POST["department"]) ? "%" . $_POST["department"] . "%" : "";
-$location = isset($_POST["location"]) ? "%" . $_POST["location"] . "%" : "";
+// Build the base query
+$sql = "SELECT p.id, p.firstName, p.lastName, p.email, p.jobTitle, 
+               d.id AS departmentID, d.name AS departmentName, l.name AS location
+        FROM personnel p
+        LEFT JOIN department d ON d.id = p.departmentID
+        LEFT JOIN location l ON l.id = d.locationID
+        WHERE 1=1"; // Ensure query is always valid
 
-// Bind parameters correctly
-$query->bind_param("ssss", $department, $department, $location, $location);
+// Add conditions dynamically
+$params = [];
+$types = "";
 
-$query->execute();
+if ($department !== 0) {
+    $sql .= " AND d.id = ?";
+    $types .= "i";
+    $params[] = $department;
+}
 
-//if there's an error with the query
-if (false === $query) {
+if ($location !== 0) {
+    $sql .= " AND l.id = ?";
+    $types .= "i";
+    $params[] = $location;
+}
 
-    //the error structure as shown in the network tab of the browser
+// Add ordering clause
+$sql .= " ORDER BY p.lastName, p.firstName";
+
+// Prepare the query
+$query = $conn->prepare($sql);
+
+if ($query === false) {
     $output['status']['code'] = "400";
     $output['status']['name'] = "executed";
-    $output['status']['description'] = "query failed";
+    $output['status']['description'] = "query preparation failed";
     $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output['data'] = [];
-
-    //close the connection
     mysqli_close($conn);
-
-    //display the error
     echo json_encode($output);
-
-    //exit the script and avoid executing the rest of the code
     exit;
 }
 
-//get the result from the query
-$result = $query->get_result();
-
-//create an array for personnel data
-$personnel = [];
-
-//loop through the personnel data and add it to the array
-
-while ($row = mysqli_fetch_assoc($result)) {
-    //add the row to the personnel array
-    array_push($personnel, $row);
+// Bind parameters dynamically if any
+if (!empty($params)) {
+    $query->bind_param($types, ...$params); // "..." unpacks the array into individual arguments
 }
 
-//the success structure as shown in the network tab of the browser
+// Execute the query
+$query->execute();
+
+// Check for execution errors
+if (!$query) {
+    $output['status']['code'] = "400";
+    $output['status']['name'] = "executed";
+    $output['status']['description'] = "query execution failed";
+    $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+    $output['data'] = [];
+    mysqli_close($conn);
+    echo json_encode($output);
+    exit;
+}
+
+// Fetch the results
+$result = $query->get_result();
+
+// Process results into an array
+$personnel = [];
+while ($row = $result->fetch_assoc()) {
+    $personnel[] = $row;
+}
+
+// Return a successful response
 $output['status']['code'] = "200";
 $output['status']['name'] = "ok";
 $output['status']['description'] = "success";
 $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
 $output['data']['personnel'] = $personnel;
-//close the connection
-mysqli_close($conn);
 
-//display the data
+// Close connection and output response
+mysqli_close($conn);
 echo json_encode($output);
 
 ?>

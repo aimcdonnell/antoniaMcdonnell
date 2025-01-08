@@ -224,19 +224,20 @@ $(window).on("load", function () {
   /*REFRESH PERSONNEL TABLE*/
   
   $("#personnelBtn").on("click", function () {
+    $("#filterBtn").attr("disabled", false);
     refreshPersonnelTable();
-
   });
 
   /*REFRESH DEPARTMENT TABLE*/
 
   $("#departmentsBtn").on("click", function () {
+    $("#filterBtn").attr("disabled", true);
     refreshDepartmentTable();
   });
   
   /*REFRESH LOCATION TABLE*/
   $("#locationsBtn").on("click", function () {
-   
+    $("#filterBtn").attr("disabled", true);
     refreshLocationTable();
   });
   
@@ -249,16 +250,12 @@ $("#filterBtn").on("click", function () {
       success: function (response) {
         const result = typeof response === "string" ? JSON.parse(response) : response;
         if (result.status.name == "ok") {
-          const departmentFilter = $("#departmentFilter");
+          const departmentFilter = $("#filterPersonnelByDepartment");
           departmentFilter.empty();
+          departmentFilter.append(`<option value="0">All</option>`)
           result.data.forEach(department => {
             departmentFilter.append(`
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="department" value="${department.departmentName}" id="dept_${department.departmentID}">
-                <label class="form-check-label" for="dept_${department.departmentID}">
-                  ${department.departmentName}
-                </label>
-              </div>
+                <option value="${department.departmentID}">${department.departmentName}</option>
             `);
           });
         } else {
@@ -278,16 +275,12 @@ $("#filterBtn").on("click", function () {
       success: function (response) {
         const result = typeof response === "string" ? JSON.parse(response) : response;
         if (result.status.name == "ok") {
-          const locationFilter = $("#locationFilter");
+          const locationFilter = $("#filterPersonnelByLocation");
           locationFilter.empty();
+          locationFilter.append(`<option value="0">All</option>`)
           result.data.forEach(location => {
             locationFilter.append(`
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="location" value="${location.locationName}" id="loc_${location.locationID}">
-                <label class="form-check-label" for="loc_${location.locationID}">
-                  ${location.locationName}
-                </label>
-              </div>
+              <option value="${location.locationID}">${location.locationName}</option>
             `);
           });
         } else {
@@ -307,79 +300,31 @@ $("#filterBtn").on("click", function () {
   }
 });
 
-    /*FILTER PERSONNEL APPLY BUTTON */
-    $("#applyFilters").on("click", function () {
-      var selectedDepartment = $("#departmentFilter input:radio:checked").val() || "";
-      var selectedLocation = $("#locationFilter input:radio:checked").val() || "";
-      $.ajax({
-        url: "libs/php/filterPersonnel.php",
-        type: "POST",
-        data: { department: selectedDepartment, location: selectedLocation },
-        dataType: "json",
-        success: function (result) {
-          if (result.status.name == "ok") {
-            $("#personnelTableBody").empty();
-            if (result.data.personnel.length > 0) {
-            result.data.personnel.forEach(personnel => {
-              $("#personnelTableBody").append(`
-                <tr>
-                  <td class="align-middle text-nowrap">
-                    <a href="#" class="view-personnel-name" data-id=${personnel.id}>${personnel.lastName}, ${personnel.firstName}</a>
-                  </td>
-                  <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.departmentName}</td>
-                  <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
-                  <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
-                  <td class="text-end text-nowrap">
-                      <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
-                        <i class="fa-solid fa-pencil fa-fw"></i>
-                      </button>
-                      <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${personnel.id}>
-                        <i class="fa-solid fa-trash fa-fw"></i>
-                      </button>
-                    </td>
-                </tr>
-              `);
-            });
-            } else {
-              $("#filterPersonnelModal").modal("hide");
-              $("#personnelTableBody").append(`
-              <tr>
-                <td colspan="5" class="text-center">No personnel found.</td>
-              </tr>              
-            `);
-            }
-          } else {
-            $("#popupErrorModal .modal-body").text("Error fetching personnel.");
-            $("#popupErrorModal").modal("show");
-          }
-        },
-        error: function () {
-          $("#popupErrorModal .modal-body").text("Failed to fetch filtered personnel.");
-          $("#popupErrorModal").modal("show");
-        }
-      });
-    });
-    
-    /*FILTER PERSONNEL CLEAR FILTERS BUTTON */
-$("#clearFilters").on("click", function () {
-  $("#filterForm input:radio").prop("checked", false);
-  $("#personnelTableBody").empty();
+/*FILTER PERSONNEL ON CHANGE BUTTON */
+$("#filterPersonnelByDepartment").on("change", function () {
+  if (this.value > 0) {
+      $("#filterPersonnelByLocation").val(0);
+  }
+  var selectedDepartment = $("#filterPersonnelByDepartment option:selected").val() || "";
+  console.log("selected department", selectedDepartment);
+  var selectedLocation = $("#filterPersonnelByLocation option:selected").val() || "";
+  console.log("selected location", selectedLocation);
   $.ajax({
-    url: "libs/php/updateAllPersonnel.php",
-    type: "GET",
+    url: "libs/php/filterPersonnel.php",
+    type: "POST",
+    data: { department: selectedDepartment, location: selectedLocation },
     dataType: "json",
     success: function (result) {
-      if (result.status.name == "ok" && Array.isArray(result.data)) {
-        if (result.data.length === 0) {
+      console.log("filter personnel by department", result.data);
+      if (result.status.name == "ok") {
+        $("#personnelTableBody").empty();
+        if (result.data.personnel.length > 0) {
+        result.data.personnel.forEach(personnel => {
           $("#personnelTableBody").append(`
-            <tr><td colspan="6">No personnel data available</td></tr>
-            `);
-        } else {
-          result.data.forEach(function (personnel) {
-            $("#personnelTableBody").append(`
             <tr>
-              <td class="align-middle text-nowrap"><a href="#" class="view-personnel-name" data-id=${personnel.id}>${personnel.lastName}, ${personnel.firstName}
-                </a></td>
+              <td class="align-middle text-nowrap">
+                <a href="#" class="view-personnel-name" data-id=${personnel.id}>${personnel.lastName}, ${personnel.firstName}</a>
+              </td>
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.departmentName}</td>
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
               <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
@@ -392,16 +337,77 @@ $("#clearFilters").on("click", function () {
                   </button>
                 </td>
             </tr>
-            `);
-          });
+          `);
+        });
+        } else {
+          $("#personnelTableBody").append(`
+          <tr>
+            <td colspan="5" class="text-center">No personnel found.</td>
+          </tr>              
+        `);
         }
       } else {
-        $("#popupErrorModal .modal-body").text("No personnel data available.");
+        $("#popupErrorModal .modal-body").text("Error fetching personnel.");
         $("#popupErrorModal").modal("show");
       }
     },
-    error: function (jqXHR, textStatus, errorThrown) {
-      $("#popupErrorModal .modal-body").text("Error refreshing personnel table.");
+    error: function () {
+      $("#popupErrorModal .modal-body").text("Failed to fetch filtered personnel.");
+      $("#popupErrorModal").modal("show");
+    }
+  });
+});
+
+$("#filterPersonnelByLocation").on("change", function () {
+  if (this.value > 0) {
+      $("#filterPersonnelByDepartment").val(0);
+  }
+  var selectedDepartment = $("#filterPersonnelByDepartment option:selected").val() || "";
+  var selectedLocation = $("#filterPersonnelByLocation option:selected").val() || "";
+  $.ajax({
+    url: "libs/php/filterPersonnel.php",
+    type: "POST",
+    data: { department: selectedDepartment, location: selectedLocation },
+    dataType: "json",
+    success: function (result) {
+      console.log("filter personnel by location", result.data);
+      if (result.status.name == "ok") {
+        $("#personnelTableBody").empty();
+        if (result.data.personnel.length > 0) {
+        result.data.personnel.forEach(personnel => {
+          $("#personnelTableBody").append(`
+            <tr>
+              <td class="align-middle text-nowrap">
+                <a href="#" class="view-personnel-name" data-id=${personnel.id}>${personnel.lastName}, ${personnel.firstName}</a>
+              </td>
+              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.departmentName}</td>
+              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
+              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
+              <td class="text-end text-nowrap">
+                  <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
+                    <i class="fa-solid fa-pencil fa-fw"></i>
+                  </button>
+                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${personnel.id}>
+                    <i class="fa-solid fa-trash fa-fw"></i>
+                  </button>
+                </td>
+            </tr>
+          `);
+        });
+        } else {
+          $("#personnelTableBody").append(`
+          <tr>
+            <td colspan="5" class="text-center">No personnel found.</td>
+          </tr>              
+        `);
+        }
+      } else {
+        $("#popupErrorModal .modal-body").text("Error fetching personnel.");
+        $("#popupErrorModal").modal("show");
+      }
+    },
+    error: function () {
+      $("#popupErrorModal .modal-body").text("Failed to fetch filtered personnel.");
       $("#popupErrorModal").modal("show");
     }
   });
