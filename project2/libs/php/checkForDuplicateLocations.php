@@ -47,18 +47,18 @@ if ($result->num_rows > 0) {
         ];
     }
 
-    $output["status"]["code"] = "200";
-    $output["status"]["name"] = "ok";
+    $output["status"]["code"] = "409";
+    $output["status"]["name"] = "conflict";
     $output["status"]["description"] = "Duplicate locations found.";
     $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-    $output["data"] = ["exists" => true, "duplicates" => $duplicates];
+    $output["data"] = ["duplicates" => $duplicates];
 } else {
     //No duplicates found
     $output["status"]["code"] = "200";
     $output["status"]["name"] = "ok";
     $output["status"]["description"] = "No duplicate locations found.";
     $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-    $output["data"] = ["exists" => false];
+    $output["data"] = [];
 
 }
 

@@ -990,10 +990,10 @@ $("#deleteDepartmentConfirmationModal .btn-delete-department-confirmation").on("
   });
 });
 
- /*ADD LOCATION FORM SUBMIT */
- $("#addLocationModal").on("submit", "#addLocationForm", function (e) {
+/*ADD LOCATION FORM SUBMIT */
+$("#addLocationModal").on("submit", "#addLocationForm", function (e) {
   e.preventDefault();
-   
+    
   $.ajax({
     url: "libs/php/checkForDuplicateLocations.php",
     type: "POST",
@@ -1002,37 +1002,35 @@ $("#deleteDepartmentConfirmationModal .btn-delete-department-confirmation").on("
       locationName: $("#addLocationName").val(),
     },
     success: function (result) {
-      if (result.status.name == "ok" && result.data.exists) {
-        
-        let locationName = result.data.duplicates[0].locationName;
-        $("#addLocationModal").modal("hide");
-
-        $("#addLocationErrorModal .modal-body").text(`The location ${locationName} cannot be added as it already exists in the directory.`);;
-        $("#addLocationErrorModal").modal("show");
+      if (result.status.name == "ok") {
+          $.ajax({
+              url: "libs/php/addLocation.php",
+              type: "POST",
+              dataType: "json",
+              data: {
+                locationName: $("#addLocationName").val(),
+                locationID: $("#addLocation option:selected").val()
+              },
+              success: function (result) {
+                if (result.status.name == "ok") {
+                  let locationName = result.data.location.name;
+              
+                  $("#addLocationModal").modal("hide");
+                  $("#addLocationSuccessModal .modal-body").text(`The location ${locationName} was successfully added.`);
+                  $("#addLocationSuccessModal").modal("show");
+                  refreshLocationTable();
+                }
+              },
+              error: function (jqXHR, textStatus, errorThrown) {
+                $("#popupErrorModal .modal-body").text("Failed to add location.");
+                $("#popupErrorModal").modal("show");
+              }
+            });
       } else {
-        $.ajax({
-          url: "libs/php/addLocation.php",
-          type: "POST",
-          dataType: "json",
-          data: {
-            locationName: $("#addLocationName").val(),
-            locationID: $("#addLocation option:selected").val()
-          },
-          success: function (result) {
-            if (result.status.name == "ok") {
-              let locationName = result.data.location.name;
-          
-              $("#addLocationModal").modal("hide");
-              $("#addLocationSuccessModal .modal-body").text(`The location ${locationName} was successfully added.`);
-              $("#addLocationSuccessModal").modal("show");
-              refreshLocationTable();
-            }
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-            $("#popupErrorModal .modal-body").text("Failed to add location.");
-            $("#popupErrorModal").modal("show");
-          }
-        });
+          let locationName = result.data.duplicates[0].locationName;
+          $("#addLocationModal").modal("hide");
+          $("#addLocationErrorModal .modal-body").text(`The location ${locationName} cannot be added as it already exists in the directory.`);;
+          $("#addLocationErrorModal").modal("show");
       }
     },
     error: function (jqXHR, textStatus, errorThrown) {
