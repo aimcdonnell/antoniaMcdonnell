@@ -712,7 +712,7 @@ $(document).on("click", ".delete-personnel-btn", function () {
 
     if (firstName && lastName) {
       $("#deletePersonnelConfirmationModal .modal-body").html(
-        `Are you sure that you want to remove the entry <b>${firstName} ${lastName}</b>?`
+        `Are you sure that you want to remove the entry for <b>${firstName} ${lastName}</b>?`
       );
       $("#deletePersonnelConfirmationModal").modal("show");
     } else {
@@ -795,7 +795,7 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
                   let locationName = result.data.department.locationName;
               
                   $("#addDepartmentModal").modal("hide");
-                  $("#addDepartmentSuccessModal .modal-body").html(`The entry <b>${departmentName}</b> was successfully added.`);
+                  $("#addDepartmentSuccessModal .modal-body").html(`The entry for <b>${departmentName}</b> was successfully added.`);
                   $("#addDepartmentSuccessModal").modal("show");
                   refreshDepartmentTable();
                 }
@@ -929,7 +929,7 @@ $(document).on("click", ".delete-department-btn", function () {
 
         if (personnelCount > 0) {
 
-          const errorMessage = `You cannot remove the entry <b>${departmentName}</b> because it has <b>${personnelCount}</b> employee${personnelCount === 1 ? "" : "s"} assigned to it.`;
+          const errorMessage = `You cannot remove the entry for <b>${departmentName}</b> because it has <b>${personnelCount}</b> employee${personnelCount === 1 ? "" : "s"} assigned to it.`;
           $("#deleteDepartmentErrorModal .modal-body").html(errorMessage);
           $("#deleteDepartmentErrorModal").modal("show");
 
@@ -937,7 +937,7 @@ $(document).on("click", ".delete-department-btn", function () {
         } else {
 
           $("#deleteDepartmentConfirmationModal .modal-body").html(
-            `Are you sure that you want to remove the entry <b>${departmentName.trim()}</b>?`
+            `Are you sure that you want to remove the entry for <b>${departmentName.trim()}</b>?`
           );
           $("#deleteDepartmentConfirmationModal").modal("show");
         }
@@ -971,7 +971,7 @@ $("#deleteDepartmentConfirmationModal .btn-delete-department-confirmation").on("
         $("#deleteDepartmentConfirmationModal").modal("hide");
 
         refreshDepartmentTable();
-        $("#deleteDepartmentSuccessModal .modal-body").html(`The entry <b>${departmentName}</b> was successfully removed.`);
+        $("#deleteDepartmentSuccessModal .modal-body").html(`The entry for <b>${departmentName}</b> was successfully removed.`);
         $("#deleteDepartmentSuccessModal").modal("show");
 
       } else {
@@ -1014,7 +1014,7 @@ $("#addLocationModal").on("submit", "#addLocationForm", function (e) {
                   let locationName = result.data.location.name;
               
                   $("#addLocationModal").modal("hide");
-                  $("#addLocationSuccessModal .modal-body").html(`The entry <b>${locationName}</b> was successfully added.`);
+                  $("#addLocationSuccessModal .modal-body").html(`The entry for <b>${locationName}</b> was successfully added.`);
                   $("#addLocationSuccessModal").modal("show");
                   refreshLocationTable();
                 }
@@ -1027,7 +1027,7 @@ $("#addLocationModal").on("submit", "#addLocationForm", function (e) {
       } else {
           let locationName = result.data.duplicates[0].locationName;
           $("#addLocationModal").modal("hide");
-          $("#addLocationErrorModal .modal-body").html(`The entry <b>${locationName}</b> cannot be added as it already exists in the directory.`);;
+          $("#addLocationErrorModal .modal-body").html(`The entry for <b>${locationName}</b> cannot be added as it already exists in the directory.`);;
           $("#addLocationErrorModal").modal("show");
       }
     },
@@ -1129,7 +1129,7 @@ $(document).on("click", ".delete-location-btn", function () {
         const locationName = result.data.locationName;
 
         if (departmentCount > 0) {
-          const errorMessage = `You cannot remove the entry <b>${locationName}</b> because it has <b>${departmentCount}</b> department${departmentCount === 1 ? "" : "s"} assigned to it.`;
+          const errorMessage = `You cannot remove the entry for <b>${locationName}</b> because it has <b>${departmentCount}</b> department${departmentCount === 1 ? "" : "s"} assigned to it.`;
           
           $("#deleteLocationConfirmationModal").modal("hide");
           $("#deleteLocationErrorModal").modal("hide");
@@ -1140,7 +1140,7 @@ $(document).on("click", ".delete-location-btn", function () {
           return;
         } else {
           $("#deleteLocationConfirmationModal .modal-body").html(
-            `Are you sure that you want to remove the entry <b>${locationName}</b>?`
+            `Are you sure that you want to remove the entry for <b>${locationName}</b>?`
           );
           $("#deleteLocationConfirmationModal").modal("show");
         }
@@ -1172,7 +1172,7 @@ $("#deleteLocationConfirmationModal .btn-delete-location-confirmation").on("clic
         $("#deleteLocationConfirmationModal").modal("hide");
         
         refreshLocationTable();
-        $("#deleteLocationSuccessModal .modal-body").html(`The entry <b>${locationName}</b> was successfully deleted.`);
+        $("#deleteLocationSuccessModal .modal-body").html(`The entry for <b>${locationName}</b> was successfully deleted.`);
         $("#deleteLocationSuccessModal").modal("show");
 
       } else {
