@@ -556,7 +556,7 @@ $("#addPersonnelModal").on("submit", "#addPersonnelForm", function (e) {
               firstName = result.data.firstName;
               lastName = result.data.lastName;
               $("#addPersonnelModal").modal("hide");
-              $("#addPersonnelErrorModal .modal-body").text(`${firstName} ${lastName} cannot be added as it already exists in the directory.`);
+              $("#addPersonnelErrorModal .modal-body").html(`The entry for <b>${firstName}</b> <b>${lastName}</b> cannot be added as it already exists in the directory.`);
               $("#addPersonnelErrorModal").modal("show");
           }
       },
@@ -708,27 +708,30 @@ $(document).on("click", ".delete-personnel-btn", function () {
   $.ajax({
     url: "libs/php/getPersonnelDetails.php",
     type: "GET",
-    data: { id: deletePersonnelId },
+    data: 
+    { 
+      id: deletePersonnelId,
+    },
     success: function (response) {
-  const result = typeof response === "string" ? JSON.parse(response) : response;
+      const result = typeof response === "string" ? JSON.parse(response) : response;
+      if (result.status.name == "ok") {
+        let firstName = result.data.firstName;
+        let lastName = result.data.lastName;
 
-  if (result.status.name == "ok") {
-    let firstName = result.data.firstName;
-    let lastName = result.data.lastName;
-
-    if (firstName && lastName) {
-      $("#deletePersonnelConfirmationModal .modal-body").html(
-        `Are you sure that you want to remove the entry for <b>${firstName} ${lastName}</b>?`
-      );
-      $("#deletePersonnelConfirmationModal").modal("show");
-    } else {
-      $("#popupErrorModal .modal-body").text("Incomplete personnel data.");
-      $("#popupErrorModal").modal("show");
-    }
-  } else {
-    $("#popupErrorModal .modal-body").text("Personnel not found.");
-    $("#popupErrorModal").modal("show");
-  }
+        if (firstName && lastName) {
+          $("#deletePersonnelConfirmationMessage").html(
+            `Are you sure that you want to remove the entry for <b>${firstName} ${lastName}</b>?`
+          );
+          $("#deletePersonnelId").val(deletePersonnelId);
+          $("#deletePersonnelConfirmationModal").modal("show");
+        } else {
+          $("#popupErrorModal .modal-body").text("Incomplete personnel data.");
+          $("#popupErrorModal").modal("show");
+        }
+      } else {
+        $("#popupErrorModal .modal-body").text("Personnel not found.");
+        $("#popupErrorModal").modal("show");
+      }
 },
     error: function (xhr, status, error) {
       $("#popupErrorModal .modal-body").text("Error retrieving personnel details.");
@@ -740,9 +743,9 @@ $(document).on("click", ".delete-personnel-btn", function () {
 
 
 /* DELETE PERSONNEL CONFIRMATION MODAL*/
-$("#deletePersonnelConfirmationModal .btn-delete-personnel-confirmation").on("click", function() {
-  const deletePersonnelId = $("#deletePersonnelConfirmationModal").data("id");
-
+$("#deletePersonnelForm").on("submit", function(e) {
+  e.preventDefault();
+  const deletePersonnelId = $("#deletePersonnelId").val();
   $.ajax({
     url: "libs/php/deletePersonnelByID.php",
     type: "POST",
@@ -813,9 +816,8 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
           });
       } else {
           let departmentName = result.data.duplicates[0].departmentName;
-          let departmentLocation = result.data.duplicates[0].locationName;
           $("#addDepartmentModal").modal("hide");
-          $("#addDepartmentErrorModal .modal-body").text(`The ${departmentName} department in ${departmentLocation} cannot be added as it already exists in the directory.`);
+          $("#addDepartmentErrorModal .modal-body").html(`The entry for <b>${departmentName}</b> cannot be added as it already exists in the directory.`);
           $("#addDepartmentErrorModal").modal("show");
       }
     },
@@ -931,20 +933,18 @@ $(document).on("click", ".delete-department-btn", function () {
       if (result.status.name == "ok" && result.data) {
         const personnelCount = result.data.personnelCount;
         const departmentName = result.data.departmentName;
-        const locationName = result.data.locationName;
 
         if (personnelCount > 0) {
-
           const errorMessage = `You cannot remove the entry for <b>${departmentName}</b> because it has <b>${personnelCount}</b> employee${personnelCount === 1 ? "" : "s"} assigned to it.`;
           $("#deleteDepartmentErrorModal .modal-body").html(errorMessage);
           $("#deleteDepartmentErrorModal").modal("show");
-
           return;
         } else {
-
-          $("#deleteDepartmentConfirmationModal .modal-body").html(
+          // Update the modal with the confirmation message
+          $("#deleteDepartmentConfirmationMessage").html(
             `Are you sure that you want to remove the entry for <b>${departmentName.trim()}</b>?`
           );
+          $("#deleteDepartmentId").val(deleteDepartmentId);
           $("#deleteDepartmentConfirmationModal").modal("show");
         }
       } else {
@@ -952,16 +952,17 @@ $(document).on("click", ".delete-department-btn", function () {
         $("#popupErrorModal").modal("show");
       }
     },
-    error: function (jqXHR, textStatus, errorThrown) {
+    error: function () {
       $("#popupErrorModal .modal-body").text("Error retrieving department details.");
       $("#popupErrorModal").modal("show");
     },
   });
-});  
+});
 
-/* DELETE DEPARTMENT CONFIRMATION MODAL*/
-$("#deleteDepartmentConfirmationModal .btn-delete-department-confirmation").on("click", function() {
-  const deleteDepartmentId = $("#deleteDepartmentConfirmationModal").data("id");
+// DELETE DEPARTMENT FORM SUBMIT
+$("#deleteDepartmentForm").on("submit", function (e) {
+  e.preventDefault();
+  const deleteDepartmentId = $("#deleteDepartmentId").val();
   $.ajax({
     url: "libs/php/deleteDepartmentByID.php",
     type: "POST",
@@ -969,27 +970,24 @@ $("#deleteDepartmentConfirmationModal .btn-delete-department-confirmation").on("
     data: {
       id: deleteDepartmentId,
     },
-    success: function(result) {
+    success: function (result) {
       if (result.status.name == "ok") {
-        let departmentName = result.data.departmentName;
+        const departmentName = result.data.departmentName;
 
         $("#deleteDepartmentConfirmationModal").modal("hide");
-
         refreshDepartmentTable();
         $("#deleteDepartmentSuccessModal .modal-body").html(`The entry for <b>${departmentName}</b> was successfully removed.`);
         $("#deleteDepartmentSuccessModal").modal("show");
-
       } else {
         $("#deleteDepartmentConfirmationModal").modal("hide");
         $("#popupErrorModal .modal-body").text("Error deleting department.");
         $("#popupErrorModal").modal("show");
-        
       }
-},
-    error: function(jqXHR, textStatus, errorThrown) {
+    },
+    error: function () {
       $("#popupErrorModal .modal-body").text("Error deleting department.");
       $("#popupErrorModal").modal("show");
-    }
+    },
   });
 });
 
@@ -1116,6 +1114,7 @@ $(document).on("click", ".delete-location-btn", function () {
 
   if (!deleteLocationId) {
     $("#popupErrorModal .modal-body").text("Invalid location ID.");
+    $("#popupErrorModal").modal("show");
     return;
   }
 
@@ -1136,17 +1135,18 @@ $(document).on("click", ".delete-location-btn", function () {
         if (departmentCount > 0) {
           const errorMessage = `You cannot remove the entry for <b>${locationName}</b> because it has <b>${departmentCount}</b> department${departmentCount === 1 ? "" : "s"} assigned to it.`;
           
-          $("#deleteLocationConfirmationModal").modal("hide");
-          $("#deleteLocationErrorModal").modal("hide");
+          // $("#deleteLocationConfirmationModal").modal("hide");
+          // $("#deleteLocationErrorModal").modal("hide");
           
           $("#deleteLocationErrorModal .modal-body").html(errorMessage);
           $("#deleteLocationErrorModal").modal("show");
           
           return;
         } else {
-          $("#deleteLocationConfirmationModal .modal-body").html(
+          $("#deleteLocationConfirmationMessage").html(
             `Are you sure that you want to remove the entry for <b>${locationName}</b>?`
           );
+          $("#deleteLocationId").val(deleteLocationId);
           $("#deleteLocationConfirmationModal").modal("show");
         }
       } else {
@@ -1162,7 +1162,8 @@ $(document).on("click", ".delete-location-btn", function () {
 });  
 
 /* DELETE LOCATION CONFIRMATION MODAL*/
-$("#deleteLocationConfirmationModal .btn-delete-location-confirmation").on("click", function() {
+$("#deleteLocationForm").on("submit", function(e) {
+  e.preventDefault();
   const deleteLocationId = $("#deleteLocationConfirmationModal").data("id");
   $.ajax({
     url: "libs/php/deleteLocationByID.php",

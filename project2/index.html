@@ -434,10 +434,13 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      
+        <div id="deletePersonnelConfirmationMessage"></div>
+        <form id="deletePersonnelForm">
+          <input type="hidden" id="deletePersonnelId"> 
+        </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-primary btn-sm btn-delete-personnel-confirmation">YES</button>
+        <button type="submit" form="deletePersonnelForm" class="btn btn-outline-primary btn-sm btn-delete-personnel-confirmation">YES</button>
         <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">NO</button>
       </div>
     </div>
@@ -611,15 +614,20 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-
+            <div id="deleteDepartmentConfirmationMessage"></div>
+            <form id="deleteDepartmentForm">
+              <input type="hidden" id="deleteDepartmentId">
+            </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-primary btn-sm btn-delete-department-confirmation">YES</button>
+            <button type="submit" form="deleteDepartmentForm" class="btn btn-outline-primary btn-sm btn-delete-department-confirmation">YES</button>
             <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">NO</button>
           </div>
         </div>
       </div>
     </div>
+
+
 
     <!--Delete Department Success Modal -->
     <div id="deleteDepartmentSuccessModal" class="modal fade" tabindex="-1" data-bs-backdrop="false" aria-labelledby="deleteDepartmentSuccessModal" aria-hidden="true">
@@ -790,13 +798,16 @@
               <h5 class="modal-title" id="deleteLocationConfirmationModal">Remove location?</h5>
               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-outline-primary btn-sm btn-delete-location-confirmation">YES</button>
-              <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">NO</button>
-            </div>
+              <div class="modal-body">
+                <div id="deleteLocationConfirmationMessage"></div>
+                <form id="deleteLocationForm">
+                  <input type="hidden" id="deleteLocationId">
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" form="deleteLocationForm" class="btn btn-outline-primary btn-sm btn-delete-location-confirmation">YES</button>
+                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">NO</button>
+              </div>
           </div>
         </div>
       </div>
