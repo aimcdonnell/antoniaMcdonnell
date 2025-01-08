@@ -767,7 +767,7 @@ $("#deletePersonnelConfirmationModal .btn-delete-personnel-confirmation").on("cl
 });
 
 
-  /*ADD DEPARTMENT FORM SUBMIT */
+/*ADD DEPARTMENT FORM SUBMIT */
 $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
   e.preventDefault(); 
   
@@ -780,37 +780,37 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
       locationID: $("#addDepartmentLocation option:selected").val()
     },
     success: function (result) {
-      if (result.status.name == "ok" && result.data.exists) {
-        let departmentName = result.data.duplicates[0].departmentName;
-        let departmentLocation = result.data.duplicates[0].locationName;
-        $("#addDepartmentModal").modal("hide");
-
-        $("#addDepartmentErrorModal .modal-body").text(`The ${departmentName} department in ${departmentLocation} cannot be added as it already exists in the directory.`);;
-        $("#addDepartmentErrorModal").modal("show");
+      if (result.status.name == "ok") {
+          $.ajax({
+              url: "libs/php/addDepartment.php",
+              type: "POST",
+              dataType: "json",
+              data: {
+                departmentName: $("#addDepartmentName").val(),
+                locationID: $("#addDepartmentLocation option:selected").val()
+              },
+              success: function (result) {
+                if (result.status.name == "ok") {
+                  let departmentName = result.data.department.departmentName;
+                  let locationName = result.data.department.locationName;
+              
+                  $("#addDepartmentModal").modal("hide");
+                  $("#addDepartmentSuccessModal .modal-body").text(`The ${departmentName} department in ${locationName} was successfully added.`);
+                  $("#addDepartmentSuccessModal").modal("show");
+                  refreshDepartmentTable();
+                }
+              },
+              error: function (jqXHR, textStatus, errorThrown) {
+                $("#popupErrorModal .modal-body").text("Failed to add department.");
+                $("#popupErrorModal").modal("show");
+              }
+          });
       } else {
-        $.ajax({
-          url: "libs/php/addDepartment.php",
-          type: "POST",
-          dataType: "json",
-          data: {
-            departmentName: $("#addDepartmentName").val(),
-            locationID: $("#addDepartmentLocation option:selected").val()
-          },
-          success: function (result) {
-            if (result.status.name == "ok") {
-              let departmentName = result.data.department.departmentName;
-              let locationName = result.data.department.locationName;
-          
-              $("#addDepartmentModal").modal("hide");
-              $("#addDepartmentSuccessModal .modal-body").text(`The ${departmentName} department in ${locationName} was successfully added.`);
-              $("#addDepartmentSuccessModal").modal("show");
-              refreshDepartmentTable();
-            }
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-            $("#addDepartmentErrorModal .modal-body").text("Failed to add department.");
-          }
-        });
+          let departmentName = result.data.duplicates[0].departmentName;
+          let departmentLocation = result.data.duplicates[0].locationName;
+          $("#addDepartmentModal").modal("hide");
+          $("#addDepartmentErrorModal .modal-body").text(`The ${departmentName} department in ${departmentLocation} cannot be added as it already exists in the directory.`);
+          $("#addDepartmentErrorModal").modal("show");
       }
     },
     error: function (jqXHR, textStatus, errorThrown) {
@@ -821,139 +821,139 @@ $("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
 });
 
 /*EDIT DEPARTMENT MODAL */
-  $("#editDepartmentModal").on("show.bs.modal", function (e) {
+$("#editDepartmentModal").on("show.bs.modal", function (e) {
 
-  $("#editDepartmentName").val("");
+$("#editDepartmentName").val("");
 
-  const editDepartmentId = $(e.relatedTarget).attr("data-id");
+const editDepartmentId = $(e.relatedTarget).attr("data-id");
 
-  $(this).data("editDepartmentId", editDepartmentId);
+$(this).data("editDepartmentId", editDepartmentId);
 
-  $.ajax({
-    url: "libs/php/getDepartmentByID.php",
-    type: "POST",
-    dataType: "json",
-    data: {
-      departmentID: editDepartmentId,
-    },
-    success: function (result) {
-      if (result.status.name == "ok" && result.data.department.length > 0) {
-        let department = result.data.department[0];
-        let location = result.data.locations;
-       $("#editDepartmentName").val(department.departmentName);
+$.ajax({
+  url: "libs/php/getDepartmentByID.php",
+  type: "POST",
+  dataType: "json",
+  data: {
+    departmentID: editDepartmentId,
+  },
+  success: function (result) {
+    if (result.status.name == "ok" && result.data.department.length > 0) {
+      let department = result.data.department[0];
+      let location = result.data.locations;
+      $("#editDepartmentName").val(department.departmentName);
 
-        $("#editDepartmentLocation").html("");
-        $.each(location, function () {
-          $("#editDepartmentLocation").append(
-            $("<option>", {
-              value: this.locationID,
-              text: this.locationName,
-            })
-          );
-        });
+      $("#editDepartmentLocation").html("");
+      $.each(location, function () {
+        $("#editDepartmentLocation").append(
+          $("<option>", {
+            value: this.locationID,
+            text: this.locationName,
+          })
+        );
+      });
 
-        $("#editDepartmentLocation").val(department.locationID);
-      } else {
-        $("#popupErrorModal .modal-body").text("No department data found.");
-        $("#popupErrorModal").modal("show");
-      }
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-      $("#popupErrorModal .modal-body").text("Error retrieving data.");
+      $("#editDepartmentLocation").val(department.locationID);
+    } else {
+      $("#popupErrorModal .modal-body").text("No department data found.");
       $("#popupErrorModal").modal("show");
-    },
-  });
+    }
+  },
+  error: function (jqXHR, textStatus, errorThrown) {
+    $("#popupErrorModal .modal-body").text("Error retrieving data.");
+    $("#popupErrorModal").modal("show");
+  },
+});
 });
 
 /* EDIT DEPARTMENT FORM SUBMIT*/
 $("#editDepartmentForm").on("submit", function (e) {
-  
-  e.preventDefault();
 
-  const editDepartmentId = $("#editDepartmentModal").data("editDepartmentId");
+e.preventDefault();
+
+const editDepartmentId = $("#editDepartmentModal").data("editDepartmentId");
+
+$.ajax({
+  url: "libs/php/updateDepartmentByID.php",
+  type: "POST",
+  dataType: "json",
+  data: {
+    id: editDepartmentId,
+    departmentName: $("#editDepartmentName").val(),
+    locationID: $("#editDepartmentLocation option:selected").val(),
+  },
+  success: function (result) {
+    let departmentName = result.data[0].departmentName;
+    let locationName = result.data[0].locationName;
+    if (result.status.name == "ok") {
+      $("#editDepartmentModal").modal("hide");
+
+      $("#editDepartmentSuccessModal .modal-body").text(`The ${departmentName} department in ${locationName} was successfully updated.`);
+      $("#editDepartmentSuccessModal").modal("show");
+      refreshDepartmentTable();
+    } else {
+      $("#popupErrorModal .modal-body").text("Error updating the department.");
+      $("#popupErrorModal").modal("show");
+    }
+  },
+  error: function (jqXHR, textStatus, errorThrown) {
+    $("#popupErrorModal .modal-body").text("An error occurred in the edit department submit form.");
+    $("#popupErrorModal").modal("show");
+  },
+});
+});
+
+/*DELETE DEPARTMENT MODAL */
+$(document).on("click", ".delete-department-btn", function () {
+  const deleteDepartmentId = $(this).data("id");
+
+  if (!deleteDepartmentId) {
+    $("#popupErrorModal .modal-body").text("Invalid department ID.");
+    $("#popupErrorModal").modal("show");
+    return;
+  }
+
+  $("#deleteDepartmentConfirmationModal").data("id", deleteDepartmentId);
 
   $.ajax({
-    url: "libs/php/updateDepartmentByID.php",
-    type: "POST",
+    url: "libs/php/getDepartmentDetails.php",
+    type: "GET",
     dataType: "json",
     data: {
-      id: editDepartmentId,
-      departmentName: $("#editDepartmentName").val(),
-      locationID: $("#editDepartmentLocation option:selected").val(),
+      id: deleteDepartmentId,
     },
     success: function (result) {
-      let departmentName = result.data[0].departmentName;
-      let locationName = result.data[0].locationName;
-      if (result.status.name == "ok") {
-        $("#editDepartmentModal").modal("hide");
+      if (result.status.name == "ok" && result.data) {
+        const personnelCount = result.data.personnelCount;
+        const departmentName = result.data.departmentName;
+        const locationName = result.data.locationName;
 
-        $("#editDepartmentSuccessModal .modal-body").text(`The ${departmentName} department in ${locationName} was successfully updated.`);
-        $("#editDepartmentSuccessModal").modal("show");
-        refreshDepartmentTable();
+        if (personnelCount > 0) {
+
+          const errorMessage = `Sorry, you cannot delete ${departmentName} in ${locationName} as there ${
+            personnelCount === 1 ? "is" : "are"
+          } ${personnelCount} employee${personnelCount === 1 ? "" : "s"} assigned to it.`;
+          $("#deleteDepartmentErrorModal .modal-body").text(errorMessage);
+          $("#deleteDepartmentErrorModal").modal("show");
+
+          return;
+        } else {
+
+          $("#deleteDepartmentConfirmationModal .modal-body").text(
+            `Are you sure you want to delete the ${departmentName} department in ${locationName}?`
+          );
+          $("#deleteDepartmentConfirmationModal").modal("show");
+        }
       } else {
-        $("#popupErrorModal .modal-body").text("Error updating the department.");
+        $("#popupErrorModal .modal-body").text("Error retrieving department details.");
         $("#popupErrorModal").modal("show");
       }
     },
     error: function (jqXHR, textStatus, errorThrown) {
-      $("#popupErrorModal .modal-body").text("An error occurred in the edit department submit form.");
+      $("#popupErrorModal .modal-body").text("Error retrieving department details.");
       $("#popupErrorModal").modal("show");
     },
   });
-});
-
-/*DELETE DEPARTMENT MODAL */
-  $(document).on("click", ".delete-department-btn", function () {
-    const deleteDepartmentId = $(this).data("id");
-  
-    if (!deleteDepartmentId) {
-      $("#popupErrorModal .modal-body").text("Invalid department ID.");
-      $("#popupErrorModal").modal("show");
-      return;
-    }
-  
-    $("#deleteDepartmentConfirmationModal").data("id", deleteDepartmentId);
-  
-    $.ajax({
-      url: "libs/php/getDepartmentDetails.php",
-      type: "GET",
-      dataType: "json",
-      data: {
-        id: deleteDepartmentId,
-      },
-      success: function (result) {
-        if (result.status.name == "ok" && result.data) {
-          const personnelCount = result.data.personnelCount;
-          const departmentName = result.data.departmentName;
-          const locationName = result.data.locationName;
-  
-          if (personnelCount > 0) {
-
-            const errorMessage = `Sorry, you cannot delete ${departmentName} in ${locationName} as there ${
-              personnelCount === 1 ? "is" : "are"
-            } ${personnelCount} employee${personnelCount === 1 ? "" : "s"} assigned to it.`;
-            $("#deleteDepartmentErrorModal .modal-body").text(errorMessage);
-            $("#deleteDepartmentErrorModal").modal("show");
-
-            return;
-          } else {
-
-            $("#deleteDepartmentConfirmationModal .modal-body").text(
-              `Are you sure you want to delete the ${departmentName} department in ${locationName}?`
-            );
-            $("#deleteDepartmentConfirmationModal").modal("show");
-          }
-        } else {
-          $("#popupErrorModal .modal-body").text("Error retrieving department details.");
-          $("#popupErrorModal").modal("show");
-        }
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        $("#popupErrorModal .modal-body").text("Error retrieving department details.");
-        $("#popupErrorModal").modal("show");
-      },
-    });
-  });  
+});  
 
 /* DELETE DEPARTMENT CONFIRMATION MODAL*/
 $("#deleteDepartmentConfirmationModal .btn-delete-department-confirmation").on("click", function() {
@@ -1108,57 +1108,57 @@ $("#editLocationForm").on("submit", function (e) {
 })
 
 /*DELETE LOCATION MODAL */
-  $(document).on("click", ".delete-location-btn", function () {
-    const deleteLocationId = $(this).data("id");
+$(document).on("click", ".delete-location-btn", function () {
+  const deleteLocationId = $(this).data("id");
 
-    if (!deleteLocationId) {
-      $("#popupErrorModal .modal-body").text("Invalid location ID.");
-      return;
-    }
-  
-    $("#deleteLocationConfirmationModal").data("id", deleteLocationId);
-  
-    $.ajax({
-      url: "libs/php/getLocationDetails.php",
-      type: "GET",
-      dataType: "json",
-      data: {
-        id: deleteLocationId,
-      },
-      success: function (result) {
-        if (result.status.name == "ok" && result.data) {
-          const departmentCount = result.data.departmentCount;
-          const locationName = result.data.locationName;
+  if (!deleteLocationId) {
+    $("#popupErrorModal .modal-body").text("Invalid location ID.");
+    return;
+  }
 
-          if (departmentCount > 0) {
-            const errorMessage = `Sorry, you cannot delete ${locationName} as there ${
-              departmentCount === 1 ? "is" : "are"
-            } ${departmentCount} department${departmentCount === 1 ? "" : "s"} assigned to it.`;
-            
-            $("#deleteLocationConfirmationModal").modal("hide");
-            $("#deleteLocationErrorModal").modal("hide");
-            
-            $("#deleteLocationErrorModal .modal-body").text(errorMessage);
-            $("#deleteLocationErrorModal").modal("show");
-            
-            return;
-          } else {
-            $("#deleteLocationConfirmationModal .modal-body").text(
-              `Are you sure you want to delete the location ${locationName}?`
-            );
-            $("#deleteLocationConfirmationModal").modal("show");
-          }
+  $("#deleteLocationConfirmationModal").data("id", deleteLocationId);
+
+  $.ajax({
+    url: "libs/php/getLocationDetails.php",
+    type: "GET",
+    dataType: "json",
+    data: {
+      id: deleteLocationId,
+    },
+    success: function (result) {
+      if (result.status.name == "ok" && result.data) {
+        const departmentCount = result.data.departmentCount;
+        const locationName = result.data.locationName;
+
+        if (departmentCount > 0) {
+          const errorMessage = `Sorry, you cannot delete ${locationName} as there ${
+            departmentCount === 1 ? "is" : "are"
+          } ${departmentCount} department${departmentCount === 1 ? "" : "s"} assigned to it.`;
+          
+          $("#deleteLocationConfirmationModal").modal("hide");
+          $("#deleteLocationErrorModal").modal("hide");
+          
+          $("#deleteLocationErrorModal .modal-body").text(errorMessage);
+          $("#deleteLocationErrorModal").modal("show");
+          
+          return;
         } else {
-          $("#popupErrorModal .modal-body").text("Error retrieving location details.");
-          $("#popupErrorModal").modal("show");
+          $("#deleteLocationConfirmationModal .modal-body").text(
+            `Are you sure you want to delete the location ${locationName}?`
+          );
+          $("#deleteLocationConfirmationModal").modal("show");
         }
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-        $("#popupErrorModal .modal-body").text("An error occurred when trying to retrieve location details.");
+      } else {
+        $("#popupErrorModal .modal-body").text("Error retrieving location details.");
         $("#popupErrorModal").modal("show");
-      },
-    });
-  });  
+      }
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+      $("#popupErrorModal .modal-body").text("An error occurred when trying to retrieve location details.");
+      $("#popupErrorModal").modal("show");
+    },
+  });
+});  
 
 /* DELETE LOCATION CONFIRMATION MODAL*/
 $("#deleteLocationConfirmationModal .btn-delete-location-confirmation").on("click", function() {
