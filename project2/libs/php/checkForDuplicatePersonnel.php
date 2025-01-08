@@ -43,14 +43,13 @@ $result = $query->get_result();
 if ($result->num_rows > 0) {
     // Duplicate found
     $row = $result->fetch_assoc();
-    $output["status"]["code"] = "200";
-    $output["status"]["name"] = "ok";
+    $output["status"]["code"] = "409";
+    $output["status"]["name"] = "conflict";
     $output["status"]["description"] = "Duplicate personnel found";
     $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
     $output["data"] = [
         "firstName" => $row["firstName"], 
-        "lastName" =>$row["lastName"], 
-        "exists" => true
+        "lastName" =>$row["lastName"]
     ];
 } else {
     // No duplicates found
@@ -58,7 +57,7 @@ if ($result->num_rows > 0) {
     $output["status"]["name"] = "ok";
     $output["status"]["description"] = "No duplicate personnel found";
     $output["status"]["returnedIn"] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-    $output["data"] = ["exists" => false];
+    $output["data"] = [];
 }
 
 // Close the connection

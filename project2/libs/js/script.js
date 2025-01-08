@@ -518,13 +518,7 @@ $("#addPersonnelModal").on("submit", "#addPersonnelForm", function (e) {
           email: email
       },
       success: function (result) {
-          if (result.status.name == "ok" && result.data.exists) {
-              firstName = result.data.firstName;
-              lastName = result.data.lastName;
-              $("#addPersonnelModal").modal("hide");
-              $("#addPersonnelErrorModal .modal-body").text(`${firstName} ${lastName} cannot be added as it already exists in the directory.`);
-              $("#addPersonnelErrorModal").modal("show");
-          } else {
+          if (result.status.name == "ok") {
               $.ajax({
                   url: "libs/php/addPersonnel.php",
                   type: "POST",
@@ -551,7 +545,13 @@ $("#addPersonnelModal").on("submit", "#addPersonnelForm", function (e) {
                     $("#popupErrorModal .modal-body").text("Failed to add personnel.");
                     $("#popupErrorModal").modal("show");
                   }
-              });
+              });                
+          } else {
+              firstName = result.data.firstName;
+              lastName = result.data.lastName;
+              $("#addPersonnelModal").modal("hide");
+              $("#addPersonnelErrorModal .modal-body").text(`${firstName} ${lastName} cannot be added as it already exists in the directory.`);
+              $("#addPersonnelErrorModal").modal("show");
           }
       },
       error: function (jqXHR, textStatus, errorThrown) {
