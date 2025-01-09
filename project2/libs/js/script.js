@@ -8,41 +8,86 @@ $(window).on("load", function () {
       });
   }
 
-/*GET ALL PERSONNEL DYNAMICALLY */
-  $.ajax({
-    url: "libs/php/getAll.php",
-    type: "GET",
-    dataType: "json",
-    success: function (result) {
-      if (result.status.name == "ok") {
-        result.data.forEach((personnel) => {
-          $("#personnelTableBody").append(`
-            <tr>
-              <td class="align-middle text-nowrap">
-                <a href="#" class="view-personnel-name" data-id=${personnel.id}>${personnel.lastName}, ${personnel.firstName}
-                </a>
-              </td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.departmentName}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
-              <td class="text-end text-nowrap">
-                  <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
-                    <i class="fa-solid fa-pencil fa-fw"></i>
-                  </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${personnel.id}>
-                    <i class="fa-solid fa-trash fa-fw"></i>
-                  </button>
-                </td>
-            </tr>
-          `);
-        });
-      }
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-      $("#popupErrorModal .modal-body").text("Error fetching personnel data.");
-      $("#popupErrorModal").modal("show");
+/* GET ALL PERSONNEL DYNAMICALLY */
+$.ajax({
+  url: "libs/php/getAll.php",
+  type: "GET",
+  dataType: "json",
+  success: function (result) {
+    if (result.status.name == "ok") {
+      const personnelFrag = document.createDocumentFragment();
+
+      result.data.forEach((personnel) => {
+        const row = document.createElement("tr");
+
+        // Name Column
+        const nameCell = document.createElement("td");
+        nameCell.classList = "align-middle text-nowrap";
+        const nameLink = document.createElement("a");
+        nameLink.href = "#";
+        nameLink.classList = "view-personnel-name";
+        nameLink.setAttribute("data-id", personnel.id);
+        nameLink.textContent = `${personnel.lastName}, ${personnel.firstName}`;
+        nameCell.append(nameLink);
+        row.append(nameCell);
+
+        // Department Column
+        const departmentCell = document.createElement("td");
+        departmentCell.classList = "align-middle text-nowrap d-none d-md-table-cell";
+        departmentCell.textContent = personnel.departmentName;
+        row.append(departmentCell);
+
+        // Location Column
+        const locationCell = document.createElement("td");
+        locationCell.classList = "align-middle text-nowrap d-none d-md-table-cell";
+        locationCell.textContent = personnel.location;
+        row.append(locationCell);
+
+        // Email Column
+        const emailCell = document.createElement("td");
+        emailCell.classList = "align-middle text-nowrap d-none d-md-table-cell";
+        emailCell.textContent = personnel.email;
+        row.append(emailCell);
+
+        // Action Buttons Column
+        const actionsCell = document.createElement("td");
+        actionsCell.classList = "align-middle text-end text-nowrap";
+
+        // Edit Button
+        const editButton = document.createElement("button");
+        editButton.type = "button";
+        editButton.classList = "btn btn-primary btn-sm edit-personnel-btn";
+        editButton.setAttribute("data-bs-toggle", "modal");
+        editButton.setAttribute("data-bs-target", "#editPersonnelModal");
+        editButton.setAttribute("data-id", personnel.id);
+        editButton.innerHTML = `<i class="fa-solid fa-pencil fa-fw"></i>`;
+        actionsCell.append(editButton);
+
+        // Add spacing between buttons
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.classList = "btn btn-primary btn-sm delete-personnel-btn ms-2"; // Added Bootstrap's ms-2 class for spacing
+        deleteButton.setAttribute("data-id", personnel.id);
+        deleteButton.innerHTML = `<i class="fa-solid fa-trash fa-fw"></i>`;
+        actionsCell.append(deleteButton);
+
+        row.append(actionsCell);
+
+
+        // Append row to the fragment
+        personnelFrag.appendChild(row);
+      });
+
+      // Append the fragment to the table body
+      $("#personnelTableBody").append(personnelFrag);
     }
-  });
+  },
+  error: function () {
+    $("#popupErrorModal .modal-body").text("Error fetching personnel data.");
+    $("#popupErrorModal").modal("show");
+  }
+});
+
 
   /*GET ALL DEPARTMENTS DYNAMICALLY */
   $.ajax({
