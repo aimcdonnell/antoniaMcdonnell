@@ -507,7 +507,7 @@ $("#addBtn").on("click", function () {
 });
    
 /* ADD PERSONNEL FORM SUBMIT */
-$("#addPersonnelModal").on("submit", "#addPersonnelForm", function (e) {
+$("#addPersonnelForm").on("submit", function (e) {
   e.preventDefault();
 
   let firstName = $("#addPersonnelFirstName").val();
@@ -769,7 +769,7 @@ $("#deletePersonnelForm").on("submit", function(e) {
 
 
 /*ADD DEPARTMENT FORM SUBMIT */
-$("#addDepartmentModal").on("submit", "#addDepartmentForm", function (e) {
+$("#addDepartmentForm").on("submit", function (e) {
   e.preventDefault(); 
   
   $.ajax({
@@ -974,7 +974,7 @@ $("#deleteDepartmentForm").on("submit", function (e) {
 });
 
 /*ADD LOCATION FORM SUBMIT */
-$("#addLocationModal").on("submit", "#addLocationForm", function (e) {
+$("#addLocationForm").on("submit", function (e) {
   e.preventDefault();
     
   $.ajax({

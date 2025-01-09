@@ -138,8 +138,6 @@
     
               <div class="form-floating mb-3">
                 <select class="form-select" id="filterPersonnelByDepartment" placeholder="Department">
-                  <option value="0">All</option>
-                  <option value="12">Business Development</option>
                 </select>
                 <label for="filterPersonnelByDepartment">Department</label>
               </div>
@@ -259,6 +257,9 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+            <form id="addPersonnelErrorForm">
+
+            </form>
           
           </div>
           <div class="modal-footer">
@@ -466,7 +467,9 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            
+            <form id="addDepartmentErrorForm">
+
+            </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-primary btn-sm btn-add-error" data-bs-dismiss="modal">OK</button>
@@ -548,7 +551,8 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            
+            <form id="deleteDepartmentErrorForm">
+            </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-primary btn-sm btn-delete-error" data-bs-dismiss="modal">OK</button>
@@ -605,7 +609,8 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            
+            <form id="addLocationErrorForm">
+            </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-primary btn-sm btn-add-error" data-bs-dismiss="modal">OK</button>
@@ -695,7 +700,9 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            
+            <form id="popupErrorForm">
+
+            </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">OK</button>
