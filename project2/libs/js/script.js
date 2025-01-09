@@ -565,21 +565,28 @@ $("#addPersonnelForm").on("submit", function (e) {
   });
 });
 
-/*VIEW PERSONNEL MODAL */
-$("#personnelTableBody").on("click", ".view-personnel-name", function(e) {
+  /*VIEW PERSONNEL MODAL */
+  // Delegate the event listener for dynamically added elements
+$(document).on("click", ".view-personnel-name", function (e) {
   e.preventDefault();
-  
-  const personnelId = $(this).data("id");
-  
+
+  const viewPersonnelId = $(this).data("id"); // Retrieve data-id from the clicked link
+
+  if (!viewPersonnelId) {
+    alert("Personnel ID is missing!");
+    return;
+  }
+
+  // Show the modal and make AJAX call to fetch details
+  $("#viewPersonnelModal").data("viewPersonnelId", viewPersonnelId).modal("show");
+
   $.ajax({
     url: "libs/php/getPersonnelById.php",
     type: "GET",
     dataType: "json",
-    data: {
-      id: personnelId
-    },
+    data: { id: viewPersonnelId },
     success: function (result) {
-      if (result.status.name == "ok") {
+      if (result.status.name === "ok") {
         const personnel = result.data.personnel[0];
         $("#viewPersonnelFirstName").val(personnel.firstName);
         $("#viewPersonnelLastName").val(personnel.lastName);
@@ -587,16 +594,17 @@ $("#personnelTableBody").on("click", ".view-personnel-name", function(e) {
         $("#viewPersonnelEmailAddress").val(personnel.email);
         $("#viewPersonnelLocation").val(personnel.location);
         $("#viewPersonnelDepartment").val(personnel.departmentName);
-
-        $("#viewPersonnelModal").modal("show");
+      } else {
+        alert("No personnel data found.");
       }
-    }, 
-    error: function (jqXHR, textStatus, errorThrown) {
-      $("#popupErrorModal .modal-body").text("Failed to fetch view personnel details.");
-      $("#popupErrorModal").modal("show");
-    }
-  })
-})
+    },
+    error: function () {
+      alert("Failed to fetch personnel details.");
+    },
+  });
+});
+
+  
   
 /*EDIT PERSONNEL MODAL */
 $("#editPersonnelModal").on("show.bs.modal", function (e) {
