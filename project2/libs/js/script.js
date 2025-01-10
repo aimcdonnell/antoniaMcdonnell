@@ -81,13 +81,20 @@ $.ajax({
       // Append the fragment to the table body
       $("#personnelTableBody").append(personnelFrag);
     } else{
-      $("#popupErrorModal .modal-body").text("Error fetching personnel data.");
-      $("#popupErrorModal").modal("show");
+
+      document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch all personnel data.";
+
+      const modalElement = document.getElementById("popupErrorModal");
+      const bootstrapModal = new bootstrap.Modal(modalElement);
+      bootstrapModal.show();
     }
   },
   error: function () {
-    $("#popupErrorModal .modal-body").text("Error fetching personnel data.");
-    $("#popupErrorModal").modal("show");
+    document.querySelector("#popupErrorModal .modal-body").textContent = "Error fetching all personnel data.";
+
+    const modalElement = document.getElementById("popupErrorModal");
+    const bootstrapModal = new bootstrap.Modal(modalElement);
+    bootstrapModal.show();
   }
 });
 
@@ -143,13 +150,23 @@ $.ajax({
         });
         $("#departmentTableBody").append(departmentFrag);
       } else {
-        $("#popupErrorModal .modal-body").text("Failed to fetch departments.");
-        $("#popupErrorModal").modal("show");
+        // Set the text content of the modal body
+        document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch all departments.";
+
+        // Show the modal (assuming Bootstrap 5 is used)
+        const modalElement = document.getElementById("popupErrorModal");
+        const bootstrapModal = new bootstrap.Modal(modalElement);
+        bootstrapModal.show();
       }
     },
     error: function () {
-      $("#popupErrorModal .modal-body").text("Failed to fetch departments.");
-      $("#popupErrorModal").modal("show");
+       // Set the text content of the modal body
+       document.querySelector("#popupErrorModal .modal-body").textContent = "Error fetching all departments.";
+
+       // Show the modal (assuming Bootstrap 5 is used)
+       const modalElement = document.getElementById("popupErrorModal");
+       const bootstrapModal = new bootstrap.Modal(modalElement);
+       bootstrapModal.show();
     }
   });  
 
@@ -198,13 +215,22 @@ $.ajax({
         });
         $("#locationTableBody").append(locationFrag);
       } else {
-        $("#popupErrorModal .modal-body").text("Failed to fetch locations.");
-        $("#popupErrorModal").modal("show");
+        // Set the text content of the modal body
+        document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch all locations from.";
+
+        // Show the modal (assuming Bootstrap 5 is used)
+        const modalElement = document.getElementById("popupErrorModal");
+        const bootstrapModal = new bootstrap.Modal(modalElement);
+        bootstrapModal.show();
       }
     },
     error: function () {
-      $("#popupErrorModal .modal-body").text("Failed to fetch locations.");
-      $("#popupErrorModal").modal("show");
+      document.querySelector("#popupErrorModal .modal-body").textContent = "Error fetching all locations.";
+
+      // Show the modal (assuming Bootstrap 5 is used)
+      const modalElement = document.getElementById("popupErrorModal");
+      const bootstrapModal = new bootstrap.Modal(modalElement);
+      bootstrapModal.show();
     }
   });
 
@@ -403,13 +429,19 @@ $.ajax({
           departmentTableBody.appendChild(noDataRow);
         }
     } else {
-      $("#popupErrorModal .modal-body").text("SearchAll API Response Error.");
-      $("#popupErrorModal").modal("show");
+      document.querySelector("#popupErrorModal .modal-body").textContent = "Error searching all data.";
+
+      const modalElement = document.getElementById("popupErrorModal");
+      const bootstrapModal = new bootstrap.Modal(modalElement);
+      bootstrapModal.show();
     }
         },
         error: function (xhr, status, error) {
-          $("#popupErrorModal .modal-body").text("SearchAll AJAX Error.");
-          $("#popupErrorModal").modal("show");
+          document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to search all data.";
+
+          const modalElement = document.getElementById("popupErrorModal");
+          const bootstrapModal = new bootstrap.Modal(modalElement);
+          bootstrapModal.show();
         }
     });
 });
@@ -449,7 +481,6 @@ $.ajax({
   });
   
 $("#filterBtn").on("click", function () {
-  if ($("#personnelBtn").hasClass("active")) {
     $("#filterPersonnelModal").modal("show");
     $.ajax({
       url: "libs/php/getAllDepartments.php",
@@ -467,19 +498,25 @@ $("#filterBtn").on("click", function () {
             const option = document.createElement("option");
             option.value = department.departmentID;
             option.textContent = department.departmentName;
-            frag.appendChild(option); // Append each option to the fragment
+            frag.appendChild(option);
           });
-          // Append the entire fragment to the department filter in one go
+  
           departmentFilter.appendChild(frag);
           
         } else {
-          $("#popupErrorModal .modal-body").text("Get all departments API response error.");
-          $("#popupErrorModal").modal("show");
+          document.querySelector("#popupErrorModal .modal-body").textContent = "Error getting all departments.";
+
+          const modalElement = document.getElementById("popupErrorModal");
+          const bootstrapModal = new bootstrap.Modal(modalElement);
+          bootstrapModal.show();
         }
       },
       error: function () {
-        $("#popupErrorModal .modal-body").text("Failed to fetch departments.");
-        $("#popupErrorModal").modal("show");
+        document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch departments.";
+
+        const modalElement = document.getElementById("popupErrorModal");
+        const bootstrapModal = new bootstrap.Modal(modalElement);
+        bootstrapModal.show();
       }
     });
 
@@ -504,21 +541,22 @@ $("#filterBtn").on("click", function () {
           // Append the entire fragment to the department filter in one go
           locationFilter.appendChild(frag);
         } else {
-          $("#popupErrorModal .modal-body").text("Get all locations API response error.");
-          $("#popupErrorModal").modal("show");
+          document.querySelector("#popupErrorModal .modal-body").textContent = "Error getting all locations.";
+
+          const modalElement = document.getElementById("popupErrorModal");
+          const bootstrapModal = new bootstrap.Modal(modalElement);
+          bootstrapModal.show();
         }
       },
       error: function () {
-        $("#popupErrorModal .modal-body").text("Failed to fetch locations.");
-        $("#popupErrorModal").modal("show");
+        document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch all locations.";
+        const modalElement = document.getElementById("popupErrorModal");
+        const bootstrapModal = new bootstrap.Modal(modalElement);
+        bootstrapModal.show();
       }
     });
 
-  } else {
-    $("#filterErrorModal .modal-body").text("Filtering is only available for personnel.");
-    $("#filterErrorModal").modal("show");
-  }
-});
+  });
 
 /*FILTER PERSONNEL ON CHANGE BUTTON */
 $("#filterPersonnelByDepartment").on("change", function () {
@@ -589,7 +627,7 @@ $("#filterPersonnelByDepartment").on("change", function () {
           // Add spacing between buttons
           const deleteButton = document.createElement("button");
           deleteButton.type = "button";
-          deleteButton.classList = "btn btn-primary btn-sm delete-personnel-btn ms-2"; // Added Bootstrap's ms-2 class for spacing
+          deleteButton.classList = "btn btn-primary btn-sm delete-personnel-btn ms-2";
           deleteButton.setAttribute("data-id", personnel.id);
           deleteButton.innerHTML = `<i class="fa-solid fa-trash fa-fw"></i>`;
           actionsCell.append(deleteButton);
@@ -613,13 +651,19 @@ $("#filterPersonnelByDepartment").on("change", function () {
             personnelTableBody.appendChild(noDataRow);
         }
       } else {
-        $("#popupErrorModal .modal-body").text("Error fetching personnel.");
-        $("#popupErrorModal").modal("show");
+        document.querySelector("#popupErrorModal .modal-body").textContent = "Error fetching personnel for filtering by department.";
+
+        const modalElement = document.getElementById("popupErrorModal");
+        const bootstrapModal = new bootstrap.Modal(modalElement);
+        bootstrapModal.show();
       }
     },
     error: function () {
-      $("#popupErrorModal .modal-body").text("Failed to fetch filtered personnel.");
-      $("#popupErrorModal").modal("show");
+      document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch personnel for filtering by department.";
+
+      const modalElement = document.getElementById("popupErrorModal");
+      const bootstrapModal = new bootstrap.Modal(modalElement);
+      bootstrapModal.show();
     }
   });
 });
@@ -690,7 +734,7 @@ $("#filterPersonnelByLocation").on("change", function () {
           // Add spacing between buttons
           const deleteButton = document.createElement("button");
           deleteButton.type = "button";
-          deleteButton.classList = "btn btn-primary btn-sm delete-personnel-btn ms-2"; // Added Bootstrap's ms-2 class for spacing
+          deleteButton.classList = "btn btn-primary btn-sm delete-personnel-btn ms-2";
           deleteButton.setAttribute("data-id", personnel.id);
           deleteButton.innerHTML = `<i class="fa-solid fa-trash fa-fw"></i>`;
           actionsCell.append(deleteButton);
@@ -712,13 +756,19 @@ $("#filterPersonnelByLocation").on("change", function () {
           personnelTableBody.appendChild(noDataRow);
         }
       } else {
-        $("#popupErrorModal .modal-body").text("Error fetching personnel.");
-        $("#popupErrorModal").modal("show");
+      document.querySelector("#popupErrorModal .modal-body").textContent = "Error fetching personnel for filtering by location.";
+
+      const modalElement = document.getElementById("popupErrorModal");
+      const bootstrapModal = new bootstrap.Modal(modalElement);
+      bootstrapModal.show();
       }
     },
     error: function () {
-      $("#popupErrorModal .modal-body").text("Failed to fetch filtered personnel.");
-      $("#popupErrorModal").modal("show");
+      document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch personnel to filter by location.";
+
+      const modalElement = document.getElementById("popupErrorModal");
+      const bootstrapModal = new bootstrap.Modal(modalElement);
+      bootstrapModal.show();
     }
   });
 });
@@ -731,7 +781,10 @@ $("#addBtn").on("click", function () {
 
   /* 1ST CONDITION: ADD PERSONNEL */
   if ($("#personnelBtn").hasClass("active")) {
-      $("#addPersonnelModal").modal("show");
+      const modalElement = document.getElementById("addPersonnelModal");
+      const bootstrapModal = new bootstrap.Modal(modalElement);
+      bootstrapModal.show();
+
       $.ajax({
           url: "libs/php/getAllDepartments.php",
           type: "GET",
@@ -741,24 +794,30 @@ $("#addBtn").on("click", function () {
                 const frag = document.createDocumentFragment();
                 const addDepartment = document.getElementById("addPersonnelDepartment");
                 addDepartment.innerHTML = `<option value="0">All</option>`;
-                $("#addPersonnelDepartment").html("");
+                document.getElementById("addPersonnelDepartment").innerHTML = "" ;
                 result.data.forEach((department) => {
                   const option = document.createElement("option");
                   option.value = department.departmentID;
                   option.textContent = department.departmentName;
-                  frag.appendChild(option); // Append each option to the fragment
+                  frag.appendChild(option);
                 });
-                // Append the entire fragment to the department filter in one go
                 addDepartment.appendChild(frag);    
               } else {
-                $("#popupErrorModal .modal-body").text("Failed to fetch departments.");
-                $("#popupErrorModal").modal("show");
+                document.querySelector("#popupErrorModal .modal-body").textContent = "Error fetching departments to add personnel.";
+
+                const modalElement = document.getElementById("popupErrorModal");
+                const bootstrapModal = new bootstrap.Modal(modalElement);
+                bootstrapModal.show();
                   
               }
           },
           error: function (jqXHR, textStatus, errorThrown) {
-            $("#popupErrorModal .modal-body").text("Failed to fetch departments for Add Personnel modal.");
-            $("#popupErrorModal").modal("show");
+            document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch departments to add personnel.";
+            
+            const modalElement = document.getElementById("popupErrorModal");
+            const bootstrapModal = new bootstrap.Modal(modalElement);
+            bootstrapModal.show();
+            
           },
       });
 
@@ -771,7 +830,8 @@ $("#addBtn").on("click", function () {
                 const frag = document.createDocumentFragment();
                 const addLocation = document.getElementById("addPersonnelLocation");
                 addLocation.innerHTML = `<option value="0">All</option>`;
-                  $("#addPersonnelLocation").html("");
+                document.getElementById("addPersonnelLocation").innerHTML = "";
+
                   result.data.forEach((location) => {
                     const option = document.createElement("option");
                     option.value = location.locationID;
@@ -780,44 +840,65 @@ $("#addBtn").on("click", function () {
                   });
                   addLocation.appendChild(frag);
               } else {
-                  $("#popupErrorModal .modal-body").text("Failed to fetch locations for Add Personnel modal.");
-                  $("#popupErrorModal").modal("show");
+                document.querySelector("#popupErrorModal .modal-body").textContent = "Error fetching locations to add personnel.";
+
+                const modalElement = document.getElementById("popupErrorModal");
+                const bootstrapModal = new bootstrap.Modal(modalElement);
+                bootstrapModal.show();
               }
+          }, error: function (jqXHR, textStatus, errorThrown) {
+              document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch locations to add personnel.";
+
+                const modalElement = document.getElementById("popupErrorModal");
+                const bootstrapModal = new bootstrap.Modal(modalElement);
+                bootstrapModal.show();
           }
       });
 
   /* 2ND CONDITION: ADD DEPARTMENT */
   } else if ($("#departmentsBtn").hasClass("active")) {
-    $("#addDepartmentModal").modal("show");
+    const modalElement = document.getElementById("addDepartmentModal");
+    const bootstrapModal = new bootstrap.Modal(modalElement);
+    bootstrapModal.show();
+    
     $.ajax({
       url: "libs/php/getAllLocations.php",
       type: "GET",
       dataType: "json",
       success: function (result) {
         if (result.status.name == "ok") {
-          $("#addDepartmentLocation").empty();
-
-          result.data.forEach(function(location) {
-            $("#addDepartmentLocation").append(
-              $("<option>", {
-                value: location.locationID,
-                text: location.locationName
-              })
-            );
+          const frag = document.createDocumentFragment();
+          const addLocation = document.getElementById("addDepartmentLocation");
+          addLocation.innerHTML = `<option value="0">All</option>`;
+          document.getElementById("addDepartmentLocation").innerHTML = "";
+          result.data.forEach((location) => {
+            const option = document.createElement("option");
+            option.value = location.locationID;
+            option.textContent = location.locationName;
+            frag.appendChild(option); // Append each option to the fragment
           });
+          addLocation.appendChild(frag);
         } else {
-          $("#popupErrorModal .modal-body").text("Failed to fetch locations for Add Department modal.");
-          $("#popupErrorModal").modal("show");
+          document.querySelector("#popupErrorModal .modal-body").textContent = "Error fetching locations to add department.";
+
+          const modalElement = document.getElementById("popupErrorModal");
+          const bootstrapModal = new bootstrap.Modal(modalElement);
+          bootstrapModal.show();
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        $("#popupErrorModal .modal-body").text("Failed to load locations.");
-        $("#popupErrorModal").modal("show");
+        document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch locations to add department.";
+
+        const modalElement = document.getElementById("popupErrorModal");
+        const bootstrapModal = new bootstrap.Modal(modalElement);
+        bootstrapModal.show();
       }
     });
   /*3RD CONDITION: ADD LOCATION */
   } else {
-      $("#addLocationModal").modal("show");
+      const modalElement = document.getElementById("addLocationModal");
+      const bootstrapModal = new bootstrap.Modal(modalElement);
+      bootstrapModal.show();
   }
   });
     
