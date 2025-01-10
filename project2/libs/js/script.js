@@ -394,11 +394,13 @@ $.ajax({
             });
             $("#departmentTableBody").append(departmentFrag);
         } else {
-            $("#departmentTableBody").append(`
-                <tr>
-                    <td colspan="3" class="text-center">No departments found</td>
-                </tr>
-            `);
+          const noDataRow = document.createElement("tr");
+          const noDataCell = document.createElement("td");
+          noDataCell.colSpan = 2;
+          noDataCell.classList = "text-center";
+          noDataCell.textContent = "No departments found";
+          noDataRow.append(noDataCell);
+          departmentTableBody.appendChild(noDataRow);
         }
     } else {
       $("#popupErrorModal .modal-body").text("SearchAll API Response Error.");
@@ -455,14 +457,21 @@ $("#filterBtn").on("click", function () {
       success: function (response) {
         const result = typeof response === "string" ? JSON.parse(response) : response;
         if (result.status.name == "ok") {
-          const departmentFilter = $("#filterPersonnelByDepartment");
-          departmentFilter.empty();
-          departmentFilter.append(`<option value="0">All</option>`)
+          const departmentFilter = document.getElementById("filterPersonnelByDepartment");
+          departmentFilter.innerHTML = `<option value="0">All</option>`;
+          
+          // Create a document fragment
+          const frag = document.createDocumentFragment();
+          
           result.data.forEach(department => {
-            departmentFilter.append(`
-                <option value="${department.departmentID}">${department.departmentName}</option>
-            `);
+            const option = document.createElement("option");
+            option.value = department.departmentID;
+            option.textContent = department.departmentName;
+            frag.appendChild(option); // Append each option to the fragment
           });
+          // Append the entire fragment to the department filter in one go
+          departmentFilter.appendChild(frag);
+          
         } else {
           $("#popupErrorModal .modal-body").text("Get all departments API response error.");
           $("#popupErrorModal").modal("show");
@@ -480,14 +489,20 @@ $("#filterBtn").on("click", function () {
       success: function (response) {
         const result = typeof response === "string" ? JSON.parse(response) : response;
         if (result.status.name == "ok") {
-          const locationFilter = $("#filterPersonnelByLocation");
-          locationFilter.empty();
-          locationFilter.append(`<option value="0">All</option>`)
+          const locationFilter = document.getElementById("filterPersonnelByLocation");
+          locationFilter.innerHTML = `<option value="0">All</option>`;
+          
+          // Create a document fragment
+          const frag = document.createDocumentFragment();
+          
           result.data.forEach(location => {
-            locationFilter.append(`
-              <option value="${location.locationID}">${location.locationName}</option>
-            `);
+            const option = document.createElement("option");
+            option.value = location.locationID;
+            option.textContent = location.locationName;
+            frag.appendChild(option); // Append each option to the fragment
           });
+          // Append the entire fragment to the department filter in one go
+          locationFilter.appendChild(frag);
         } else {
           $("#popupErrorModal .modal-body").text("Get all locations API response error.");
           $("#popupErrorModal").modal("show");
@@ -522,34 +537,80 @@ $("#filterPersonnelByDepartment").on("change", function () {
     success: function (result) {
       console.log("filter personnel by department", result.data);
       if (result.status.name == "ok") {
+        const personnelFrag = document.createDocumentFragment();
         $("#personnelTableBody").empty();
         if (result.data.personnel.length > 0) {
         result.data.personnel.forEach(personnel => {
-          $("#personnelTableBody").append(`
-            <tr>
-              <td class="align-middle text-nowrap">
-                <a href="#" class="view-personnel-name" data-id=${personnel.id}>${personnel.lastName}, ${personnel.firstName}</a>
-              </td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.departmentName}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
-              <td class="text-end text-nowrap">
-                  <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
-                    <i class="fa-solid fa-pencil fa-fw"></i>
-                  </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${personnel.id}>
-                    <i class="fa-solid fa-trash fa-fw"></i>
-                  </button>
-                </td>
-            </tr>
-          `);
-        });
+          const row = document.createElement("tr");
+
+          // Name Column
+          const nameCell = document.createElement("td");
+          nameCell.classList = "align-middle text-nowrap";
+          const nameLink = document.createElement("a");
+          nameLink.href = "#";
+          nameLink.classList = "view-personnel-name";
+          nameLink.setAttribute("data-id", personnel.id);
+          nameLink.textContent = `${personnel.lastName}, ${personnel.firstName}`;
+          nameCell.append(nameLink);
+          row.append(nameCell);
+
+          // Department Column
+          const departmentCell = document.createElement("td");
+          departmentCell.classList = "align-middle text-nowrap d-none d-md-table-cell";
+          departmentCell.textContent = personnel.departmentName;
+          row.append(departmentCell);
+
+          // Location Column
+          const locationCell = document.createElement("td");
+          locationCell.classList = "align-middle text-nowrap d-none d-md-table-cell";
+          locationCell.textContent = personnel.location;
+          row.append(locationCell);
+
+          // Email Column
+          const emailCell = document.createElement("td");
+          emailCell.classList = "align-middle text-nowrap d-none d-md-table-cell";
+          emailCell.textContent = personnel.email;
+          row.append(emailCell);
+
+          // Action Buttons Column
+          const actionsCell = document.createElement("td");
+          actionsCell.classList = "align-middle text-end text-nowrap";
+
+          // Edit Button
+          const editButton = document.createElement("button");
+          editButton.type = "button";
+          editButton.classList = "btn btn-primary btn-sm edit-personnel-btn";
+          editButton.setAttribute("data-bs-toggle", "modal");
+          editButton.setAttribute("data-bs-target", "#editPersonnelModal");
+          editButton.setAttribute("data-id", personnel.id);
+          editButton.innerHTML = `<i class="fa-solid fa-pencil fa-fw"></i>`;
+          actionsCell.append(editButton);
+
+          // Add spacing between buttons
+          const deleteButton = document.createElement("button");
+          deleteButton.type = "button";
+          deleteButton.classList = "btn btn-primary btn-sm delete-personnel-btn ms-2"; // Added Bootstrap's ms-2 class for spacing
+          deleteButton.setAttribute("data-id", personnel.id);
+          deleteButton.innerHTML = `<i class="fa-solid fa-trash fa-fw"></i>`;
+          actionsCell.append(deleteButton);
+
+          row.append(actionsCell);
+
+
+          // Append row to the fragment
+          personnelFrag.appendChild(row);
+      });
+      // Append the fragment to the table body
+      $("#personnelTableBody").append(personnelFrag);
+
         } else {
-          $("#personnelTableBody").append(`
-          <tr>
-            <td colspan="5" class="text-center">No personnel found.</td>
-          </tr>              
-        `);
+            const noDataRow = document.createElement("tr");
+            const noDataCell = document.createElement("td");
+            noDataCell.colSpan = 5;
+            noDataCell.classList = "text-center";
+            noDataCell.textContent = "No personnel found";
+            noDataRow.append(noDataCell);
+            personnelTableBody.appendChild(noDataRow);
         }
       } else {
         $("#popupErrorModal .modal-body").text("Error fetching personnel.");
@@ -578,33 +639,77 @@ $("#filterPersonnelByLocation").on("change", function () {
       console.log("filter personnel by location", result.data);
       if (result.status.name == "ok") {
         $("#personnelTableBody").empty();
+        const personnelFrag = document.createDocumentFragment();
         if (result.data.personnel.length > 0) {
         result.data.personnel.forEach(personnel => {
-          $("#personnelTableBody").append(`
-            <tr>
-              <td class="align-middle text-nowrap">
-                <a href="#" class="view-personnel-name" data-id=${personnel.id}>${personnel.lastName}, ${personnel.firstName}</a>
-              </td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.departmentName}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
-              <td class="text-end text-nowrap">
-                  <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
-                    <i class="fa-solid fa-pencil fa-fw"></i>
-                  </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${personnel.id}>
-                    <i class="fa-solid fa-trash fa-fw"></i>
-                  </button>
-                </td>
-            </tr>
-          `);
+          const row = document.createElement("tr");
+
+          // Name Column
+          const nameCell = document.createElement("td");
+          nameCell.classList = "align-middle text-nowrap";
+          const nameLink = document.createElement("a");
+          nameLink.href = "#";
+          nameLink.classList = "view-personnel-name";
+          nameLink.setAttribute("data-id", personnel.id);
+          nameLink.textContent = `${personnel.lastName}, ${personnel.firstName}`;
+          nameCell.append(nameLink);
+          row.append(nameCell);
+
+          // Department Column
+          const departmentCell = document.createElement("td");
+          departmentCell.classList = "align-middle text-nowrap d-none d-md-table-cell";
+          departmentCell.textContent = personnel.departmentName;
+          row.append(departmentCell);
+
+          // Location Column
+          const locationCell = document.createElement("td");
+          locationCell.classList = "align-middle text-nowrap d-none d-md-table-cell";
+          locationCell.textContent = personnel.location;
+          row.append(locationCell);
+
+          // Email Column
+          const emailCell = document.createElement("td");
+          emailCell.classList = "align-middle text-nowrap d-none d-md-table-cell";
+          emailCell.textContent = personnel.email;
+          row.append(emailCell);
+
+          // Action Buttons Column
+          const actionsCell = document.createElement("td");
+          actionsCell.classList = "align-middle text-end text-nowrap";
+
+          // Edit Button
+          const editButton = document.createElement("button");
+          editButton.type = "button";
+          editButton.classList = "btn btn-primary btn-sm edit-personnel-btn";
+          editButton.setAttribute("data-bs-toggle", "modal");
+          editButton.setAttribute("data-bs-target", "#editPersonnelModal");
+          editButton.setAttribute("data-id", personnel.id);
+          editButton.innerHTML = `<i class="fa-solid fa-pencil fa-fw"></i>`;
+          actionsCell.append(editButton);
+
+          // Add spacing between buttons
+          const deleteButton = document.createElement("button");
+          deleteButton.type = "button";
+          deleteButton.classList = "btn btn-primary btn-sm delete-personnel-btn ms-2"; // Added Bootstrap's ms-2 class for spacing
+          deleteButton.setAttribute("data-id", personnel.id);
+          deleteButton.innerHTML = `<i class="fa-solid fa-trash fa-fw"></i>`;
+          actionsCell.append(deleteButton);
+
+          row.append(actionsCell);
+
+          // Append row to the fragment
+          personnelFrag.appendChild(row);
         });
+        // Append the fragment to the table body
+        $("#personnelTableBody").append(personnelFrag);
         } else {
-          $("#personnelTableBody").append(`
-          <tr>
-            <td colspan="5" class="text-center">No personnel found.</td>
-          </tr>              
-        `);
+          const noDataRow = document.createElement("tr");
+          const noDataCell = document.createElement("td");
+          noDataCell.colSpan = 5;
+          noDataCell.classList = "text-center";
+          noDataCell.textContent = "No personnel found";
+          noDataRow.append(noDataCell);
+          personnelTableBody.appendChild(noDataRow);
         }
       } else {
         $("#popupErrorModal .modal-body").text("Error fetching personnel.");
@@ -633,15 +738,18 @@ $("#addBtn").on("click", function () {
           dataType: "json",
           success: function (result) {
               if (result.status.name == "ok") {
-                  $("#addPersonnelDepartment").html("");
-                  result.data.forEach((department) => {
-                      $("#addPersonnelDepartment").append(
-                          $("<option>", {
-                              value: department.departmentID,
-                              text: department.departmentName,
-                          })
-                      );
-                  });
+                const frag = document.createDocumentFragment();
+                const addDepartment = document.getElementById("addPersonnelDepartment");
+                addDepartment.innerHTML = `<option value="0">All</option>`;
+                $("#addPersonnelDepartment").html("");
+                result.data.forEach((department) => {
+                  const option = document.createElement("option");
+                  option.value = department.departmentID;
+                  option.textContent = department.departmentName;
+                  frag.appendChild(option); // Append each option to the fragment
+                });
+                // Append the entire fragment to the department filter in one go
+                addDepartment.appendChild(frag);    
               } else {
                 $("#popupErrorModal .modal-body").text("Failed to fetch departments.");
                 $("#popupErrorModal").modal("show");
@@ -660,15 +768,17 @@ $("#addBtn").on("click", function () {
           dataType: "json",
           success: function (result) {
               if (result.status.name == "ok") {
+                const frag = document.createDocumentFragment();
+                const addLocation = document.getElementById("addPersonnelLocation");
+                addLocation.innerHTML = `<option value="0">All</option>`;
                   $("#addPersonnelLocation").html("");
                   result.data.forEach((location) => {
-                      $("#addPersonnelLocation").append(
-                          $("<option>", {
-                              value: location.locationID,
-                              text: location.locationName
-                          })
-                      );
+                    const option = document.createElement("option");
+                    option.value = location.locationID;
+                    option.textContent = location.locationName;
+                    frag.appendChild(option); // Append each option to the fragment
                   });
+                  addLocation.appendChild(frag);
               } else {
                   $("#popupErrorModal .modal-body").text("Failed to fetch locations for Add Personnel modal.");
                   $("#popupErrorModal").modal("show");
@@ -676,48 +786,48 @@ $("#addBtn").on("click", function () {
           }
       });
 
-/* 2ND CONDITION: ADD DEPARTMENT */
-} else if ($("#departmentsBtn").hasClass("active")) {
-  $("#addDepartmentModal").modal("show");
-  $.ajax({
-    url: "libs/php/getAllLocations.php",
-    type: "GET",
-    dataType: "json",
-    success: function (result) {
-      if (result.status.name == "ok") {
-        $("#addDepartmentLocation").empty();
+  /* 2ND CONDITION: ADD DEPARTMENT */
+  } else if ($("#departmentsBtn").hasClass("active")) {
+    $("#addDepartmentModal").modal("show");
+    $.ajax({
+      url: "libs/php/getAllLocations.php",
+      type: "GET",
+      dataType: "json",
+      success: function (result) {
+        if (result.status.name == "ok") {
+          $("#addDepartmentLocation").empty();
 
-        result.data.forEach(function(location) {
-          $("#addDepartmentLocation").append(
-            $("<option>", {
-              value: location.locationID,
-              text: location.locationName
-            })
-          );
-        });
-      } else {
-        $("#popupErrorModal .modal-body").text("Failed to fetch locations for Add Department modal.");
+          result.data.forEach(function(location) {
+            $("#addDepartmentLocation").append(
+              $("<option>", {
+                value: location.locationID,
+                text: location.locationName
+              })
+            );
+          });
+        } else {
+          $("#popupErrorModal .modal-body").text("Failed to fetch locations for Add Department modal.");
+          $("#popupErrorModal").modal("show");
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        $("#popupErrorModal .modal-body").text("Failed to load locations.");
         $("#popupErrorModal").modal("show");
       }
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-      $("#popupErrorModal .modal-body").text("Failed to load locations.");
-      $("#popupErrorModal").modal("show");
-    }
+    });
+  /*3RD CONDITION: ADD LOCATION */
+  } else {
+      $("#addLocationModal").modal("show");
+  }
   });
-/*3RD CONDITION: ADD LOCATION */
-} else {
-    $("#addLocationModal").modal("show");
-}
-});
-   
-/* ADD PERSONNEL FORM SUBMIT */
-$("#addPersonnelForm").on("submit", function (e) {
-  e.preventDefault();
+    
+  /* ADD PERSONNEL FORM SUBMIT */
+  $("#addPersonnelForm").on("submit", function (e) {
+    e.preventDefault();
 
-  let firstName = $("#addPersonnelFirstName").val();
-  let lastName = $("#addPersonnelLastName").val();
-  let email = $("#addPersonnelEmailAddress").val();
+    let firstName = $("#addPersonnelFirstName").val();
+    let lastName = $("#addPersonnelLastName").val();
+    let email = $("#addPersonnelEmailAddress").val();
 
   $.ajax({
       url: "libs/php/checkForDuplicatePersonnel.php",
@@ -744,8 +854,6 @@ $("#addPersonnelForm").on("submit", function (e) {
                   },
                   success: function (result) {
                       if (result.status.name == "ok") {
-                       let firstName = result.data.firstName;
-                       let lastName = result.data.lastName;
                           $("#addPersonnelModal").modal("hide");
                           refreshPersonnelTable();
                       }
@@ -885,8 +993,6 @@ $("#editPersonnelForm").on("submit", function (e) {
     },
     success: function (result) {
       if (result.status.name == "ok") {
-        let firstName = result.data[0].firstName;
-        let lastName = result.data[0].lastName;
         $("#editPersonnelModal").modal("hide");
 
         refreshPersonnelTable();
