@@ -208,106 +208,202 @@ $.ajax({
     }
   });
 
-  $(document).on("ready", function () {
-    $("#searchInp").val(""); // Clear the search input field
-});
-
   $("#searchInp").on("keyup", function () {
     let searchTerm = $(this).val().trim();
 
     $.ajax({
-        url: "libs/php/searchAll.php",
-        type: "POST",
-        data: {
-            txt: searchTerm
-        },
-        dataType: "json",
-        success: function (result) {
-            if (result.status.name == "ok") {
-                $("#personnelTableBody").empty();
-                $("#departmentTableBody").empty();
-                $("#locationTableBody").empty();
+      url: "libs/php/searchAll.php",
+      type: "POST",
+      data: {
+          txt: searchTerm
+      },
+      dataType: "json",
+      success: function (result) {
+        if (result.status.name == "ok") {
+          const personnelTableBody = document.getElementById("personnelTableBody");
+          const departmentTableBody = document.getElementById("departmentTableBody");
+          const locationTableBody = document.getElementById("locationTableBody");
 
-                if (result.data.personnel && result.data.personnel.length > 0) {
-                    result.data.personnel.forEach((item) => {
-                        $("#personnelTableBody").append(`
-                            <tr>
-                                <td class="align-middle text-nowrap">
-                                    <a href="#" class="view-personnel-name" data-id=${item.id}>${item.lastName}, ${item.firstName}</a>
-                                </td>
-                                <td class="align-middle text-nowrap d-none d-md-table-cell">${item.departmentName}</td>
-                                <td class="align-middle text-nowrap d-none d-md-table-cell">${item.locationName}</td>
-                                <td class="align-middle text-nowrap d-none d-md-table-cell">${item.email}</td>
-                                <td class="text-end text-nowrap">
-                                    <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${item.personnelID}>
-                                        <i class="fa-solid fa-pencil fa-fw"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${item.id}>
-                                        <i class="fa-solid fa-trash fa-fw"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        `);
-                    });
-                } else {
-                    $("#personnelTableBody").append(`
-                        <tr>
-                            <td colspan="5" class="text-center">No personnel found</td>
-                        </tr>
-                    `);
-                }
+          // Clear existing content
+          personnelTableBody.innerHTML = "";
+          departmentTableBody.innerHTML = "";
+          locationTableBody.innerHTML = "";
+          /*PERSONNEL TABLE*/
+          if (result.data.personnel && result.data.personnel.length > 0) {
+            const personnelFrag = document.createDocumentFragment();
+              result.data.personnel.forEach((item) => {
+                const row = document.createElement("tr");
 
-                if (result.data.locations && result.data.locations.length > 0) {
-                    result.data.locations.forEach((item) => {
-                        $("#locationTableBody").append(`
-                            <tr>
-                                <td class="align-middle text-nowrap">${item.locationName}</td>
-                                <td class="align-middle text-end text-nowrap">
-                                    <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${item.id}>
-                                        <i class="fa-solid fa-pencil fa-fw"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-id=${item.id}>
-                                        <i class="fa-solid fa-trash fa-fw"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        `);
-                    });
-                } else {
-                    $("#locationTableBody").append(`
-                        <tr>
-                            <td colspan="2" class="text-center">No locations found</td>
-                        </tr>
-                    `);
-                }
-                if (result.data.departments && result.data.departments.length > 0) {
-                    result.data.departments.forEach((item) => {
-                        $("#departmentTableBody").append(`
-                            <tr>
-                                <td class="align-middle text-nowrap">${item.departmentName}</td>
-                                <td class="align-middle text-nowrap d-none d-md-table-cell">${item.locationName}</td>
-                                <td class="align-middle text-end text-nowrap">
-                                    <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${item.id}>
-                                        <i class="fa-solid fa-pencil fa-fw"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-primary btn-sm delete-department-btn" data-id=${item.id}>
-                                        <i class="fa-solid fa-trash fa-fw"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        `);
-                    });
-                } else {
-                    $("#departmentTableBody").append(`
-                        <tr>
-                            <td colspan="3" class="text-center">No departments found</td>
-                        </tr>
-                    `);
-                }
-            } else {
-              $("#popupErrorModal .modal-body").text("SearchAll API Response Error.");
-              $("#popupErrorModal").modal("show");
-            }
+                // Name Column
+                const nameCell = document.createElement("td");
+                nameCell.classList = "align-middle text-nowrap";
+                const nameLink = document.createElement("a");
+                nameLink.href = "#";
+                nameLink.classList = "view-personnel-name";
+                nameLink.setAttribute("data-id", item.id);
+                nameLink.textContent = `${item.lastName}, ${item.firstName}`;
+                nameCell.append(nameLink);
+                row.append(nameCell);
+        
+                // Department Column
+                const departmentCell = document.createElement("td");
+                departmentCell.classList = "align-middle text-nowrap d-none d-md-table-cell";
+                departmentCell.textContent = item.departmentName;
+                row.append(departmentCell);
+        
+                // Location Column
+                const locationCell = document.createElement("td");
+                locationCell.classList = "align-middle text-nowrap d-none d-md-table-cell";
+                locationCell.textContent = item.locationName;
+                row.append(locationCell);
+        
+                // Email Column
+                const emailCell = document.createElement("td");
+                emailCell.classList = "align-middle text-nowrap d-none d-md-table-cell";
+                emailCell.textContent = item.email;
+                row.append(emailCell);
+        
+                // Action Buttons Column
+                const actionsCell = document.createElement("td");
+                actionsCell.classList = "align-middle text-end text-nowrap";
+        
+                // Edit Button
+                const editButton = document.createElement("button");
+                editButton.type = "button";
+                editButton.classList = "btn btn-primary btn-sm edit-personnel-btn";
+                editButton.setAttribute("data-bs-toggle", "modal");
+                editButton.setAttribute("data-bs-target", "#editPersonnelModal");
+                editButton.setAttribute("data-id", item.id);
+                editButton.innerHTML = `<i class="fa-solid fa-pencil fa-fw"></i>`;
+                actionsCell.append(editButton);
+        
+                // Add spacing between buttons
+                const deleteButton = document.createElement("button");
+                deleteButton.type = "button";
+                deleteButton.classList = "btn btn-primary btn-sm delete-personnel-btn ms-2"; // Added Bootstrap's ms-2 class for spacing
+                deleteButton.setAttribute("data-id", item.id);
+                deleteButton.innerHTML = `<i class="fa-solid fa-trash fa-fw"></i>`;
+                actionsCell.append(deleteButton);
+        
+                row.append(actionsCell);
+        
+        
+                // Append row to the fragment
+                personnelFrag.appendChild(row);
+              });
+              personnelTableBody.appendChild(personnelFrag);
+          } else {
+            const noDataRow = document.createElement("tr");
+            const noDataCell = document.createElement("td");
+            noDataCell.colSpan = 5;
+            noDataCell.classList = "text-center";
+            noDataCell.textContent = "No personnel found";
+            noDataRow.append(noDataCell);
+            personnelTableBody.appendChild(noDataRow);
+          }
+
+          /*LOCATIONS TABLE */
+          if (result.data.locations && result.data.locations.length > 0) {
+            const locationFrag = document.createDocumentFragment();
+              result.data.locations.forEach((item) => {
+                const row = document.createElement("tr");
+
+                //Location column
+                const locationCell = document.createElement("td");
+                locationCell.classList = "align-middle-text-nowrap";
+                locationCell.textContent = item.locationName;
+                row.append(locationCell);
+      
+                //Action Buttons column
+                const actionsCell = document.createElement("td");
+                actionsCell.classList = "align-middle text-end text-nowrap";
+      
+                //Edit button
+                const editButton = document.createElement("button");
+                editButton.type = "button";
+                editButton.classList = "btn btn-primary btn-sm edit-location-btn ms-2";
+                editButton.setAttribute("data-bs-toggle", "modal");
+                editButton.setAttribute("data-bs-target", "#editLocationModal");
+                editButton.innerHTML = '<i class="fa-solid fa-pencil fa-fw"></i>';
+                editButton.setAttribute("data-id", item.id);
+                actionsCell.append(editButton);
+      
+                //Delete button
+                const deleteButton = document.createElement("button");
+                deleteButton.type = "button";
+                deleteButton.classList = "btn btn-primary btn-sm delete-location-btn ms-2";
+                deleteButton.setAttribute("data-id", item.id);
+                deleteButton.innerHTML = '<i class="fa-solid fa-trash fa-fw"></i>';
+                actionsCell.append(deleteButton);
+      
+                row.append(actionsCell);
+      
+                locationFrag.appendChild(row);
+              });
+              locationTableBody.appendChild(locationFrag);
+          } else {
+            const noDataRow = document.createElement("tr");
+            const noDataCell = document.createElement("td");
+            noDataCell.colSpan = 2;
+            noDataCell.classList = "text-center";
+            noDataCell.textContent = "No locations found";
+            noDataRow.append(noDataCell);
+            locationTableBody.appendChild(noDataRow);
+          }
+          if (result.data.departments && result.data.departments.length > 0) {
+            const departmentFrag = document.createDocumentFragment();
+            result.data.departments.forEach((item) => {
+              const row = document.createElement("tr");
+              //Department column
+              const departmentCell = document.createElement("td");
+              departmentCell.classList = "align-middle-text-nowrap";
+              departmentCell.textContent = item.departmentName;
+              row.append(departmentCell);
+
+              //Location column
+              const locationCell = document.createElement("td");
+              locationCell.classList = "align-middle-text-nowrap d-none d-md-table-cell";
+              locationCell.textContent = item.locationName;
+              row.append(locationCell);
+
+              //Action Buttons column
+              const actionsCell = document.createElement("td");
+              actionsCell.classList = "align-middle text-end text-nowrap";
+
+              //Edit button
+              const editButton = document.createElement("button");
+              editButton.type = "button";
+              editButton.classList = "btn btn-primary btn-sm edit-department-btn ms-2";
+              editButton.setAttribute("data-bs-toggle", "modal");
+              editButton.setAttribute("data-bs-target", "#editDepartmentModal");
+              editButton.innerHTML = '<i class="fa-solid fa-pencil fa-fw"></i>';
+              editButton.setAttribute("data-id", item.id);
+              actionsCell.append(editButton);
+
+              //Delete button
+              const deleteButton = document.createElement("button");
+              deleteButton.type = "button";
+              deleteButton.classList = "btn btn-primary btn-sm delete-department-btn ms-2";
+              deleteButton.setAttribute("data-id", item.id);
+              deleteButton.innerHTML = '<i class="fa-solid fa-trash fa-fw"></i>';
+              actionsCell.append(deleteButton);
+
+              row.append(actionsCell);
+
+              departmentFrag.appendChild(row);
+            });
+            $("#departmentTableBody").append(departmentFrag);
+        } else {
+            $("#departmentTableBody").append(`
+                <tr>
+                    <td colspan="3" class="text-center">No departments found</td>
+                </tr>
+            `);
+        }
+    } else {
+      $("#popupErrorModal .modal-body").text("SearchAll API Response Error.");
+      $("#popupErrorModal").modal("show");
+    }
         },
         error: function (xhr, status, error) {
           $("#popupErrorModal .modal-body").text("SearchAll AJAX Error.");
