@@ -80,6 +80,9 @@ $.ajax({
 
       // Append the fragment to the table body
       $("#personnelTableBody").append(personnelFrag);
+    } else{
+      $("#popupErrorModal .modal-body").text("Error fetching personnel data.");
+      $("#popupErrorModal").modal("show");
     }
   },
   error: function () {
@@ -95,28 +98,60 @@ $.ajax({
     type: "GET",
     dataType: "json",
     success: function (result) {
-      result.data.forEach((department) => {
-        $("#departmentTableBody").append(`
-          <tr>
-                <td class="align-middle text-nowrap">
-                  ${department.departmentName}
-                </td>
-                <td class="align-middle text-nowrap d-none d-md-table-cell">
-                  ${department.location}
-                </td>
-                <td class="align-middle text-end text-nowrap">
-                  <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${department.departmentId}>
-                    <i class="fa-solid fa-pencil fa-fw"></i>
-                  </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-department-btn" data-id=${department.departmentId}>
-                    <i class="fa-solid fa-trash fa-fw"></i>
-                  </button>
-                </td>
-              </tr>     
-          `)
-      })
+      if (result.status.name == "ok") {
+        const departmentFrag = document.createDocumentFragment();
+        result.data.forEach((department) => {
+          const row = document.createElement("tr");
+
+          //Department column
+          const departmentCell = document.createElement("td");
+          departmentCell.classList = "align-middle-text-nowrap";
+          departmentCell.textContent = department.departmentName;
+          row.append(departmentCell);
+
+          //Location column
+          const locationCell = document.createElement("td");
+          locationCell.classList = "align-middle-text-nowrap d-none d-md-table-cell";
+          locationCell.textContent = department.location;
+          row.append(locationCell);
+
+          //Action Buttons column
+          const actionsCell = document.createElement("td");
+          actionsCell.classList = "align-middle text-end text-nowrap";
+
+          //Edit button
+          const editButton = document.createElement("button");
+          editButton.type = "button";
+          editButton.classList = "btn btn-primary btn-sm edit-department-btn ms-2";
+          editButton.setAttribute("data-bs-toggle", "modal");
+          editButton.setAttribute("data-bs-target", "#editDepartmentModal");
+          editButton.innerHTML = '<i class="fa-solid fa-pencil fa-fw"></i>';
+          editButton.setAttribute("data-id", department.departmentId);
+          actionsCell.append(editButton);
+
+          //Delete button
+          const deleteButton = document.createElement("button");
+          deleteButton.type = "button";
+          deleteButton.classList = "btn btn-primary btn-sm delete-department-btn ms-2";
+          deleteButton.setAttribute("data-id", department.departmentId);
+          deleteButton.innerHTML = '<i class="fa-solid fa-trash fa-fw"></i>';
+          actionsCell.append(deleteButton);
+
+          row.append(actionsCell);
+
+          departmentFrag.appendChild(row);
+        });
+        $("#departmentTableBody").append(departmentFrag);
+      } else {
+        $("#popupErrorModal .modal-body").text("Failed to fetch departments.");
+        $("#popupErrorModal").modal("show");
+      }
+    },
+    error: function () {
+      $("#popupErrorModal .modal-body").text("Failed to fetch departments.");
+      $("#popupErrorModal").modal("show");
     }
-  })
+  });  
 
   /*GET ALL LOCATIONS DYNAMICALLY*/
   $.ajax({
@@ -124,25 +159,54 @@ $.ajax({
     type: "GET",
     dataType: "json",
     success: function (result) {
-      result.data.forEach((location) => {
-        $("#locationTableBody").append(`
-          <tr>
-            <td class="align-middle text-nowrap">
-              ${location.location}
-            </td>
-            <td class="align-middle text-end text-nowrap">
-              <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${location.id}>
-                <i class="fa-solid fa-pencil fa-fw"></i>
-              </button>
-              <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-id=${location.id}>
-                <i class="fa-solid fa-trash fa-fw"></i>
-              </button>
-            </td>
-          </tr>
-        `)
-      })
+      if (result.status.name == "ok") {
+        const locationFrag = document.createDocumentFragment();
+        result.data.forEach((location) => {
+          const row = document.createElement("tr");
+
+          //Location column
+          const locationCell = document.createElement("td");
+          locationCell.classList = "align-middle-text-nowrap";
+          locationCell.textContent = location.location;
+          row.append(locationCell);
+
+          //Action Buttons column
+          const actionsCell = document.createElement("td");
+          actionsCell.classList = "align-middle text-end text-nowrap";
+
+          //Edit button
+          const editButton = document.createElement("button");
+          editButton.type = "button";
+          editButton.classList = "btn btn-primary btn-sm edit-location-btn ms-2";
+          editButton.setAttribute("data-bs-toggle", "modal");
+          editButton.setAttribute("data-bs-target", "#editLocationModal");
+          editButton.innerHTML = '<i class="fa-solid fa-pencil fa-fw"></i>';
+          editButton.setAttribute("data-id", location.id);
+          actionsCell.append(editButton);
+
+          //Delete button
+          const deleteButton = document.createElement("button");
+          deleteButton.type = "button";
+          deleteButton.classList = "btn btn-primary btn-sm delete-location-btn ms-2";
+          deleteButton.setAttribute("data-id", location.id);
+          deleteButton.innerHTML = '<i class="fa-solid fa-trash fa-fw"></i>';
+          actionsCell.append(deleteButton);
+
+          row.append(actionsCell);
+
+          locationFrag.appendChild(row);
+        });
+        $("#locationTableBody").append(locationFrag);
+      } else {
+        $("#popupErrorModal .modal-body").text("Failed to fetch locations.");
+        $("#popupErrorModal").modal("show");
+      }
+    },
+    error: function () {
+      $("#popupErrorModal .modal-body").text("Failed to fetch locations.");
+      $("#popupErrorModal").modal("show");
     }
-  })
+  });
 
   $(document).on("ready", function () {
     $("#searchInp").val(""); // Clear the search input field
@@ -930,8 +994,6 @@ $.ajax({
     locationID: $("#editDepartmentLocation option:selected").val(),
   },
   success: function (result) {
-    let departmentName = result.data[0].departmentName;
-    let locationName = result.data[0].locationName;
     if (result.status.name == "ok") {
       $("#editDepartmentModal").modal("hide");
       refreshDepartmentTable();
