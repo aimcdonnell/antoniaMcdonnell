@@ -205,31 +205,12 @@ $(window).on("load", function () {
               
                     $("#personnelTableBody").append(frag);
                 } else {
-                    $("#popupErrorModal .modal-body").text("No personnel found.");
-                    $("#popupErrorModal").modal("show");
+                    $("#personnelTableBody").append(`
+                        <tr>
+                            <td colspan="5" class="text-center">No personnel found</td>
+                        </tr>
+                    `);
                 }
-
-                if (result.data.departments && result.data.departments.length > 0) {
-                  result.data.departments.forEach((item) => {
-                      $("#departmentTableBody").append(`
-                          <tr>
-                              <td class="align-middle text-nowrap">${item.departmentName}</td>
-                              <td class="align-middle text-nowrap d-none d-md-table-cell">${item.locationName}</td>
-                              <td class="align-middle text-end text-nowrap">
-                                  <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${item.id}>
-                                      <i class="fa-solid fa-pencil fa-fw"></i>
-                                  </button>
-                                  <button type="button" class="btn btn-primary btn-sm delete-department-btn" data-id=${item.id}>
-                                      <i class="fa-solid fa-trash fa-fw"></i>
-                                  </button>
-                              </td>
-                          </tr>
-                      `);
-                  });
-              } else {
-                  $("#popupErrorModal .modal-body").text("No departments found.");
-                  $("#popupErrorModal").modal("show");
-              }
 
                 if (result.data.locations && result.data.locations.length > 0) {
                     result.data.locations.forEach((item) => {
@@ -248,8 +229,35 @@ $(window).on("load", function () {
                         `);
                     });
                 } else {
-                  $("#popupErrorModal .modal-body").text("No locations found.");
-                  $("#popupErrorModal").modal("show");
+                    $("#locationTableBody").append(`
+                        <tr>
+                            <td colspan="2" class="text-center">No locations found</td>
+                        </tr>
+                    `);
+                }
+                if (result.data.departments && result.data.departments.length > 0) {
+                    result.data.departments.forEach((item) => {
+                        $("#departmentTableBody").append(`
+                            <tr>
+                                <td class="align-middle text-nowrap">${item.departmentName}</td>
+                                <td class="align-middle text-nowrap d-none d-md-table-cell">${item.locationName}</td>
+                                <td class="align-middle text-end text-nowrap">
+                                    <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${item.id}>
+                                        <i class="fa-solid fa-pencil fa-fw"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm delete-department-btn" data-id=${item.id}>
+                                        <i class="fa-solid fa-trash fa-fw"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    $("#departmentTableBody").append(`
+                        <tr>
+                            <td colspan="3" class="text-center">No departments found</td>
+                        </tr>
+                    `);
                 }
             } else {
               $("#popupErrorModal .modal-body").text("SearchAll API Response Error.");
