@@ -159,36 +159,77 @@ $(window).on("load", function () {
         dataType: "json",
         success: function (result) {
             if (result.status.name == "ok") {
+              const frag = document.createDocumentFragment();
                 $("#personnelTableBody").empty();
                 $("#departmentTableBody").empty();
                 $("#locationTableBody").empty();
 
                 if (result.data.personnel && result.data.personnel.length > 0) {
                     result.data.personnel.forEach((item) => {
-                        $("#personnelTableBody").append(`
-                            <tr>
-                                <td class="align-middle text-nowrap">${item.lastName}, ${item.firstName}</td>
-                                <td class="align-middle text-nowrap d-none d-md-table-cell">${item.departmentName}</td>
-                                <td class="align-middle text-nowrap d-none d-md-table-cell">${item.locationName}</td>
-                                <td class="align-middle text-nowrap d-none d-md-table-cell">${item.email}</td>
-                                <td class="text-end text-nowrap">
-                                    <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${item.personnelID}>
-                                        <i class="fa-solid fa-pencil fa-fw"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${item.id}>
-                                        <i class="fa-solid fa-trash fa-fw"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        `);
+                      const row = document.createElement("tr");
+        
+                      const nameCell = document.createElement("td");
+                      nameCell.className = "align-middle text-nowrap";
+                      nameCell.textContent = `${item.lastName}, ${item.firstName}`;
+                      row.appendChild(nameCell);
+              
+                      const deptCell = document.createElement("td");
+                      deptCell.className = "align-middle text-nowrap d-none d-md-table-cell";
+                      deptCell.textContent = item.departmentName;
+                      row.appendChild(deptCell);
+              
+                      const locCell = document.createElement("td");
+                      locCell.className = "align-middle text-nowrap d-none d-md-table-cell";
+                      locCell.textContent = item.location;
+                      row.appendChild(locCell);
+              
+                      const emailCell = document.createElement("td");
+                      emailCell.className = "align-middle text-nowrap d-none d-md-table-cell";
+                      emailCell.textContent = item.email;
+                      row.appendChild(emailCell);
+              
+                      const actionCell = document.createElement("td");
+                      actionCell.className = "text-end text-nowrap";
+                      actionCell.innerHTML = `
+                        <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${item.id}>
+                          <i class="fa-solid fa-pencil fa-fw"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${item.id}>
+                          <i class="fa-solid fa-trash fa-fw"></i>
+                        </button>
+                      `;
+                      row.appendChild(actionCell);
+              
+                      frag.appendChild(row);
                     });
+              
+                    $("#personnelTableBody").append(frag);
                 } else {
-                    $("#personnelTableBody").append(`
-                        <tr>
-                            <td colspan="5" class="text-center">No personnel found</td>
-                        </tr>
-                    `);
+                    $("#popupErrorModal .modal-body").text("No personnel found.");
+                    $("#popupErrorModal").modal("show");
                 }
+
+                if (result.data.departments && result.data.departments.length > 0) {
+                  result.data.departments.forEach((item) => {
+                      $("#departmentTableBody").append(`
+                          <tr>
+                              <td class="align-middle text-nowrap">${item.departmentName}</td>
+                              <td class="align-middle text-nowrap d-none d-md-table-cell">${item.locationName}</td>
+                              <td class="align-middle text-end text-nowrap">
+                                  <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${item.id}>
+                                      <i class="fa-solid fa-pencil fa-fw"></i>
+                                  </button>
+                                  <button type="button" class="btn btn-primary btn-sm delete-department-btn" data-id=${item.id}>
+                                      <i class="fa-solid fa-trash fa-fw"></i>
+                                  </button>
+                              </td>
+                          </tr>
+                      `);
+                  });
+              } else {
+                  $("#popupErrorModal .modal-body").text("No departments found.");
+                  $("#popupErrorModal").modal("show");
+              }
 
                 if (result.data.locations && result.data.locations.length > 0) {
                     result.data.locations.forEach((item) => {
@@ -207,35 +248,8 @@ $(window).on("load", function () {
                         `);
                     });
                 } else {
-                    $("#locationTableBody").append(`
-                        <tr>
-                            <td colspan="2" class="text-center">No locations found</td>
-                        </tr>
-                    `);
-                }
-                if (result.data.departments && result.data.departments.length > 0) {
-                    result.data.departments.forEach((item) => {
-                        $("#departmentTableBody").append(`
-                            <tr>
-                                <td class="align-middle text-nowrap">${item.departmentName}</td>
-                                <td class="align-middle text-nowrap d-none d-md-table-cell">${item.locationName}</td>
-                                <td class="align-middle text-end text-nowrap">
-                                    <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${item.id}>
-                                        <i class="fa-solid fa-pencil fa-fw"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-primary btn-sm delete-department-btn" data-id=${item.id}>
-                                        <i class="fa-solid fa-trash fa-fw"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        `);
-                    });
-                } else {
-                    $("#departmentTableBody").append(`
-                        <tr>
-                            <td colspan="3" class="text-center">No departments found</td>
-                        </tr>
-                    `);
+                  $("#popupErrorModal .modal-body").text("No locations found.");
+                  $("#popupErrorModal").modal("show");
                 }
             } else {
               $("#popupErrorModal .modal-body").text("SearchAll API Response Error.");
@@ -489,9 +503,10 @@ $(window).on("load", function () {
     /* 1ST CONDITION: ADD PERSONNEL */
     if ($("#personnelBtn").hasClass("active")) {
       $("#addPersonnelModal").modal("show");
+      
       /* 2ND CONDITION: ADD DEPARTMENT */
     } else if ($("#departmentsBtn").hasClass("active")) {
-    $("#addDepartmentModal").modal("show");
+      $("#addDepartmentModal").modal("show");
     
     /*3RD CONDITION: ADD LOCATION */
     } else {
@@ -1282,6 +1297,9 @@ $("#deleteDepartmentForm").on("submit", function (e) {
           });
     
           $("#personnelTableBody").append(frag);
+        } else {
+          $("#popupErrorModal .modal-body").text("No personnel data available.");
+          $("#popupErrorModal").modal("show");
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
@@ -1332,6 +1350,9 @@ $("#deleteDepartmentForm").on("submit", function (e) {
             frag.appendChild(row);
           });
           $("#departmentTableBody").append(frag);
+        } else {
+          $("#popupErrorModal .modal-body").text("No department data available.");
+          $("#popupErrorModal").modal("show");
         }
       }, 
       error: function () {
@@ -1356,13 +1377,11 @@ $("#deleteDepartmentForm").on("submit", function (e) {
           result.data.forEach((location) => {
             const row = document.createElement("tr");
       
-            // Create and append the location cell
             const locCell = document.createElement("td");
             locCell.classList = "align-middle text-nowrap";
             locCell.textContent = location.name; // Ensure you're using the correct key ('name' instead of 'location')
             row.append(locCell);
       
-            // Create and append the actions cell
             const actionCell = document.createElement("td");
             actionCell.classList = "align-middle text-end text-nowrap";
             actionCell.innerHTML = `
@@ -1375,17 +1394,12 @@ $("#deleteDepartmentForm").on("submit", function (e) {
             `;
             row.append(actionCell);
       
-            // Append the row to the fragment
             frag.appendChild(row);
           });
-      
-          // Append the fragment to the table body
           $("#locationTableBody").empty().append(frag);
         } else {
-          // Handle case where no data is available
-          $("#locationTableBody").html(`
-            <tr><td colspan="6">No location data available</td></tr>
-          `);
+          $("#popupErrorModal .modal-body").text("No location data available.");
+          $("#popupErrorModal").modal("show");
         }
       },
       error: function () {
