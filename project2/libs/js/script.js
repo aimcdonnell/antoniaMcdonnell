@@ -1095,20 +1095,18 @@ $(document).on("click", ".delete-location-btn", function () {
         const locationName = result.data.locationName;
 
         if (departmentCount > 0) {
-          const errorMessage = `Sorry, you cannot delete ${locationName} as there ${
-            departmentCount === 1 ? "is" : "are"
-          } ${departmentCount} department${departmentCount === 1 ? "" : "s"} assigned to it.`;
-          
+          const errorMessage = `You cannot remove the entry for <b>${locationName}</b> because it has <b>${departmentCount}</b> department${departmentCount === 1 ? "" : "s"} assigned to it.`;
+
           $("#deleteLocationConfirmationModal").modal("hide");
           $("#deleteLocationErrorModal").modal("hide");
           
-          $("#deleteLocationErrorModal .modal-body").text(errorMessage);
+          $("#deleteLocationErrorModal .modal-body").html(errorMessage);
           $("#deleteLocationErrorModal").modal("show");
           
           return;
         } else {
-          $("#deleteLocationConfirmationModal .modal-body").text(
-            `Are you sure you want to delete the location ${locationName}?`
+          $("#deleteLocationConfirmationModal .modal-body").html(
+            `Are you sure that you want to remove the entry for <b>${locationName}</b>?`
           );
           $("#deleteLocationConfirmationModal").modal("show");
         }
