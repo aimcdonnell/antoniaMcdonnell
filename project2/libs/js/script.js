@@ -113,25 +113,35 @@ $(window).on("load", function () {
     type: "GET",
     dataType: "json",
     success: function (result) {
-      result.data.forEach((location) => {
-        $("#locationTableBody").append(`
-          <tr>
-            <td class="align-middle text-nowrap">
-              ${location.location}
-            </td>
-            <td class="align-middle text-end text-nowrap">
-              <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${location.id}>
-                <i class="fa-solid fa-pencil fa-fw"></i>
-              </button>
-              <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-id=${location.id}>
-                <i class="fa-solid fa-trash fa-fw"></i>
-              </button>
-            </td>
-          </tr>
-        `)
-      })
+      if (result.status.name == "ok") {
+        const frag = document.createDocumentFragment();
+        result.data.forEach((location) => {
+          const row = document.createElement("tr");
+
+          const locCell = document.createElement("td");
+          locCell.classList = "align-middle-text-nowrap";
+          locCell.textContent = location.location;
+          row.append(locCell);
+
+          const actionCell = document.createElement("td");
+          actionCell.classList = "align-middle text-end text-nowrap";
+          actionCell.innerHTML = `
+            <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${location.id}>
+              <i class="fa-solid fa-pencil fa-fw"></i>
+            </button>
+            <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-id=${location.id}>
+              <i class="fa-solid fa-trash fa-fw"></i>
+            </button>
+          `;
+          row.append(actionCell);
+        });
+        $("#locationTableBody").append(frag);
+      }
+    }, error: function () {
+      $("#popupErrorModal .modal-body").text("Error fetching all locations.");
+      $("#popupErrorModal").modal("show");
     }
-  })
+  });
 
   $(document).on("ready", function () {
     $("#searchInp").val(""); // Clear the search input field
@@ -1239,7 +1249,7 @@ $("#deleteDepartmentForm").on("submit", function (e) {
         }
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        $("#popupErrorModal .modal-body").text("Error fetching personnel data.");
+        $("#popupErrorModal .modal-body").text("Error refreshing all personnel.");
         $("#popupErrorModal").modal("show");
       }
     });
@@ -1287,8 +1297,9 @@ $("#deleteDepartmentForm").on("submit", function (e) {
           });
           $("#departmentTableBody").append(frag);
         }
-      }, error: function () {
-        $("#popupErrorModal .modal-body").text("Error fetching all departments.");
+      }, 
+      error: function () {
+        $("#popupErrorModal .modal-body").text("Error refreshing all departments.");
         $("#popupErrorModal").modal("show");
       }
     })
@@ -1304,39 +1315,48 @@ $("#deleteDepartmentForm").on("submit", function (e) {
       type: "GET",
       dataType: "json",
       success: function (result) {
-        if (result.status.name == "ok" && Array.isArray(result.data)) {
-          if (result.data.length === 0) {
-            $("#locationTableBody").append(`
-              <tr><td colspan="6">No location data available</td></tr>
-              `);
-          } else {
-            result.data.forEach(function (location) {
-              $("#locationTableBody").append(`
-                <tr>
-                  <td class="align-middle text-nowrap">
-                    ${location.name}
-                  </td>
-                  <td class="align-middle text-end text-nowrap">
-                    <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${location.id}>
-                      <i class="fa-solid fa-pencil fa-fw"></i>
-                    </button>
-                    <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-id=${location.id}>
-                      <i class="fa-solid fa-trash fa-fw"></i>
-                    </button>
-                  </td>
-                </tr>
-              `);
-            });
-          }
+        if (result.status.name == "ok") {
+          const frag = document.createDocumentFragment(); // Create a DocumentFragment
+          result.data.forEach((location) => {
+            const row = document.createElement("tr");
+      
+            // Create and append the location cell
+            const locCell = document.createElement("td");
+            locCell.classList = "align-middle text-nowrap";
+            locCell.textContent = location.name; // Ensure you're using the correct key ('name' instead of 'location')
+            row.append(locCell);
+      
+            // Create and append the actions cell
+            const actionCell = document.createElement("td");
+            actionCell.classList = "align-middle text-end text-nowrap";
+            actionCell.innerHTML = `
+              <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${location.id}>
+                <i class="fa-solid fa-pencil fa-fw"></i>
+              </button>
+              <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-id=${location.id}>
+                <i class="fa-solid fa-trash fa-fw"></i>
+              </button>
+            `;
+            row.append(actionCell);
+      
+            // Append the row to the fragment
+            frag.appendChild(row);
+          });
+      
+          // Append the fragment to the table body
+          $("#locationTableBody").empty().append(frag);
         } else {
-          $("#popupErrorModal .modal-body").text("No location data available.");
-          $("#popupErrorModal").modal("show");
+          // Handle case where no data is available
+          $("#locationTableBody").html(`
+            <tr><td colspan="6">No location data available</td></tr>
+          `);
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
-        $("#popupErrorModal .modal-body").text("Error refreshing location table.");
+      error: function () {
+        $("#popupErrorModal .modal-body").text("Error refreshing all locations.");
         $("#popupErrorModal").modal("show");
       }
-    })
+      
+    });
   }
 });
