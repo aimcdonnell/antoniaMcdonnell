@@ -409,7 +409,7 @@ $("#addBtn").on("click", function () {
 
   /* 1ST CONDITION: ADD PERSONNEL */
   if ($("#personnelBtn").hasClass("active")) {
-      $("#addPersonnelModal").modal("show");
+    $("#addPersonnelModal").modal("show");
       
 
 /* 2ND CONDITION: ADD DEPARTMENT */
@@ -418,7 +418,7 @@ $("#addBtn").on("click", function () {
   
 /*3RD CONDITION: ADD LOCATION */
 } else {
-    $("#addLocationModal").modal("show");
+  $("#addLocationModal").modal("show");
 }
 });
    
