@@ -9,37 +9,60 @@ $(window).on("load", function () {
   }
 
 /*GET ALL PERSONNEL DYNAMICALLY */
-  $.ajax({
-    url: "libs/php/getAll.php",
-    type: "GET",
-    dataType: "json",
-    success: function (result) {
-      if (result.status.name == "ok") {
-        result.data.forEach((personnel) => {
-          $("#personnelTableBody").append(`
-            <tr>
-              <td class="align-middle text-nowrap">${personnel.lastName}, ${personnel.firstName}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.departmentName}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
-              <td class="text-end text-nowrap">
-                  <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
-                    <i class="fa-solid fa-pencil fa-fw"></i>
-                  </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${personnel.id}>
-                    <i class="fa-solid fa-trash fa-fw"></i>
-                  </button>
-                </td>
-            </tr>
-          `);
-        });
-      }
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-      $("#popupErrorModal .modal-body").text("Error fetching personnel data.");
-      $("#popupErrorModal").modal("show");
+$.ajax({
+  url: "libs/php/getAll.php",
+  type: "GET",
+  dataType: "json",
+  success: function (result) {
+    if (result.status.name == "ok") {
+      const frag = document.createDocumentFragment();
+
+      result.data.forEach((personnel) => {
+        const row = document.createElement("tr");
+        
+        const nameCell = document.createElement("td");
+        nameCell.className = "align-middle text-nowrap";
+        nameCell.textContent = `${personnel.lastName}, ${personnel.firstName}`;
+        row.appendChild(nameCell);
+
+        const deptCell = document.createElement("td");
+        deptCell.className = "align-middle text-nowrap d-none d-md-table-cell";
+        deptCell.textContent = personnel.departmentName;
+        row.appendChild(deptCell);
+
+        const locCell = document.createElement("td");
+        locCell.className = "align-middle text-nowrap d-none d-md-table-cell";
+        locCell.textContent = personnel.location;
+        row.appendChild(locCell);
+
+        const emailCell = document.createElement("td");
+        emailCell.className = "align-middle text-nowrap d-none d-md-table-cell";
+        emailCell.textContent = personnel.email;
+        row.appendChild(emailCell);
+
+        const actionCell = document.createElement("td");
+        actionCell.className = "text-end text-nowrap";
+        actionCell.innerHTML = `
+          <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
+            <i class="fa-solid fa-pencil fa-fw"></i>
+          </button>
+          <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${personnel.id}>
+            <i class="fa-solid fa-trash fa-fw"></i>
+          </button>
+        `;
+        row.appendChild(actionCell);
+
+        frag.appendChild(row);
+      });
+
+      $("#personnelTableBody").append(frag);
     }
-  });
+  },
+  error: function (jqXHR, textStatus, errorThrown) {
+    $("#popupErrorModal .modal-body").text("Error fetching all personnel data.");
+    $("#popupErrorModal").modal("show");
+  }
+});
 
   /*GET ALL DEPARTMENTS DYNAMICALLY */
   $.ajax({
@@ -47,28 +70,43 @@ $(window).on("load", function () {
     type: "GET",
     dataType: "json",
     success: function (result) {
-      result.data.forEach((department) => {
-        $("#departmentTableBody").append(`
-          <tr>
-                <td class="align-middle text-nowrap">
-                  ${department.departmentName}
-                </td>
-                <td class="align-middle text-nowrap d-none d-md-table-cell">
-                  ${department.location}
-                </td>
-                <td class="align-middle text-end text-nowrap">
-                  <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${department.departmentId}>
-                    <i class="fa-solid fa-pencil fa-fw"></i>
-                  </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-department-btn" data-id=${department.departmentId}>
-                    <i class="fa-solid fa-trash fa-fw"></i>
-                  </button>
-                </td>
-              </tr>     
-          `)
-      })
+      if (result.status.name == "ok") {
+        const frag = document.createDocumentFragment();
+
+        result.data.forEach((department) => {
+          const row = document.createElement("tr");
+
+          const deptCell = document.createElement("td");
+          deptCell.classList = "align-middle-text-nowrap";
+          deptCell.textContent = department.departmentName;
+          row.append(deptCell);
+
+          const locCell = document.createElement("td");
+          locCell.classList = "align-middle-text-nowrap d-none d-md-table-cell";
+          locCell.textContent = department.location;
+          row.append(locCell);
+
+          const actionCell = document.createElement("td");
+          actionCell.classList = "align-middle text-end text-nowrap";
+          actionCell.innerHTML = `
+            <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${department.departmentId}>
+              <i class="fa-solid fa-pencil fa-fw"></i>
+            </button>
+            <button type="button" class="btn btn-primary btn-sm delete-department-btn" data-id=${department.departmentId}>
+              <i class="fa-solid fa-trash fa-fw"></i>
+            </button> 
+          `;
+          row.append(actionCell);
+
+          frag.appendChild(row);
+        });
+        $("#departmentTableBody").append(frag);
+      }
+    }, error: function () {
+      $("#popupErrorModal .modal-body").text("Error fetching all departments.");
+      $("#popupErrorModal").modal("show");
     }
-  })
+  });
 
   /*GET ALL LOCATIONS DYNAMICALLY*/
   $.ajax({
@@ -1161,38 +1199,52 @@ function refreshPersonnelTable() {
     type: "GET",
     dataType: "json",
     success: function (result) {
-      if (result.status.name == "ok" && Array.isArray(result.data)) {
-        if (result.data.length === 0) {
-          $("#personnelTableBody").append(`
-            <tr><td colspan="6">No personnel data available</td></tr>
-            `);
-        } else {
-          result.data.forEach(function (personnel) {
-            $("#personnelTableBody").append(`
-            <tr>
-              <td class="align-middle text-nowrap">${personnel.lastName}, ${personnel.firstName}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.departmentName}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.location}</td>
-              <td class="align-middle text-nowrap d-none d-md-table-cell">${personnel.email}</td>
-              <td class="text-end text-nowrap">
-                  <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
-                    <i class="fa-solid fa-pencil fa-fw"></i>
-                  </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${personnel.id}>
-                    <i class="fa-solid fa-trash fa-fw"></i>
-                  </button>
-                </td>
-            </tr>
-            `);
-          });
-        }
-      } else {
-        $("#popupErrorModal .modal-body").text("No personnel data available.");
-        $("#popupErrorModal").modal("show");
+      if (result.status.name == "ok") {
+        const frag = document.createDocumentFragment();
+
+        result.data.forEach((personnel) => {
+          const row = document.createElement("tr");
+          
+          const nameCell = document.createElement("td");
+          nameCell.className = "align-middle text-nowrap";
+          nameCell.textContent = `${personnel.lastName}, ${personnel.firstName}`;
+          row.appendChild(nameCell);
+  
+          const deptCell = document.createElement("td");
+          deptCell.className = "align-middle text-nowrap d-none d-md-table-cell";
+          deptCell.textContent = personnel.departmentName;
+          row.appendChild(deptCell);
+  
+          const locCell = document.createElement("td");
+          locCell.className = "align-middle text-nowrap d-none d-md-table-cell";
+          locCell.textContent = personnel.location;
+          row.appendChild(locCell);
+  
+          const emailCell = document.createElement("td");
+          emailCell.className = "align-middle text-nowrap d-none d-md-table-cell";
+          emailCell.textContent = personnel.email;
+          row.appendChild(emailCell);
+  
+          const actionCell = document.createElement("td");
+          actionCell.className = "text-end text-nowrap";
+          actionCell.innerHTML = `
+            <button type="button" class="btn btn-primary btn-sm edit-personnel-btn" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id=${personnel.id}>
+              <i class="fa-solid fa-pencil fa-fw"></i>
+            </button>
+            <button type="button" class="btn btn-primary btn-sm delete-personnel-btn" data-id=${personnel.id}>
+              <i class="fa-solid fa-trash fa-fw"></i>
+            </button>
+          `;
+          row.appendChild(actionCell);
+  
+          frag.appendChild(row);
+        });
+  
+        $("#personnelTableBody").append(frag);
       }
     },
     error: function (jqXHR, textStatus, errorThrown) {
-      $("#popupErrorModal .modal-body").text("Error refreshing personnel table.");
+      $("#popupErrorModal .modal-body").text("Error fetching personnel data.");
       $("#popupErrorModal").modal("show");
     }
   });
@@ -1208,42 +1260,41 @@ function refreshDepartmentTable() {
     type: "GET",
     dataType: "json",
     success: function (result) {
-      if (result.status.name == "ok" && Array.isArray(result.data)) {
-        if (result.data.length === 0) {
-          $("#departmentTableBody").append(`
-            <tr><td colspan="6">No department data available</td></tr>
-            `);
-          } else {
-            result.data.forEach(function (department){
-              $("#departmentTableBody").append(`
-              <tr>
-                <td class="align-middle text-nowrap">
-                  ${department.name}
-                </td>
-                <td class="align-middle text-nowrap d-none d-md-table-cell">
-                  ${department.location}
-                </td>
-                <td class="align-middle text-end text-nowrap">
-                  <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${department.id}>
-                    <i class="fa-solid fa-pencil fa-fw"></i>
-                  </button>
-                  <button type="button" class="btn btn-primary btn-sm delete-department-btn" data-id=${department.id}>
-                    <i class="fa-solid fa-trash fa-fw"></i>
-                  </button>
-                </td>
-              </tr>     
-              `);
-            });
-          }
-      } else {
-        $("#popupErrorModal .modal-body").text("No department data available.");
-        $("#popupErrorModal").modal("show");
+      if (result.status.name == "ok") {
+        const frag = document.createDocumentFragment();
+
+        result.data.forEach((department) => {
+          const row = document.createElement("tr");
+
+          const deptCell = document.createElement("td");
+          deptCell.classList = "align-middle-text-nowrap";
+          deptCell.textContent = department.name;
+          row.append(deptCell);
+
+          const locCell = document.createElement("td");
+          locCell.classList = "align-middle-text-nowrap d-none d-md-table-cell";
+          locCell.textContent = department.location;
+          row.append(locCell);
+
+          const actionCell = document.createElement("td");
+          actionCell.classList = "align-middle text-end text-nowrap";
+          actionCell.innerHTML = `
+            <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${department.id}>
+              <i class="fa-solid fa-pencil fa-fw"></i>
+            </button>
+            <button type="button" class="btn btn-primary btn-sm delete-department-btn" data-id=${department.id}>
+              <i class="fa-solid fa-trash fa-fw"></i>
+            </button> 
+          `;
+          row.append(actionCell);
+
+          frag.appendChild(row);
+        });
+        $("#departmentTableBody").append(frag);
       }
-    }, 
-    error: function (jqXHR, textStatus, errorThrown) {
-      $("#popupErrorModal .modal-body").text("Error refreshing department table.");
+    }, error: function () {
+      $("#popupErrorModal .modal-body").text("Error fetching all departments.");
       $("#popupErrorModal").modal("show");
-      
     }
   })
 }
