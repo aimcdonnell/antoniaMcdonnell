@@ -559,15 +559,16 @@ $(window).on("load", function () {
       dataType: "json",
       success: function (result) {
           if (result.status.name == "ok") {
-              $("#addPersonnelDepartment").html("");
+            const addPersonnelDepartment = document.getElementById("addPersonnelDepartment");
+            addPersonnelDepartment.innerHTML = "";
+
               result.data.forEach((department) => {
-                  $("#addPersonnelDepartment").append(
-                      $("<option>", {
-                          value: department.departmentID,
-                          text: department.departmentName,
-                      })
-                  );
+                const option = document.createElement("option");
+                option.value = department.departmentID;
+                option.textContent = department.departmentName;
+                addPersonnelDepartment.appendChild(option);
               });
+              
           } else {
             $("#popupErrorModal .modal-body").text("Failed to fetch departments.");
             $("#popupErrorModal").modal("show");
@@ -586,15 +587,15 @@ $(window).on("load", function () {
         dataType: "json",
         success: function (result) {
             if (result.status.name == "ok") {
-                $("#addPersonnelLocation").html("");
+              const addPersonnelLocation = document.getElementById("addPersonnelLocation");
+              addPersonnelLocation.innerHTML = "";
                 result.data.forEach((location) => {
-                    $("#addPersonnelLocation").append(
-                        $("<option>", {
-                            value: location.locationID,
-                            text: location.locationName
-                        })
-                    );
+                  const option = document.createElement("option");
+                  option.value = location.locationID;
+                  option.textContent = location.locationName;
+                  addPersonnelLocation.appendChild(option);
                 });
+
             } else {
                 $("#popupErrorModal .modal-body").text("Failed to fetch locations for Add Personnel modal.");
                 $("#popupErrorModal").modal("show");
@@ -702,14 +703,14 @@ $(window).on("load", function () {
           $("#editPersonnelJobTitle").val(personnel.jobTitle);
           $("#editPersonnelEmailAddress").val(personnel.email);
 
-          $("#editPersonnelDepartment").html("");
-          $.each(department, function () {
-            $("#editPersonnelDepartment").append(
-              $("<option>", {
-                value: this.id,
-                text: this.name,
-              })
-            );
+          const editPersonnelDepartment = document.getElementById("editPersonnelDepartment");
+          editPersonnelDepartment.innerHTML = "";
+
+          department.forEach((item) => {
+            const option = document.createElement("option"); // Create a new option element
+            option.value = item.id; // Set the value attribute
+            option.textContent = item.name; // Set the display text
+            editPersonnelDepartment.appendChild(option); // Append the option to the select element
           });
 
           $("#editPersonnelDepartment").val(personnel.departmentID);
@@ -745,8 +746,6 @@ $(window).on("load", function () {
       },
       success: function (result) {
         if (result.status.name == "ok") {
-          let firstName = result.data[0].firstName;
-          let lastName = result.data[0].lastName;
           $("#editPersonnelModal").modal("hide");
 
           refreshPersonnelTable();
@@ -846,14 +845,14 @@ $(window).on("load", function () {
       dataType: "json",
       success: function (result) {
         if (result.status.name == "ok") {
-          $("#addDepartmentLocation").empty();
+          const addDepartmentLocation = document.getElementById("addDepartmentLocation");
+          addDepartmentLocation.innerHTML = "";
+
           result.data.forEach(function(location) {
-            $("#addDepartmentLocation").append(
-              $("<option>", {
-                value: location.locationID,
-                text: location.locationName
-              })
-            );
+            const option = document.createElement("option");
+            option.value = location.locationID;
+            option.textContent = location.locationName;
+            addDepartmentLocation.appendChild(option);
           });
         } else {
           $("#popupErrorModal .modal-body").text("Failed to fetch locations for Add Department modal.");
@@ -924,11 +923,10 @@ $(window).on("load", function () {
   /*EDIT DEPARTMENT MODAL */
   $("#editDepartmentModal").on("show.bs.modal", function (e) {
 
-    $("#editDepartmentName").val("");
+    document.getElementById("editDepartmentName").value = "";
 
-    const editDepartmentId = $(e.relatedTarget).attr("data-id");
-
-    $(this).data("editDepartmentId", editDepartmentId);
+    const editDepartmentId = e.relatedTarget.getAttribute("data-id");
+    this.dataset.editDepartmentId = editDepartmentId;
 
     $.ajax({
       url: "libs/php/getDepartmentByID.php",
@@ -940,17 +938,17 @@ $(window).on("load", function () {
       success: function (result) {
         if (result.status.name == "ok" && result.data.department.length > 0) {
           let department = result.data.department[0];
-          let location = result.data.locations;
-          $("#editDepartmentName").val(department.departmentName);
+          let locations = result.data.locations;
+          document.getElementById("editDepartmentName").value = department.departmentName;
 
-          $("#editDepartmentLocation").html("");
-          $.each(location, function () {
-            $("#editDepartmentLocation").append(
-              $("<option>", {
-                value: this.locationID,
-                text: this.locationName,
-              })
-            );
+          const editDepartmentLocation = document.getElementById("editDepartmentLocation");
+          editDepartmentLocation.innerHTML = ""; // Clear existing options
+  
+          locations.forEach(function (location) {
+            const option = document.createElement("option");
+            option.value = location.locationID;
+            option.textContent = location.locationName;
+            editDepartmentLocation.appendChild(option);
           });
 
           $("#editDepartmentLocation").val(department.locationID);
