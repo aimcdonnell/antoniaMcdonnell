@@ -336,7 +336,6 @@ $(window).on("load", function () {
   });
   
   $("#filterBtn").on("click", function () {
-    if ($("#personnelBtn").hasClass("active")) {
       $("#filterPersonnelModal").modal("show");
       $.ajax({
         url: "libs/php/getAllDepartments.php",
@@ -387,11 +386,6 @@ $(window).on("load", function () {
       $("#popupErrorModal").modal("show");
     }
   });
-
-  } else {
-    $("#filterErrorModal .modal-body").text("Filtering is only available for personnel.");
-    $("#filterErrorModal").modal("show");
-  }
 });
 
   /*FILTER PERSONNEL BY DEPARTMENT */
