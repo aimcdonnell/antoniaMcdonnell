@@ -57,7 +57,7 @@ $(window).on("load", function () {
       $("#personnelTableBody").append(frag);
     }
   },
-  error: function (jqXHR, textStatus, errorThrown) {
+  error: function () {
     document.querySelector("#popupErrorModal .modal-body").textContent = "Error fetching all personnel data.";
     $("#popupErrorModal").modal("show");
     
@@ -295,7 +295,7 @@ $(window).on("load", function () {
               $("#popupErrorModal").modal("show");
             }
         },
-        error: function (xhr, status, error) {
+        error: function () {
           document.querySelector("#popupErrorModal .modal-body").textContent = "Error retrieving all search data.";
           $("#popupErrorModal").modal("show");
         }
@@ -337,36 +337,36 @@ $(window).on("load", function () {
   });
   
   $("#filterBtn").on("click", function () {
-      $("#filterPersonnelModal").modal("show");
-      $.ajax({
-        url: "libs/php/getAllDepartments.php",
-        type: "GET",
-        success: function (response) {
-          const result = typeof response === "string" ? JSON.parse(response) : response;
-          if (result.status.name == "ok") {
-            const departmentFilter = document.getElementById("filterPersonnelByDepartment");
-            departmentFilter.innerHTML = "";
+    $("#filterPersonnelModal").modal("show");
+    $.ajax({
+      url: "libs/php/getAllDepartments.php",
+      type: "GET",
+      success: function (response) {
+        const result = typeof response === "string" ? JSON.parse(response) : response;
+        if (result.status.name == "ok") {
+          const departmentFilter = document.getElementById("filterPersonnelByDepartment");
+          departmentFilter.innerHTML = "";
 
-            const allOption = document.createElement("option");
-            allOption.value = "0";
-            allOption.textContent = "All";
-            departmentFilter.appendChild(allOption);
-            result.data.forEach(department => {
-              const option = document.createElement("option");
-              option.value = department.departmentID;
-              option.textContent = department.departmentName;
-              departmentFilter.appendChild(option);
-            });
-          } else {
-            document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch all departments for filtering.";
-            $("#popupErrorModal").modal("show");
-          }
-        },
-        error: function () {
-          document.querySelector("#popupErrorModal .modal-body").textContent = "Error retrieving all departments for filtering.";
+          const allOption = document.createElement("option");
+          allOption.value = "0";
+          allOption.textContent = "All";
+          departmentFilter.appendChild(allOption);
+          result.data.forEach(department => {
+            const option = document.createElement("option");
+            option.value = department.departmentID;
+            option.textContent = department.departmentName;
+            departmentFilter.appendChild(option);
+          });
+        } else {
+          document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch all departments for filtering.";
           $("#popupErrorModal").modal("show");
         }
-  });
+      },
+      error: function () {
+        document.querySelector("#popupErrorModal .modal-body").textContent = "Error retrieving all departments for filtering.";
+        $("#popupErrorModal").modal("show");
+      }
+    });
 
   $.ajax({
     url: "libs/php/getAllLocations.php",
@@ -580,10 +580,10 @@ $(window).on("load", function () {
               
           }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
+      error: function () {
         document.querySelector("#popupErrorModal .modal-body").textContent = "Error retrieving departments for add personnel modal.";
         $("#popupErrorModal").modal("show");
-      },
+      }
   });
 
     $.ajax({
@@ -675,7 +675,7 @@ $(window).on("load", function () {
 
   /*RESET ADD PERSONNEL FORM */
   $("#addPersonnelModal").on("hidden.bs.modal", function () {
-    $("#addPersonnelForm")[0].reset();
+    document.getElementById("addPersonnelForm").reset();
   });
   
   /*EDIT PERSONNEL MODAL */
@@ -724,10 +724,10 @@ $(window).on("load", function () {
           $("#popupErrorModal").modal("show");
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
+      error: function () {
         document.querySelector("#popupErrorModal .modal-body").textContent = "Error retrieving personnel data for the edit personnel modal.";
         $("#popupErrorModal").modal("show");
-      },
+      }
     });
   });
 
@@ -759,10 +759,10 @@ $(window).on("load", function () {
           $("#popupErrorModal").modal("show");
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
+      error: function () {
         document.querySelector("#popupErrorModal .modal-body").textContent = "Error updating personnel using the edit personnel modal.";
         $("#popupErrorModal").modal("show");
-      },
+      }
     });
   });
 
@@ -805,11 +805,11 @@ $(window).on("load", function () {
           document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to delete personnel using the delete personnel modal.";
           $("#popupErrorModal").modal("show");
         }
-  },
-      error: function (xhr, status, error) {
+      },
+      error: function () {
         document.querySelector("#popupErrorModal .modal-body").textContent = "Error retrieving personnel details for the delete personnel modal.";
         $("#popupErrorModal").modal("show");
-      },
+      }
     });
   });
 
@@ -836,7 +836,7 @@ $(window).on("load", function () {
 
         }
   },
-      error: function(jqXHR, textStatus, errorThrown) {
+      error: function () {
         document.querySelector("#popupErrorModal .modal-body").textContent = "Error deleting personnel.";
         $("#popupErrorModal").modal("show");
       }
@@ -865,7 +865,7 @@ $(window).on("load", function () {
           $("#popupErrorModal").modal("show");
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
+      error: function () {
         document.querySelector("#popupErrorModal .modal-body").textContent = "Error fetching locations for add department modal.";
         $("#popupErrorModal").modal("show");
       }
@@ -901,7 +901,7 @@ $(window).on("load", function () {
                     refreshDepartmentTable();
                   }
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function () {
                   document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to add department.";
                   $("#popupErrorModal").modal("show");
                 }
@@ -913,7 +913,7 @@ $(window).on("load", function () {
             $("#addDepartmentErrorModal").modal("show");
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
+      error: function () {
         document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to check for duplicate departments.";
         $("#popupErrorModal").modal("show");
       }
@@ -922,8 +922,7 @@ $(window).on("load", function () {
 
   /* RESET ADD DEPARTMENT MODAL */
   $("#addDepartmentModal").on("hidden.bs.modal", function () {
-    $("#addDepartmentForm")[0].reset();
-
+    document.getElementById("addDepartmentForm").reset();
   });
 
   /*EDIT DEPARTMENT MODAL */
@@ -963,10 +962,10 @@ $(window).on("load", function () {
           $("#popupErrorModal").modal("show");
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
+      error: function () {
         document.querySelector("#popupErrorModal .modal-body").textContent = "Error retrieving data for edit department modal.";
         $("#popupErrorModal").modal("show");
-      },
+      }
     });
   });
 
@@ -995,11 +994,10 @@ $("#editDepartmentForm").on("submit", function (e) {
         $("#popupErrorModal").modal("show");
       }
     },
-    error: function (jqXHR, textStatus, errorThrown) {
+    error: function () {
       document.querySelector("#popupErrorModal .modal-body").textContent = "Error updating the department.";
       $("#popupErrorModal").modal("show");
-
-    },
+    }
   });
 });
 
@@ -1045,7 +1043,7 @@ $(document).on("click", ".delete-department-btn", function () {
     error: function () {
       document.querySelector("#popupErrorModal .modal-body").textContent = "Error retrieving department details for the delete department modal.";
       $("#popupErrorModal").modal("show");
-    },
+    }
   });
 });
 
@@ -1075,7 +1073,7 @@ $("#deleteDepartmentForm").on("submit", function (e) {
     error: function () {
       document.querySelector("#popupErrorModal .modal-body").textContent = "Error deleting the department";
       $("#popupErrorModal").modal("show");
-    },
+    }
   });
 });
 
@@ -1113,7 +1111,7 @@ $("#deleteDepartmentForm").on("submit", function (e) {
                     refreshLocationTable();
                   }
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function () {
                   document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to add location.";
                   $("#popupErrorModal").modal("show");
                 }
@@ -1127,7 +1125,7 @@ $("#deleteDepartmentForm").on("submit", function (e) {
 
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
+      error: function () {
         document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to check for duplicate locations.";
         $("#popupErrorModal").modal("show");
       }
@@ -1136,7 +1134,7 @@ $("#deleteDepartmentForm").on("submit", function (e) {
 
   /* RESET ADD LOCATION FORM */
   $("#addLocationModal").on("hidden.bs.modal", function () {
-    $("#addLocationForm")[0].reset();
+    document.getElementById("addLocationForm").reset();
   });
 
   /*EDIT LOCATION MODAL*/
@@ -1164,7 +1162,7 @@ $("#deleteDepartmentForm").on("submit", function (e) {
           $("#popupErrorModal").modal("show");
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
+      error: function () {
         document.querySelector("#popupErrorModal .modal-body").textContent = "Error retrieving location details for the edit location modal.";
         $("#popupErrorModal").modal("show");
       }
@@ -1194,7 +1192,7 @@ $("#deleteDepartmentForm").on("submit", function (e) {
           $("#popupErrorModal").modal("show");
         }
       }, 
-      error: function(jqXHR, textStatus, errorThrown) {
+      error: function () {
         document.querySelector("#popupErrorModal .modal-body").textContent = "Error updating the location from the edit location modal.";
         $("#popupErrorModal").modal("show");
       }
@@ -1243,10 +1241,10 @@ $("#deleteDepartmentForm").on("submit", function (e) {
           $("#popupErrorModal").modal("show");
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
+      error: function () {
         document.querySelector("#popupErrorModal .modal-body").textContent = "Error retrieving location details for the delete location modal.";
         $("#popupErrorModal").modal("show");
-      },
+      }
     });
   });  
 
@@ -1271,7 +1269,7 @@ $("#deleteDepartmentForm").on("submit", function (e) {
           $("#popupErrorModal").modal("show");
         }
     },
-      error: function(jqXHR, textStatus, errorThrown) {
+      error: function () {
         document.querySelector("#popupErrorModal .modal-body").textContent = "Error deleting the location.";
         $("#popupErrorModal").modal("show");
       }
@@ -1337,7 +1335,7 @@ $("#deleteDepartmentForm").on("submit", function (e) {
           $("#popupErrorModal").modal("show");
         }
       },
-      error: function (jqXHR, textStatus, errorThrown) {
+      error: function () {
         document.querySelector("#popupErrorModal .modal-body").textContent = "Error refreshing the personnel table.";
         $("#popupErrorModal").modal("show");
       }
@@ -1441,7 +1439,6 @@ $("#deleteDepartmentForm").on("submit", function (e) {
         document.querySelector("#popupErrorModal .modal-body").textContent = "Error refreshing the location table.";
         $("#popupErrorModal").modal("show");
       }
-      
     });
   }
 });
