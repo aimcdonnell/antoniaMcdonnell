@@ -58,8 +58,9 @@ $(window).on("load", function () {
     }
   },
   error: function (jqXHR, textStatus, errorThrown) {
-    $("#popupErrorModal .modal-body").text("Error fetching all personnel data.");
+    document.querySelector("#popupErrorModal .modal-body").textContent = "Error fetching all personnel data.";
     $("#popupErrorModal").modal("show");
+    
   }
 });
 
@@ -102,7 +103,7 @@ $(window).on("load", function () {
         $("#departmentTableBody").append(frag);
       }
     }, error: function () {
-      $("#popupErrorModal .modal-body").text("Error fetching all departments.");
+      document.querySelector("#popupErrorModal .modal-body").textContent = "Error fetching all departments.";
       $("#popupErrorModal").modal("show");
     }
   });
@@ -140,7 +141,7 @@ $(window).on("load", function () {
         $("#locationTableBody").append(frag);
       }
     }, error: function () {
-      $("#popupErrorModal .modal-body").text("Error fetching all locations.");
+      document.querySelector("#popupErrorModal .modal-body").textContent = "Error fetching all locations";
       $("#popupErrorModal").modal("show");
     }
   });
@@ -290,12 +291,12 @@ $(window).on("load", function () {
                 }
                 
             } else {
-              $("#popupErrorModal .modal-body").text("SearchAll API Response Error.");
+              document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch all search data.";
               $("#popupErrorModal").modal("show");
             }
         },
         error: function (xhr, status, error) {
-          $("#popupErrorModal .modal-body").text("SearchAll AJAX Error.");
+          document.querySelector("#popupErrorModal .modal-body").textContent = "Error retrieving all search data.";
           $("#popupErrorModal").modal("show");
         }
     });
@@ -357,11 +358,12 @@ $(window).on("load", function () {
               departmentFilter.appendChild(option);
             });
           } else {
-            $("#popupErrorModal .modal-body").text("Get all departments API response error.");
+            document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch all departments for filtering.";
             $("#popupErrorModal").modal("show");
           }
         },
         error: function () {
+          document.querySelector("#popupErrorModal .modal-body").textContent = "Error retrieving all departments for filtering.";
           $("#popupErrorModal .modal-body").text("Failed to fetch departments.");
           $("#popupErrorModal").modal("show");
         }
@@ -387,12 +389,12 @@ $(window).on("load", function () {
           locationFilter.appendChild(option);
         });
       } else {
-        $("#popupErrorModal .modal-body").text("Get all locations API response error.");
+        document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch all locations for filtering.";
         $("#popupErrorModal").modal("show");
       }
     },
     error: function () {
-      $("#popupErrorModal .modal-body").text("Failed to fetch locations.");
+      document.querySelector("#popupErrorModal .modal-body").textContent = "Error retrieving all locations for filtering.";
       $("#popupErrorModal").modal("show");
     }
   });
@@ -453,16 +455,16 @@ $(window).on("load", function () {
           });
           $("#personnelTableBody").append(frag);
           } else {
-            $("#popupErrorModal .modal-body").text("No personnel found for that particular department.");
+            document.querySelector("#popupErrorModal .modal-body").textContent = "No personnel found for that particular department.";
             $("#popupErrorModal").modal("show");
           }
         } else {
-          $("#popupErrorModal .modal-body").text("Error fetching personnel filtered by department.");
+          document.querySelector("#popupErrorModal .modal-body").textContent = "Error fetching personnel filtered by department.";
           $("#popupErrorModal").modal("show");
         }
       },
       error: function () {
-        $("#popupErrorModal .modal-body").text("Failed to fetch personnel filtered by department.");
+        document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch personnel filtered by department.";
         $("#popupErrorModal").modal("show");
       }
     });
@@ -523,16 +525,16 @@ $(window).on("load", function () {
           });
           $("#personnelTableBody").append(frag);
           } else {
-          $("#popupErrorModal .modal-body").text("No personnel found for that particular location.");
+          document.querySelector("#popupErrorModal .modal-body").textContent = "No personnel found for that particular location.";
           $("#popupErrorModal").modal("show");
           }
         } else {
-          $("#popupErrorModal .modal-body").text("Error fetching personnel filtered by location.");
+          document.querySelector("#popupErrorModal .modal-body").textContent = "Error fetching personnel filtered by location.";
           $("#popupErrorModal").modal("show");
         }
       },
       error: function () {
-        $("#popupErrorModal .modal-body").text("Failed to fetch personnel filtered by location.");
+        document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch personnel filtered by location.";
         $("#popupErrorModal").modal("show");
       }
     });
@@ -574,13 +576,13 @@ $(window).on("load", function () {
               });
               
           } else {
-            $("#popupErrorModal .modal-body").text("Failed to fetch departments.");
+            document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch departments for add personnel modal.";
             $("#popupErrorModal").modal("show");
               
           }
       },
       error: function (jqXHR, textStatus, errorThrown) {
-        $("#popupErrorModal .modal-body").text("Failed to fetch departments for Add Personnel modal.");
+        document.querySelector("#popupErrorModal .modal-body").textContent = "Error retrieving departments for add personnel modal.";
         $("#popupErrorModal").modal("show");
       },
   });
@@ -601,7 +603,7 @@ $(window).on("load", function () {
                 });
 
             } else {
-                $("#popupErrorModal .modal-body").text("Failed to fetch locations for Add Personnel modal.");
+                document.querySelector("#popupErrorModal .modal-body").textContent = "Failed to fetch locations for add personnel modal.";
                 $("#popupErrorModal").modal("show");
             }
         }
