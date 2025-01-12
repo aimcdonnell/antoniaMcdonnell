@@ -76,17 +76,17 @@ $(window).on("load", function () {
           const row = document.createElement("tr");
 
           const deptCell = document.createElement("td");
-          deptCell.classList = "align-middle-text-nowrap";
+          deptCell.className = "align-middle text-nowrap";
           deptCell.textContent = department.departmentName;
           row.append(deptCell);
 
           const locCell = document.createElement("td");
-          locCell.classList = "align-middle-text-nowrap d-none d-md-table-cell";
+          locCell.className = "align-middle text-nowrap d-none d-md-table-cell";
           locCell.textContent = department.location;
           row.append(locCell);
 
           const actionCell = document.createElement("td");
-          actionCell.classList = "align-middle text-end text-nowrap";
+          actionCell.className = "align-middle text-end text-nowrap";
           actionCell.innerHTML = `
             <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${department.departmentId}>
               <i class="fa-solid fa-pencil fa-fw"></i>
@@ -119,12 +119,12 @@ $(window).on("load", function () {
           const row = document.createElement("tr");
 
           const locCell = document.createElement("td");
-          locCell.classList = "align-middle-text-nowrap";
+          locCell.className = "align-middle text-nowrap";
           locCell.textContent = location.location;
           row.append(locCell);
 
           const actionCell = document.createElement("td");
-          actionCell.classList = "align-middle text-end text-nowrap";
+          actionCell.className = "align-middle text-end text-nowrap";
           actionCell.innerHTML = `
             <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${location.id}>
               <i class="fa-solid fa-pencil fa-fw"></i>
@@ -162,9 +162,9 @@ $(window).on("load", function () {
         success: function (result) {
             if (result.status.name == "ok") {
               const personnelFrag = document.createDocumentFragment();
-                $("#personnelTableBody").empty();
-                $("#departmentTableBody").empty();
-                $("#locationTableBody").empty();
+                document.getElementById("personnelTableBody").innerHTML = "";
+                document.getElementById("departmentTableBody").innerHTML = "";
+                document.getElementById("locationTableBody").innerHTML = "";
 
                 if (result.data.personnel && result.data.personnel.length > 0) {
                     result.data.personnel.forEach((item) => {
@@ -222,17 +222,17 @@ $(window).on("load", function () {
                     const row = document.createElement("tr");
 
                     const deptCell = document.createElement("td");
-                    deptCell.classList = "align-middle-text-nowrap";
+                    deptCell.className = "align-middle text-nowrap";
                     deptCell.textContent = item.departmentName;
                     row.append(deptCell);
           
                     const locCell = document.createElement("td");
-                    locCell.classList = "align-middle-text-nowrap d-none d-md-table-cell";
+                    locCell.className = "align-middle text-nowrap d-none d-md-table-cell";
                     locCell.textContent = item.location;
                     row.append(locCell);
           
                     const actionCell = document.createElement("td");
-                    actionCell.classList = "align-middle text-end text-nowrap";
+                    actionCell.className = "align-middle text-end text-nowrap";
                     actionCell.innerHTML = `
                       <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${item.id}>
                         <i class="fa-solid fa-pencil fa-fw"></i>
@@ -261,12 +261,12 @@ $(window).on("load", function () {
                       const row = document.createElement("tr");
 
                       const locCell = document.createElement("td");
-                      locCell.classList = "align-middle-text-nowrap";
+                      locCell.className = "align-middle text-nowrap";
                       locCell.textContent = item.locationName;
                       row.append(locCell);
 
                       const actionCell = document.createElement("td");
-                      actionCell.classList = "align-middle text-end text-nowrap";
+                      actionCell.className = "align-middle text-end text-nowrap";
                       actionCell.innerHTML = `
                         <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${item.id}>
                           <i class="fa-solid fa-pencil fa-fw"></i>
@@ -1364,17 +1364,17 @@ $("#deleteDepartmentForm").on("submit", function (e) {
             const row = document.createElement("tr");
 
             const deptCell = document.createElement("td");
-            deptCell.classList = "align-middle-text-nowrap";
+            deptCell.className = "align-middle text-nowrap";
             deptCell.textContent = department.name;
             row.append(deptCell);
 
             const locCell = document.createElement("td");
-            locCell.classList = "align-middle-text-nowrap d-none d-md-table-cell";
+            locCell.className = "align-middle text-nowrap d-none d-md-table-cell";
             locCell.textContent = department.location;
             row.append(locCell);
 
             const actionCell = document.createElement("td");
-            actionCell.classList = "align-middle text-end text-nowrap";
+            actionCell.className = "align-middle text-end text-nowrap";
             actionCell.innerHTML = `
               <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${department.id}>
                 <i class="fa-solid fa-pencil fa-fw"></i>
@@ -1416,12 +1416,12 @@ $("#deleteDepartmentForm").on("submit", function (e) {
             const row = document.createElement("tr");
       
             const locCell = document.createElement("td");
-            locCell.classList = "align-middle text-nowrap";
+            locCell.className = "align-middle text-nowrap";
             locCell.textContent = location.name; // Ensure you're using the correct key ('name' instead of 'location')
             row.append(locCell);
       
             const actionCell = document.createElement("td");
-            actionCell.classList = "align-middle text-end text-nowrap";
+            actionCell.className = "align-middle text-end text-nowrap";
             actionCell.innerHTML = `
               <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${location.id}>
                 <i class="fa-solid fa-pencil fa-fw"></i>
@@ -1434,7 +1434,7 @@ $("#deleteDepartmentForm").on("submit", function (e) {
       
             frag.appendChild(row);
           });
-          $("#locationTableBody").empty().append(frag);
+          $("#locationTableBody").append(frag);
         } else {
           $("#popupErrorModal .modal-body").text("No location data available.");
           $("#popupErrorModal").modal("show");
