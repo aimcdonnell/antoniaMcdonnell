@@ -343,13 +343,18 @@ $(window).on("load", function () {
         success: function (response) {
           const result = typeof response === "string" ? JSON.parse(response) : response;
           if (result.status.name == "ok") {
-            const departmentFilter = $("#filterPersonnelByDepartment");
-            departmentFilter.empty();
-            departmentFilter.append(`<option value="0">All</option>`)
+            const departmentFilter = document.getElementById("filterPersonnelByDepartment");
+            departmentFilter.innerHTML = "";
+
+            const allOption = document.createElement("option");
+            allOption.value = "0";
+            allOption.textContent = "All";
+            departmentFilter.appendChild(allOption);
             result.data.forEach(department => {
-              departmentFilter.append(`
-                  <option value="${department.departmentID}">${department.departmentName}</option>
-              `);
+              const option = document.createElement("option");
+              option.value = department.departmentID;
+              option.textContent = department.departmentName;
+              departmentFilter.appendChild(option);
             });
           } else {
             $("#popupErrorModal .modal-body").text("Get all departments API response error.");
@@ -368,13 +373,18 @@ $(window).on("load", function () {
     success: function (response) {
       const result = typeof response === "string" ? JSON.parse(response) : response;
       if (result.status.name == "ok") {
-        const locationFilter = $("#filterPersonnelByLocation");
-        locationFilter.empty();
-        locationFilter.append(`<option value="0">All</option>`)
+        const locationFilter = document.getElementById("filterPersonnelByLocation");
+        locationFilter.innerHTML = "";
+        
+        const allOption = document.createElement("option");
+        allOption.value = "0";
+        allOption.textContent = "All";
+        locationFilter.appendChild(allOption);
         result.data.forEach(location => {
-          locationFilter.append(`
-            <option value="${location.locationID}">${location.locationName}</option>
-          `);
+          const option = document.createElement("option");
+          option.value = location.locationID;
+          option.textContent = location.locationName;
+          locationFilter.appendChild(option);
         });
       } else {
         $("#popupErrorModal .modal-body").text("Get all locations API response error.");
