@@ -134,6 +134,8 @@ $(window).on("load", function () {
             </button>
           `;
           row.append(actionCell);
+
+          frag.appendChild(row);
         });
         $("#locationTableBody").append(frag);
       }
@@ -159,7 +161,7 @@ $(window).on("load", function () {
         dataType: "json",
         success: function (result) {
             if (result.status.name == "ok") {
-              const frag = document.createDocumentFragment();
+              const personnelFrag = document.createDocumentFragment();
                 $("#personnelTableBody").empty();
                 $("#departmentTableBody").empty();
                 $("#locationTableBody").empty();
@@ -200,65 +202,93 @@ $(window).on("load", function () {
                       `;
                       row.appendChild(actionCell);
               
-                      frag.appendChild(row);
+                      personnelFrag.appendChild(row);
                     });
               
-                    $("#personnelTableBody").append(frag);
+                    $("#personnelTableBody").append(personnelFrag);
                 } else {
-                    $("#personnelTableBody").append(`
-                        <tr>
-                            <td colspan="5" class="text-center">No personnel found</td>
-                        </tr>
-                    `);
+                    const row = document.createElement("tr");
+                    const noPersonnelCell = document.createElement("td");
+                    noPersonnelCell.colSpan = 5;
+                    noPersonnelCell.textContent = "No personnel found";
+                    noPersonnelCell.classList.add("text-center");
+                    row.appendChild(noPersonnelCell);
+                    $("#personnelTableBody").append(row);
                 }
 
+                const departmentFrag = document.createDocumentFragment();
+                if (result.data.departments && result.data.departments.length > 0) {
+                  result.data.departments.forEach((item) => {
+                    const row = document.createElement("tr");
+
+                    const deptCell = document.createElement("td");
+                    deptCell.classList = "align-middle-text-nowrap";
+                    deptCell.textContent = item.departmentName;
+                    row.append(deptCell);
+          
+                    const locCell = document.createElement("td");
+                    locCell.classList = "align-middle-text-nowrap d-none d-md-table-cell";
+                    locCell.textContent = item.location;
+                    row.append(locCell);
+          
+                    const actionCell = document.createElement("td");
+                    actionCell.classList = "align-middle text-end text-nowrap";
+                    actionCell.innerHTML = `
+                      <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${item.id}>
+                        <i class="fa-solid fa-pencil fa-fw"></i>
+                      </button>
+                      <button type="button" class="btn btn-primary btn-sm delete-department-btn" data-id=${item.id}>
+                        <i class="fa-solid fa-trash fa-fw"></i>
+                      </button> 
+                    `;
+                    row.append(actionCell);
+          
+                    departmentFrag.appendChild(row);
+                  });
+                  $("#departmentTableBody").append(departmentFrag);
+              } else {
+                  const row = document.createElement("tr");
+                  const noDepartmentCell = document.createElement("td");
+                  noDepartmentCell.colSpan = 5;
+                  noDepartmentCell.textContent = "No departments found";
+                  noDepartmentCell.classList.add("text-center");
+                  row.appendChild(noDepartmentCell);
+                  $("#departmentTableBody").append(row);
+              }
+                const locationFrag = document.createDocumentFragment();
                 if (result.data.locations && result.data.locations.length > 0) {
                     result.data.locations.forEach((item) => {
-                        $("#locationTableBody").append(`
-                            <tr>
-                                <td class="align-middle text-nowrap">${item.locationName}</td>
-                                <td class="align-middle text-end text-nowrap">
-                                    <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${item.id}>
-                                        <i class="fa-solid fa-pencil fa-fw"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-id=${item.id}>
-                                        <i class="fa-solid fa-trash fa-fw"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        `);
+                      const row = document.createElement("tr");
+
+                      const locCell = document.createElement("td");
+                      locCell.classList = "align-middle-text-nowrap";
+                      locCell.textContent = item.locationName;
+                      row.append(locCell);
+
+                      const actionCell = document.createElement("td");
+                      actionCell.classList = "align-middle text-end text-nowrap";
+                      actionCell.innerHTML = `
+                        <button type="button" class="btn btn-primary btn-sm edit-location-btn" data-bs-toggle="modal" data-bs-target="#editLocationModal" data-id=${item.id}>
+                          <i class="fa-solid fa-pencil fa-fw"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm delete-location-btn" data-id=${item.id}>
+                          <i class="fa-solid fa-trash fa-fw"></i>
+                        </button>
+                      `;
+                      row.append(actionCell);
+                      locationFrag.appendChild(row);
                     });
+                    $("#locationTableBody").append(locationFrag);
                 } else {
-                    $("#locationTableBody").append(`
-                        <tr>
-                            <td colspan="2" class="text-center">No locations found</td>
-                        </tr>
-                    `);
+                    const row = document.createElement("tr");
+                    const noLocationCell = document.createElement("td");
+                    noLocationCell.colSpan = 5;
+                    noLocationCell.textContent = "No locations found";
+                    noLocationCell.classList.add("text-center");
+                    row.appendChild(noLocationCell);
+                    $("#locationTableBody").append(row);
                 }
-                if (result.data.departments && result.data.departments.length > 0) {
-                    result.data.departments.forEach((item) => {
-                        $("#departmentTableBody").append(`
-                            <tr>
-                                <td class="align-middle text-nowrap">${item.departmentName}</td>
-                                <td class="align-middle text-nowrap d-none d-md-table-cell">${item.locationName}</td>
-                                <td class="align-middle text-end text-nowrap">
-                                    <button type="button" class="btn btn-primary btn-sm edit-department-btn" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id=${item.id}>
-                                        <i class="fa-solid fa-pencil fa-fw"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-primary btn-sm delete-department-btn" data-id=${item.id}>
-                                        <i class="fa-solid fa-trash fa-fw"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        `);
-                    });
-                } else {
-                    $("#departmentTableBody").append(`
-                        <tr>
-                            <td colspan="3" class="text-center">No departments found</td>
-                        </tr>
-                    `);
-                }
+                
             } else {
               $("#popupErrorModal .modal-body").text("SearchAll API Response Error.");
               $("#popupErrorModal").modal("show");
@@ -370,7 +400,6 @@ $(window).on("load", function () {
         $("#filterPersonnelByLocation").val(0);
     }
     var selectedDepartment = $("#filterPersonnelByDepartment option:selected").val() || "";
-    console.log("selected department", selectedDepartment);
     $.ajax({
       url: "libs/php/filterPersonnel.php",
       type: "POST",
@@ -663,7 +692,6 @@ $(window).on("load", function () {
         id: editPersonnelId,
       },
       success: function (result) {
-        console.log("Get personnel by id", result);
         if (result.status.name == "ok" && result.data.personnel.length > 0) {
 
           let personnel = result.data.personnel[0];
