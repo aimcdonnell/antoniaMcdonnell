@@ -344,6 +344,18 @@ $(window).on("load", function () {
 
   $("#filterBtn").on("click", function () {
     $("#filterPersonnelModal").modal("show");
+  });
+
+  $("#filterBtn").on("show.bs.modal", function () {
+
+    var currentFilterDepartmentSelect = $("#filterPersonnelByDepartment").val();
+    $("#filterPersonnelByDepartment").empty();
+    $("#filterPersonnelByDepartment").append(currentFilterDepartmentSelect);
+
+    var currentFilterLocationSelect = $("#filterPersonnelByLocation").val();
+    $("#filterPersonnelByLocation").empty();
+    $("#filterPersonnelByLocation").append(currentFilterLocationSelect);
+
     $.ajax({
       url: "libs/php/getAllDepartments.php",
       type: "GET",
