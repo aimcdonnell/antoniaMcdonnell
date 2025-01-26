@@ -1,4 +1,4 @@
-# IT Career Switch: Portfolio Project
+# IT Career Switch: Portfolio Projects
 
 
 ## Portfolio Project #1: Gazetteer
