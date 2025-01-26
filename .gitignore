@@ -8,6 +8,7 @@
 
 # Don't ignore the .gitignore file itself
 !.gitignore
+!.README.md
 
 # Ignore the following files
 config.php
