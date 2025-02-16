@@ -938,7 +938,6 @@ var aerowayIcon = L.ExtraMarkers.icon({
         dataType: "json",
         data: { lat, lon },
         success: function (response) {
-          console.log("get local pois", response);
           countryPoisAvailable = false; // Reset the flag before checking POIs
         
           // Check if the response is valid and contains POIs
