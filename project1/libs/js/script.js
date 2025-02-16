@@ -67,39 +67,6 @@ $(window).on("load", function () {
     Cities: cityMarkersGroup,
   };
 
-  var buildingIcon = L.ExtraMarkers.icon({
-    icon: "fa-solid fa-building",
-    markerColor: "red",
-    shape: "circle",
-    prefix: "fa",
-    iconColor: "white",
-    extraClasses: "fa-2x",
-  });
-  var attractionIcon = L.ExtraMarkers.icon({
-    icon: "fa-solid fa-star",
-    markerColor: "blue",
-    shape: "circle",
-    prefix: "fa",
-    iconColor: "white",
-    extraClasses: "fa-2x",
-  });
-
-  var tourismIcon = L.ExtraMarkers.icon({
-    icon: "fa-solid fa-camera",
-    markerColor: "purple",
-    shape: "circle",
-    prefix: "fa",
-    iconColor: "white",
-    extraClasses: "fa-2x",
-  });
-  var natureIcon = L.ExtraMarkers.icon({
-    icon: "fa-solid fa-tree",
-    markerColor: "green",
-    shape: "circle",
-    prefix: "fa",
-    iconColor: "white",
-    extraClasses: "fa-2x",
-  });
   var amenityIcon = L.ExtraMarkers.icon({
     icon: "fa-solid fa-shop",
     markerColor: "orange",
@@ -107,32 +74,9 @@ $(window).on("load", function () {
     prefix: "fa",
     iconColor: "white",
     extraClasses: "fa-2x",
-  });
-  var shopIcon = L.ExtraMarkers.icon({
-    icon: "fa-solid fa-store",
-    markerColor: "orange-dark",
-    shape: "circle",
-    prefix: "fa",
-    iconColor: "white",
-    extraClasses: "fa-2x",
-  });
-  var highwayIcon = L.ExtraMarkers.icon({
-    icon: "fa-solid fa-road",
-    markerColor: "blue",
-    shape: "circle",
-    prefix: "fa",
-    iconColor: "white",
-    extraClasses: "fa-2x",
-  });
-  var restaurantIcon = L.ExtraMarkers.icon({
-    icon: "fa-solid fa-utensils",
-    markerColor: "white",
-    shape: "circle",
-    prefix: "fa",
-    iconColor: "white",
-    extraClasses: "fa-2x",
-  });
-  var leisureIcon = L.ExtraMarkers.icon({
+  });  
+
+var leisureIcon = L.ExtraMarkers.icon({
     icon: "fa-solid fa-umbrella-beach",
     markerColor: "pink",
     shape: "circle",
@@ -140,22 +84,33 @@ $(window).on("load", function () {
     iconColor: "white",
     extraClasses: "fa-2x",
   });
-  var transportIcon = L.ExtraMarkers.icon({
-    icon: "fa-solid fa-bus",
-    markerColor: "purple",
+
+var aerowayIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-plane",
+    markerColor: "red",
     shape: "circle",
     prefix: "fa",
     iconColor: "white",
     extraClasses: "fa-2x",
   });
-  var educationIcon = L.ExtraMarkers.icon({
-    icon: "fa-solid fa-graduation-cap",
-    markerColor: "green-light",
+  var craftIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-toolbox",
+    markerColor: "blue",
     shape: "circle",
     prefix: "fa",
     iconColor: "white",
     extraClasses: "fa-2x",
   });
+
+  var emergencyIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-hospital",
+    markerColor: "red",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+
   var healthcareIcon = L.ExtraMarkers.icon({
     icon: "fa-solid fa-briefcase-medical",
     markerColor: "red",
@@ -164,17 +119,37 @@ $(window).on("load", function () {
     iconColor: "white",
     extraClasses: "fa-2x",
   });
-  var railwayIcon = L.ExtraMarkers.icon({
-    icon: "fa-solid fa-train",
+
+  var historicIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-landmark",
     markerColor: "blue",
     shape: "circle",
     prefix: "fa",
     iconColor: "white",
     extraClasses: "fa-2x",
   });
+
+  var landuseIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-house",
+    markerColor: "green",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+
   var manMadeIcon = L.ExtraMarkers.icon({
     icon: "fa-solid fa-industry",
     markerColor: "black",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+
+  var naturalIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-mountain",
+    markerColor: "green",
     shape: "circle",
     prefix: "fa",
     iconColor: "white",
@@ -189,22 +164,43 @@ $(window).on("load", function () {
     iconColor: "white",
     extraClasses: "fa-2x",
   });
-  var placesOfWorshipIcon = L.ExtraMarkers.icon({
-    icon: "fa-solid fa-church",
-    markerColor: "pink",
+
+  var placeIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-map-marker",
+    markerColor: "green-dark",
     shape: "circle",
     prefix: "fa",
     iconColor: "white",
     extraClasses: "fa-2x",
   });
-  var powerFacilitiesIcon = L.ExtraMarkers.icon({
-    icon: "fa-solid fa-plug",
-    markerColor: "yellow",
+
+  var shopIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-store",
+    markerColor: "orange-dark",
     shape: "circle",
     prefix: "fa",
     iconColor: "white",
     extraClasses: "fa-2x",
   });
+
+  var tourismIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-camera",
+    markerColor: "purple",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+
+  var waterwayIcon = L.ExtraMarkers.icon({
+    icon: "fa-solid fa-water",
+    markerColor: "blue",
+    shape: "circle",
+    prefix: "fa",
+    iconColor: "white",
+    extraClasses: "fa-2x",
+  });
+
   var otherIcon = L.ExtraMarkers.icon({
     icon: "fa-solid fa-map-marker",
     markerColor: "green-dark",
@@ -780,7 +776,7 @@ $(window).on("load", function () {
               $("#wikipedia-modal").modal("show");
             }
           },
-          error: function (jqXHR, textStatus, errorThrown) {
+          error: function () {
             showToast("Error fetching Wikipedia data", 4000, false);
           },
         });
@@ -923,7 +919,7 @@ $(window).on("load", function () {
               $("#natural-disaster-modal").modal("show");
             }
           },
-          error: function (jqXHR, textStatus, errorThrown) {
+          error: function () {
             showToast("Error fetching natural disaster data", 4000, false);
           },
         });
@@ -934,14 +930,15 @@ $(window).on("load", function () {
 
     let countryPoisAvailable = false;
 
-    function fetchNearbyPOIs(lat, lng) {
+    function fetchNearbyPOIs(lat, lon) {
       poiMarkersGroup.clearLayers();
       $.ajax({
         url: "libs/php/getNearbyPointsOfInterest.php",
         type: "GET",
         dataType: "json",
-        data: { lat, lng },
+        data: { lat, lon },
         success: function (response) {
+          console.log("get local pois", response);
           countryPoisAvailable = false; // Reset the flag before checking POIs
         
           // Check if the response is valid and contains POIs
@@ -954,38 +951,37 @@ $(window).on("load", function () {
           ) {
             countryPoisAvailable = true; // Set the flag if POIs are found
             const poiTypes = {
-              building: buildingIcon,
-              attraction: attractionIcon,
-              tourism: tourismIcon,
-              natural: natureIcon,
               amenity: amenityIcon,
-              shop: shopIcon,
-              highway: highwayIcon,
-              food: restaurantIcon,
               leisure: leisureIcon,
-              transport: transportIcon,
-              education: educationIcon,
+              aeroway: aerowayIcon,
+              craft: craftIcon,
+              emergency: emergencyIcon,
               healthcare: healthcareIcon,
-              railway: railwayIcon,
-              man_made: manMadeIcon,
+              historic: historicIcon,
+              landuse: landuseIcon,
+              manmade: manMadeIcon,
+              natural: naturalIcon,
               office: officeIcon,
-              place_of_worship: placesOfWorshipIcon,
-              power: powerFacilitiesIcon,
+              place: placeIcon,
+              shop: shopIcon,
+              tourism: tourismIcon,
+              waterway: waterwayIcon,
+              other: otherIcon,
             };
             
             // Loop through the POIs and add them to the map
             response.data.forEach((poi) => {
-              const icon = poiTypes[poi.typeClass] || otherIcon; // Default to `otherIcon` if no match is found
-              L.marker([poi.lat, poi.lng], { icon })
+              const icon = poiTypes[poi.class] || otherIcon; // Default to `otherIcon` if no match is found
+              L.marker([poi.lat, poi.lon], { icon })
                 .addTo(poiMarkersGroup)
-                .bindPopup(`${poi.name || "Unnamed " + poi.typeClass + " marker"}`);
+                .bindPopup(`${poi.name || "Unnamed " + poi.class + " marker"}`);
             });
           } else {
             // If no POIs are found, don't show error and keep the flag false
             countryPoisAvailable = false;
           }
         },
-        error: function (jqXHR, textStatus, errorThrown) {
+        error: function () {
           // Only show an error if the request itself failed, not for missing POIs
           if (!countryPoisAvailable) {
             showToast("Error fetching POIs", 4000, false);
@@ -1021,7 +1017,7 @@ $(window).on("load", function () {
             showToast("No cities found for the selected country", 4000, false);
           }
         },
-        error: function (jqXHR, textStatus, errorThrown) {
+        error: function () {
           showToast("Error fetching cities", 4000, false);
         },
       });
